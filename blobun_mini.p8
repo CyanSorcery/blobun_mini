@@ -3,11 +3,11 @@ version 42
 __lua__
 function _init()
  -- tile lut
- #include blobun_mini/blobun_mini_tile_lut.lua
+ #include blobun_mini_tile_lut.lua
  -- camera position
  g_cam_x, g_cam_y = 0, -8
  -- levels
- #include blobun_mini/blobun_mini_levels.lua
+ #include blobun_mini_levels.lua
 
  g_fillp_diag = {0x936c, 0x36c9, 0x6c93, 0xc936}
  g_fillp_anim, g_wavy_anim = 0, 0
