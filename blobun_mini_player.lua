@@ -1,0 +1,392 @@
+-- stephanie
+function player_create(_x, _y)
+ -- make sure stephanie is below everything
+ add(g_object_list, {
+  type=0,
+  -- note: unlike other entities, this is in grid space
+  x=_x,
+  y=_y,
+  pos=-1, -- bogus key
+  dir=3, -- direction
+  anim=1, -- move factor
+  sprint=false, -- move is sprint
+  jiggle=0, -- jiggle factor
+  ismove=false, -- if she's moving or not
+  pstate=0, -- state, 0 normal, 1 fire, 2 ice
+  oldx=_x, -- old x, used for animation
+  oldy=_y, -- old y, used for animation
+  startturnx = _x, -- where the player was at the end of the last turn
+  startturny = _y,
+  isdead = false, -- when the puzzle element destroys stephanie
+  haskey = false, -- player is carrying generic key
+ }, 1)
+
+end
+function player_step(_obj)
+
+ -- jiggle animation countdown
+ _obj.jiggle = max(_obj.jiggle - 0.2, 0)
+
+ -- do undo?
+ if (btnp(5) and not g_level_win) perform_undo()
+
+ -- show pause menu on victory?
+ if (btnp(4) and g_level_win and g_bottom_msg_anim == 1) extcmd("pause")
+
+ -- allow input buffer?
+ if (_obj.anim >= 0.8) then
+  if (btn(0)) g_new_dir = 2
+  if (btn(1)) g_new_dir = 0
+  if (btn(2)) g_new_dir = 1
+  if (btn(3)) g_new_dir = 3
+ end
+
+ if (_obj.anim == 1 and not g_level_win and not g_level_lose) then
+  -- did she just stop moving?
+  if (_obj.ismove == true) player_end_move(_obj)
+
+  -- sprint jiggle?
+  if (btn(4) and g_btn4_held == false) _obj.jiggle = 1
+  g_btn4_held = btn(4)
+
+  -- move her around the playfield?
+  _obj.sprint = false
+  local _new_dir = g_new_dir
+  if (_new_dir != -1 or g_puzz_use_portal) then
+   -- do a check if this is solid or not. if we're on portal, we can move
+   local _can_move, _check, _chx, _chy = g_puzz_use_portal, 1, _obj.x + cos(_new_dir >> 2), _obj.y + sin(_new_dir >> 2)
+   -- ashe note: allow for prevent self overlap later
+   if (g_puzz_on_convey or true) _check = 3 -- allow for move on slime
+   _can_move = mget(_chx + 48, _chy) & _check > 0
+   -- if the future block is an ice block, and the player is in the fire state, let em through
+   local _nextblock = mget(_chx + 32, _chy)
+   if (_nextblock == 10 and _obj.pstate == 1) _can_move = true
+   -- if the future block is a lock and they have a key, let em through
+   if (_nextblock == 138 and _obj.haskey) _can_move = true
+
+   -- reset the buffered input and face us in this direction
+   g_new_dir, _obj.dir = -1, _new_dir
+   -- can we actually move here?
+   if (_can_move and not g_level_lose) then
+   
+    -- record the playfield before making a move?
+    if (not g_puzz_use_portal and not g_puzz_on_convey) then
+     -- update the end turn position for the next undo
+     _obj.startturnx, _obj.startturny = _obj.x, _obj.y
+     add_undo()
+     
+     -- increment the floor zappers
+     g_puzz_zapper_turn += 1
+     g_puzz_zapper_turn %= 3
+     g_redraw_zappers = true
+    end
+
+    -- reset move factor, set if move is sprint, set she's moving
+    _obj.anim, _obj.sprint, _obj.ismove = 0, btn(4), true
+    -- set where she's moving from
+    if (g_puzz_use_portal == false) _obj.oldx, _obj.oldy = _obj.x, _obj.y
+    if (_new_dir >= 0) _obj.x, _obj.y = _chx, _chy
+
+   end
+  end
+ end
+
+ -- do the move animation
+ _obj.anim = min(_obj.anim + ((_obj.sprint or g_puzz_on_convey or g_puzz_use_portal) and 0.2 or 0.1111), 1)
+ 
+ -- have we won?
+ if (g_level_win == false and g_level_touched >= g_level_tiles) then
+  g_level_win = true
+  -- add option for next stage, and remove "skip puzzle" option
+  menuitem(1, "next stage",
+   function()
+    unpack_level(g_level_index + 1)
+   end
+  )
+  menuitem(2)
+ end
+
+ -- if we've won, make stephanie face down
+ if (g_level_win) _obj.dir = 3
+
+ -- move camera while binding it to the stage edges/centering it
+ local _lw, _lh = g_level_width << 4, g_level_height << 4
+ g_cam_x = (g_level_width > 8)
+    and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
+    or (_lw >> 1) - 56
+ 
+ g_cam_y = (g_level_height > 7)
+    and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
+    or (_lh >> 1) - 60
+end
+
+function player_end_move(_obj)
+ -- mark turn as finished
+ _obj.ismove = false
+ 
+ -- proc what tile we're on
+ local _x, _y, _doslime, _destroy_obj = _obj.x, _obj.y, true, true
+ local _tile = mget(_x + 32, _y)
+
+
+ -- if we're on a water tile and in the ice state, freeze that tile
+ if (_tile == 73 and _obj.pstate == 2) _tile = 105
+ 
+ -- toggle keys
+ if (_tile == 2) do_key_swap(3, 4, 19, 20) -- heart
+ if (_tile == 34) do_key_swap(35, 36, 21, 22) -- diamond
+ if (_tile == 66) do_key_swap(67, 68, 23, 24) -- triangle
+
+ if (_tile == 98) then
+  g_puzz_coins += 1
+  if (g_puzz_coins == 3) then
+   g_puzz_coins = 0
+   do_key_swap(99, 100, 25, 26)
+  end
+  g_redraw_coin    = true;
+ end
+ 
+ -- states: 0 normal, 1 fire, 2 ice
+ for i=0,2 do
+  if (_tile == 8 | (i << 5)) _obj.pstate = i
+ end
+
+ -- is this an octogem?
+ for i=0,7 do
+  if (_tile == 15 | (i << 5) and g_puzz_octogems == i) g_puzz_octogems += 1
+ end
+ -- did we just get the last octogem? if so, process it and reset
+ if (g_puzz_octogems == 8) then
+  do_key_swap(74,106,27, 28)
+  g_puzz_octogems = 0
+ end
+
+ -- is this a key? if we don't have one, go ahead and pick it up
+ if (_tile == 44) then
+  if (_obj.haskey) then _destroy_obj = false else _obj.haskey = true end
+ end
+
+ -- is this a key block? we can assume we let them through earlier
+ if (_tile == 138) _obj.haskey = false
+
+ -- fetch the previous tile
+ local _oldx, _oldy = _obj.oldx, _obj.oldy
+ local _prevtile = mget(_oldx + 32, _oldy)
+ -- was the tile previous a slime trap?
+ if (_prevtile == 137) then
+  -- unslime this spot and clear it for re-entry
+  -- this just sets the tile ID to a clear spot
+  place_puzz_tile(_oldx, _oldy, 160)
+  mset(_oldx + 48, _oldy, 1)
+  mset(_oldx + 32, _oldy, 1)
+ end
+
+ -- was the previous tile a cracked floor? if the cracked floor script ran, update the tile
+ if (proc_cracked_floor(_oldx, _oldy)) _tile = mget(_x + 32, _y)
+
+ -- are we on a conveyer? if so, overwrite new direction
+ -- directions: 0 e, 1 n, 2 w, 3 s
+ local _dir = -1
+ for i=0,3 do
+  if (_tile == 6 | (i << 5)) _dir = i
+ end
+ 
+ -- are we on an ice tile?
+ if (_tile == 105) _dir = _obj.dir
+ -- did we get a new direction?
+ if (_dir != -1) g_new_dir = _dir
+ g_puzz_on_convey = _dir != -1
+
+ -- destroy floating object at this position
+ if (_destroy_obj) add(g_obj_delete, (_x << 4) | _y)
+
+ -- are we on a floor portal?
+ g_puzz_use_portal = false
+ if (_tile == 5 or _tile == 37 or _tile == 69 or _tile == 101) then
+  -- delete portal, then find pair
+  mset(_x + 32, _y, 1)
+  local _w, _h = g_level_width + 32, g_level_height
+  for _dx=32,_w do
+   for _dy=0,_h do
+    if (mget(_dx, _dy) == _tile) then
+     -- set our new position to where we're going
+     _obj.oldx, _obj.oldy = _obj.x, _obj.y
+     _obj.x, _obj.y = _dx - 32, _dy
+     g_puzz_use_portal = true
+     -- end the loop
+     _dx, _dy = _w, _h
+    end
+   end
+  end
+ end
+
+ -- is this the end of this turn?
+ --if (not g_puzz_use_portal and not g_puzz_on_convey) then
+ --end
+ 
+ -- coco note: this *could* be optimized, but let's keep the code readable unless we need those tokens
+ -- did we overlap our own trail?
+ if (mget(_obj.x + 48, _obj.y) & 2 == 2) player_destroy(_obj)
+ -- process stuff that destroys stephanie
+ local _kill_p = false
+ -- did we step on a lava tile and aren't in the right state
+ if (_tile == 41 and _obj.pstate == 0) _kill_p = true
+ -- did we step on an ice tile and aren't in the right state
+ if (_tile == 73 and _obj.pstate != 2) _kill_p = true
+ -- did we step on a cracked floor that just broke?
+ if (_tile == 0) _kill_p = true
+ -- did we step on a floor zapper on the wrong turn?
+ if (_tile == 39 and g_puzz_zapper_turn == 2) _kill_p = true -- cyan
+ if (_tile == 7 and g_puzz_zapper_turn == 1) _kill_p = true -- magenta
+ if (_tile == 71 and g_puzz_zapper_turn == 0) _kill_p = true -- yellow
+ if (_kill_p) then
+  player_destroy(_obj, true)
+  _doslime = false
+ end
+
+ -- put slime on the playfield here?
+ if (_doslime == true) then
+  g_level_touched += 1
+  mset(_obj.x + 48, _obj.y, 2)
+  local _x, _y = (_obj.x << 1) + 1, (_obj.y << 1) + 1
+  local _pstate = _obj.pstate << 1
+  mset(_x, _y, 218 + _pstate)
+  mset(_x + 1, _y, 219 + _pstate)
+  mset(_x, _y + 1, 234 + _pstate)
+  mset(_x + 1, _y + 1, 235 + _pstate)
+ end
+end
+
+function player_destroy(_obj, _kill)
+ g_level_lose = true
+ if (_kill == true) then 
+  _obj.isdead = true
+  local _col = _obj.pstate == 1 and {4, 9,10} or {1, 3,11}
+  if (_obj.pstate == 2) _col = {5, 13,6}
+  part_create_slime_explode((_obj.x << 4) + 12, (_obj.y << 4) + 12, _col)
+ end
+end
+
+function player_draw(_obj)
+ -- if the player was destroyed by something, don't draw
+ if (_obj.isdead) return
+
+ local _dir, _x, _y, _offset, _dir = _obj.dir, (_obj.x << 4), (_obj.y << 4)
+ 
+ -- fire/ice states respectively
+ if (_obj.pstate == 1) then
+  pal(3,8)
+  pal(11,9)
+ elseif (_obj.pstate == 2) then
+  pal(3,13)
+  pal(11,6)
+ end
+
+ -- do animation?
+ if (_obj.anim < 1) then
+  -- if on conveyer, use linear animation
+  -- if not, use curved animation
+  if (g_puzz_on_convey) then
+   _offset = _obj.anim
+  elseif (_obj.anim < 0.5) then
+   _offset = 0.5 + (cos(_obj.anim * 0.5) * -0.5)
+  else
+   _offset = 0.5 - (cos(_obj.anim * 0.5) * 0.5)
+  end
+  
+  _x, _y = lerp(_obj.oldx << 4, _obj.x << 4, _offset), lerp(_obj.oldy << 4, _obj.y << 4, _offset)
+  
+ end
+ 
+ -- do jiggle and positional offset
+ _x += ((-1 + rnd(3)) * _obj.jiggle) + 8
+ _y += ((-1 + rnd(3)) * _obj.jiggle) + 8
+ 
+ local _xflip, _yflip = cos(_obj.dir >> 2) < 0, sin(_obj.dir >> 2) < 0
+ local _xpos, _ypos = _xflip and _x or _x - 8, _yflip and _y or _y - 8
+ if (_obj.dir % 2 == 0) then
+  spr(211, _xpos, _y + 7, 3, 1, _xflip)
+  spr(211, _xpos, _y, 3, 1, _xflip, true)
+ else
+  spr(217, _x + 1, _ypos, 1, 3, false, _yflip)
+  spr(217, _x + 8, _ypos, 1, 3, true, _yflip)
+ end
+ 
+ -- reset palette back to normal in case it was set
+ pal()
+
+end
+
+function redraw_slimetrail()
+ local _sta = g_slime_trail_anim
+
+ -- initial copy of slime tiles to work area
+ spr(224, 80, 104, 6, 2)
+ 
+ local _dx1, _dy1, _subt = 80
+ for _x=0,32,16 do
+  clip(_dx1, 104, 16, 16)
+  for _subx=0,15 do
+   _subt = sin(_sta + (_subx / 8)) + 104
+   sspr(_x + _subx, 112, 1, 16, _dx1 + _subx, _subt)
+   sspr(_dx1, 104 + _subx, 16, 1, _dx1, _subt + _subx)
+  end
+  _dx1 += 16
+ end
+
+ -- initial copy of stephanie to work area
+ local _obj = g_object_list[1]
+ clip()
+ palt(0, false)
+ spr(208, 24, 104, 3, 1)
+ palt()
+
+ -- does she have the key? if so, draw the extra circle
+ if (_obj.haskey) then
+  spr(144, 32, 104)
+  spr(144, 39, 104, 1, 1, true)
+ end
+ 
+ -- add wavy effect to her
+ local _fx, _fy, _offset
+ for i=0,2 do
+  _offset = i << 3
+  _dx1 = 24 + _offset
+  clip(_dx1, 104, 8, 8)
+  for _subx=0,7 do
+   sspr(_subx + _offset, 104, 1, 8, _dx1 + sin(_sta + (_subx / 8)) + _subx, 104)
+  end
+ end
+ clip()
+ -- draw the second circle?
+ if (_obj.haskey) then
+  spr(145, 32, 104)
+  spr(145, 39, 104, 1, 1, true)
+ end
+
+ -- get ready to draw her expression on
+ local _eye_determined = (btn(4) or _obj.sprint) and g_puzz_on_convey == false -- >:3
+ local _eye_blink = g_player_blink < 3 or g_level_win
+ local _mouse_grin = _eye_determined -- sprinting
+ local _is_win, _no_win, _spr = g_level_win, g_level_win == false
+
+ -- eyes
+  _spr = 215
+ if (_eye_determined) _spr = 214
+ if (_eye_blink or g_level_lose) _spr = 216
+ spr(_spr, _is_win and 37 or 36, 104, 1, 1, _is_win)
+ -- mouth
+ _spr = 251
+ if (_mouse_grin) _spr = 252
+ if (g_level_lose) _spr = 160
+ if (_is_win) _spr = 250
+ spr(_spr, 40, 104)
+
+ -- copy this sprite to the side angle
+ -- roxy note: yes, the coordinates are wacky. it's fine
+ for _x=0,23 do
+  for _y=0,7 do
+   sset(79 - _y, 104 + _x, sget(24 + _x, 104 + _y))
+  end
+ end
+end
