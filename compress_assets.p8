@@ -3,37 +3,46 @@ version 42
 __lua__
 
 function _init()
---[[
--- copy the music data to the map
-reload(0x2000, 0x3200, 0x880, "bmus_pipeworks.p8")
--- compress the music data to the sprite sheet
-printh("data is len "..tostr(px9_comp(0, 0, 128, 17, 0x0, mget)))
--- copy the music data to the map
-memcpy(0x2000, 0x0, 0x1000)
--- decompress the data from the sprite sheet to the map
-px9_decomp(0, 0, 0x0, mget, mset)
--- copy the map to the sprite sheet
-memcpy(0x0, 0x2000, 0x1000)
--- copy the data from the sprite sheet to the music
-cstore(0x3200, 0x0000, 0x880)]]
 
--- copy sprite data from the game
-reload(0x0, 0x0, 0x2000, "blobun_mini.p8")
--- compress it
-local _data = px9_comp(0, 0, 128, 128, 0x8000, sget)
-printh("data len is "..tostr(_data))
--- tmp, copy it to sprite space
-memcpy(0x0, 0x8000, _data)
+ g_offset = 0
+ g_byte_max = 17151
 
+ printh("Starting compression...")
+ -- compress all the assets
+ compress_spritesheet("res/s_game.png", "res/s_game.p8")
+ compress_music("res/m_pipeworks.p8")
+ compress_music("res/m_islander.p8")
+
+ printh("Finished compression. "..tostr(g_offset).."/"..tostr(g_byte_max).." ("..tostr((g_offset/g_byte_max)*100).."% used)")
+
+ stop()
 end
 
-function _update()
 
+function compress_spritesheet(_filename, _cartname)
+ -- load the sprite sheet and associated sprite flags
+ import(_filename)
+ reload(0x3000, 0x3000, 0xFF, _cartname)
+ cstore(0x0, 0x0, 0x2000, _cartname)
+ -- update the sprite sheet of the given cart
+ -- compress it
+ local _bytes = px9_comp(0, 0, 128, 128, 0x8000 + g_offset, sget)
+ g_offset += _bytes
+ printh("Compressed sprite sheet ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x2000) * 100).."%)")
 end
 
-function _draw()
-rectfill(0, 0, 127, 127, 0)
-spr(0, 0, 0, 16, 16)
+function compress_music(_filename)
+ -- load the music + sfx from the given cart into this one
+ reload(0x3100, 0x3100, 0x1200, _filename)
+ -- move the music pattern data into the sprite sheet area (first 32 frames)
+ memcpy(0x0, 0x3100, 0x80)
+ -- move the sfx data into the sprite sheet area (first 32 patterns)
+ memcpy(0x80, 0x3200, 0x880)
+ -- compress it
+ local _bytes = px9_comp(0, 0, 128, 18, 0x8000 + g_offset, sget)
+ g_offset += _bytes
+ printh("Compressed music ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x900) * 100).."%)")
+ 
 end
 
 -->8

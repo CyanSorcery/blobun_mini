@@ -53,7 +53,7 @@ for ($i = 0; $i < $arrlen; $i++)
 
 $finstr .= " }";
 
-file_put_contents('blobun_mini/blobun_mini_levels.lua', $finstr);
+file_put_contents('res/r_levels.lua', $finstr);
 
 //create lookup table for tile IDs
 $max_id = 256;
@@ -131,6 +131,6 @@ for ($i = 0; $i < $max_id; $i++)
 	$finstr .= str_pad(dechex($lut[$i]), 2, "0", STR_PAD_LEFT);
 }
 $finstr .= "\"";
-file_put_contents('blobun_mini/blobun_mini_tile_lut.lua', $finstr);
+file_put_contents('res/r_tile_lut.lua', $finstr);
 
 ?>

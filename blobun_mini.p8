@@ -2,12 +2,13 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()
+ printh("Blobun Mini startup.")
  -- tile lut
- #include blobun_mini_tile_lut.lua
+ #include res/r_tile_lut.lua
  -- camera position
  g_cam_x, g_cam_y = 0, -8
  -- levels
- #include blobun_mini_levels.lua
+ #include res/r_levels.lua
 
  g_fillp_diag = {0x936c, 0x36c9, 0x6c93, 0xc936}
  g_fillp_anim, g_wavy_anim = 0, 0
@@ -447,10 +448,10 @@ end
 
 -->8
 -- includes
-#include blobun_mini_draw.lua
-#include blobun_mini_util.lua
-#include blobun_mini_player.lua
-#include blobun_mini_particles.lua
+#include scripts/s_draw.lua
+#include scripts/s_util.lua
+#include scripts/s_player.lua
+#include scripts/s_particles.lua
 
 __gfx__
 0000000000000000000000000000000002882077288207770288207702882077777028827770288277702882777028827777777777777777777777777eeccee7
