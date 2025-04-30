@@ -126,6 +126,7 @@ function player_end_move(_obj)
  
  -- proc what tile we're on
  local _x, _y, _doslime, _destroy_obj = _obj.x, _obj.y, true, true
+ local _xcenter, _ycenter, _collectcol = (_x << 4) + 12, (_y << 4) + 12
  local _tile = mget(_x + 32, _y)
 
 
@@ -133,12 +134,22 @@ function player_end_move(_obj)
  if (_tile == 73 and _obj.pstate == 2) _tile = 105
  
  -- toggle keys
- if (_tile == 2) do_key_swap(3, 4, 19, 20) -- heart
- if (_tile == 34) do_key_swap(35, 36, 21, 22) -- diamond
- if (_tile == 66) do_key_swap(67, 68, 23, 24) -- triangle
+ if (_tile == 2) then
+  do_key_swap(3, 4, 19, 20) -- heart
+  _collectcol = {8, 7}
+ end
+ if (_tile == 34) then 
+  do_key_swap(35, 36, 21, 22) -- diamond
+  _collectcol = {11, 7}
+ end
+ if (_tile == 66) then 
+  do_key_swap(67, 68, 23, 24) -- triangle
+  _collectcol = {12, 7}
+ end
 
  if (_tile == 98) then
   g_puzz_coins += 1
+  _collectcol = {10, 9, 7}
   if (g_puzz_coins == 3) then
    g_puzz_coins = 0
    do_key_swap(99, 100, 25, 26)
@@ -147,13 +158,25 @@ function player_end_move(_obj)
  end
  
  -- states: 0 normal, 1 fire, 2 ice
+ local _st = {{11, 3, 1}, {10, 9, 8}, {7, 6, 13}}
  for i=0,2 do
-  if (_tile == 8 | (i << 5)) _obj.pstate = i
+  if (_tile == 8 | (i << 5)) then 
+   _obj.pstate = i
+   _collectcol = _st[i + 1]
+  end
  end
 
  -- is this an octogem?
  for i=0,7 do
-  if (_tile == 15 | (i << 5) and g_puzz_octogems == i) g_puzz_octogems += 1
+  if (_tile == 15 | (i << 5) and g_puzz_octogems == i) then
+   g_puzz_octogems += 1
+   _collectcol = {14, 7}
+   -- find the destination octogem
+   if (g_puzz_octogems < 8) then
+    local _dest = find_tile_loc(15 | (g_puzz_octogems << 5))
+    if (_dest != nil) part_create_octogem(_xcenter, _ycenter, (_dest.x << 4) + 12, (_dest.y << 4) + 12)
+   end
+  end
  end
  -- did we just get the last octogem? if so, process it and reset
  if (g_puzz_octogems == 8) then
@@ -163,7 +186,10 @@ function player_end_move(_obj)
 
  -- is this a key? if we don't have one, go ahead and pick it up
  if (_tile == 44) then
-  if (_obj.haskey) then _destroy_obj = false else _obj.haskey = true end
+  if (_obj.haskey) then _destroy_obj = false else
+   _obj.haskey = true
+   _collectcol = {6, 13, 5}
+  end
  end
 
  -- is this a key block? we can assume we let them through earlier
@@ -205,20 +231,17 @@ function player_end_move(_obj)
  if (_tile == 5 or _tile == 37 or _tile == 69 or _tile == 101) then
   -- delete portal, then find pair
   mset(_x + 32, _y, 1)
-  local _w, _h = g_level_width + 32, g_level_height
-  for _dx=32,_w do
-   for _dy=0,_h do
-    if (mget(_dx, _dy) == _tile) then
-     -- set our new position to where we're going
-     _obj.oldx, _obj.oldy = _obj.x, _obj.y
-     _obj.x, _obj.y = _dx - 32, _dy
-     g_puzz_use_portal = true
-     -- end the loop
-     _dx, _dy = _w, _h
-    end
-   end
+  local _pair_loc = find_tile_loc(_tile)
+  if (_pair_loc != nil) then
+   -- set our new position to where we're going
+   _obj.oldx, _obj.oldy = _obj.x, _obj.y
+   _obj.x, _obj.y = _pair_loc.x - 32, _pair_loc.y
+   g_puzz_use_portal = true
   end
  end
+
+ -- do we create collectible particles here?
+ if (_collectcol != nil) part_create_item_grab(_xcenter, _ycenter, _collectcol)
 
  -- is this the end of this turn?
  --if (not g_puzz_use_portal and not g_puzz_on_convey) then
@@ -228,18 +251,18 @@ function player_end_move(_obj)
  -- did we overlap our own trail?
  if (mget(_obj.x + 48, _obj.y) & 2 == 2) player_destroy(_obj)
  -- process stuff that destroys stephanie
- local _kill_p = false
+ if ( 
  -- did we step on a lava tile and aren't in the right state
- if (_tile == 41 and _obj.pstate == 0) _kill_p = true
+  (_tile == 41 and _obj.pstate == 0) or
  -- did we step on an ice tile and aren't in the right state
- if (_tile == 73 and _obj.pstate != 2) _kill_p = true
+  (_tile == 73 and _obj.pstate != 2) or
  -- did we step on a cracked floor that just broke?
- if (_tile == 0) _kill_p = true
+  (_tile == 0) or
  -- did we step on a floor zapper on the wrong turn?
- if (_tile == 39 and g_puzz_zapper_turn == 2) _kill_p = true -- cyan
- if (_tile == 7 and g_puzz_zapper_turn == 1) _kill_p = true -- magenta
- if (_tile == 71 and g_puzz_zapper_turn == 0) _kill_p = true -- yellow
- if (_kill_p) then
+  (_tile == 39 and g_puzz_zapper_turn == 2) or -- cyan
+  (_tile == 7 and g_puzz_zapper_turn == 1) or -- magenta
+  (_tile == 71 and g_puzz_zapper_turn == 0) -- yellow
+ ) then
   player_destroy(_obj, true)
   _doslime = false
  end
@@ -250,10 +273,7 @@ function player_end_move(_obj)
   mset(_obj.x + 48, _obj.y, 2)
   local _x, _y = (_obj.x << 1) + 1, (_obj.y << 1) + 1
   local _pstate = _obj.pstate << 1
-  mset(_x, _y, 218 + _pstate)
-  mset(_x + 1, _y, 219 + _pstate)
-  mset(_x, _y + 1, 234 + _pstate)
-  mset(_x + 1, _y + 1, 235 + _pstate)
+  put_x16_tile(_x, _y, 218 + _pstate)
  end
 end
 

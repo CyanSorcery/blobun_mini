@@ -117,11 +117,7 @@ end
 -- this function unpacks the level to the top left corner of the map
 function unpack_level(_index)
  -- clear the map to be ready for incoming data
- for x = 0,63 do
-  for y = 0,31 do
-   mset(x, y, 0)
-  end
- end
+ memset(0x2000, 0, 0x1000)
  -- reset the drawlist for the incoming elements
  g_object_list, g_arrow_list, g_undo_queue = {}, {}, {}
  g_level_tiles, g_level_touched, g_bottom_msg_anim, g_puzz_coins, g_puzz_octogems = 0, 0, 0, 0, 0
@@ -190,10 +186,7 @@ function unpack_level(_index)
   _mod = ((_x + _y) % 4 == 2) and 1 or 0
   -- now, read this out onto the playfield
   if (_tile > 0) then
-   mset(_x, _y, 253)
-   mset(_x + 1, _y, 16 + _mod)
-   mset(_x, _y + 1, 253)
-   mset(_x + 1, _y + 1, 32 + _mod)
+   put_mirrored_tile(_x, _y, 16 + _mod)
   end
   -- move ahead in the tileset, moving to the next row as needed
   _x += 2
@@ -320,23 +313,13 @@ function place_puzz_tile(_x, _y, _tile_id)
   if (_tile_tl == 124 and (_x + _y) % 2 == 0) _tile_tl += 2
   -- figure out the map coordinates
   local _map_x, _map_y = (_x << 1) + 1, (_y << 1) + 1
-  local _tile_tr, _tile_bl, _tile_br = _tile_tl, _tile_tl, _tile_tl
-  if (_tile_tl != 191 and _tile_tl != 207) then
-   _tile_tr += 1
-   _tile_bl += 16
-   _tile_br += 17
+  if (_tile_tl == 191 or _tile_tl == 207) then
+   put_1x4_tile(_map_x, _map_y, _tile_tl)
+  elseif (_tile_tl < 83) then
+   put_mirrored_tile(_map_x, _map_y, _tile_tl)
+  else
+   put_x16_tile(_map_x, _map_y, _tile_tl)
   end
-  -- riley note; optimize this later
-  if (_tile_tl < 83) then
-   _tile_tr -= 1
-   _tile_br -= 1
-   _tile_tl, _tile_bl = 253, 253
-  end
-  -- place the tiles
-  mset(_map_x, _map_y, _tile_tl)
-  mset(_map_x + 1, _map_y, _tile_tr)
-  mset(_map_x, _map_y + 1, _tile_bl)
-  mset(_map_x + 1, _map_y + 1, _tile_br)
   -- block/unblock the playfield? -1: nothing, 0: block, 1: unblock
   local _state, _ele_id = -1, _tile_id & 0x1f
   if (_ele_id == 3 or _ele_id == 10) _state = 0 -- raised rgbc or ice block
@@ -348,7 +331,7 @@ end
 function calc_lava_water()
  -- note: this is similar to a function earlier in the code, see that for comments
  local _t = {176, 192}
- local _id, _id_m, _tile, _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr _xl, _xr, _yb, _m = 0
+ local _id, _id_m, _tile, _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr _xl, _xr, _yb = 0
  local _w, _h = (g_level_width << 1) + 1, (g_level_height << 1) + 1
  for i=1,2 do
   _id = _t[i]
@@ -358,12 +341,9 @@ function calc_lava_water()
    _mtl, _mtc, _mtr, _mcl, _mcc, _mcr = 1, 1, 1, 1, 1, 1
    for _y=0,_h do
     _yb = min(_y + 1, _h)
-    _m = mget(_xl, _yb)
-    _mbl = (_m >= _id and _m <= _id_m) and 0 or 1
-    _m = mget(_x, _yb)
-    _mbc = (_m >= _id and _m <= _id_m) and 0 or 1
-    _m = mget(_xr, _yb)
-    _mbr = (_m >= _id and _m <= _id_m) and 0 or 1
+    _mbl, _mbc, _mbr = (num_in_range(mget(_xl, _yb), _id, _id_m)) and 0 or 1,
+       (num_in_range(mget(_x, _yb), _id, _id_m)) and 0 or 1,
+       (num_in_range(mget(_xr, _yb), _id, _id_m)) and 0 or 1
     if (_mcc == 0) then
      _tile = calc_autotile(_mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr)
      -- place tile, optionally placing grid marker

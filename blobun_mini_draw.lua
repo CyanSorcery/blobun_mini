@@ -88,8 +88,7 @@ function do_tile_mirror()
  camera(0, 0)
  local _dx, _dy
  for i=0,34 do
-  _dx = (i << 3) % 128
-  _dy = (flr(i / 16) << 4) + 8
+  _dx, _dy = (i << 3) % 128, (flr(i / 16) << 4) + 8
   sspr(_dx, _dy, 8, 16, _dx, _dy, 8, 16, true)
  end
  camera(g_cam_x, g_cam_y)
@@ -106,8 +105,7 @@ function redraw_floor_zappers()
  local _o0, _o1, _o2
  for i=0,2 do
   _o0 = (i * 6)
-  _o1 = _o0 + 3
-  _o2 = _o0 + (((i + g_puzz_zapper_turn) % 3) << 1)
+  _o1, _o2 = _o0 + 3, _o0 + (((i + g_puzz_zapper_turn) % 3) << 1)
   pal(_pal[_o1], _pal[_o2 + 1])
   pal(_pal[_o1 + 1], _pal[_o2 + 2])
   spr(156 + i, 104 + (i << 3), 8, 1, 2)

@@ -1,0 +1,301 @@
+pico-8 cartridge // http://www.pico-8.com
+version 42
+__lua__
+
+function _init()
+--[[
+-- copy the music data to the map
+reload(0x2000, 0x3200, 0x880, "bmus_pipeworks.p8")
+-- compress the music data to the sprite sheet
+printh("data is len "..tostr(px9_comp(0, 0, 128, 17, 0x0, mget)))
+-- copy the music data to the map
+memcpy(0x2000, 0x0, 0x1000)
+-- decompress the data from the sprite sheet to the map
+px9_decomp(0, 0, 0x0, mget, mset)
+-- copy the map to the sprite sheet
+memcpy(0x0, 0x2000, 0x1000)
+-- copy the data from the sprite sheet to the music
+cstore(0x3200, 0x0000, 0x880)]]
+
+-- copy sprite data from the game
+reload(0x0, 0x0, 0x2000, "blobun_mini.p8")
+-- compress it
+local _data = px9_comp(0, 0, 128, 128, 0x8000, sget)
+printh("data len is "..tostr(_data))
+-- tmp, copy it to sprite space
+memcpy(0x0, 0x8000, _data)
+
+end
+
+function _update()
+
+end
+
+function _draw()
+rectfill(0, 0, 127, 127, 0)
+spr(0, 0, 0, 16, 16)
+end
+
+-->8
+-- px9 decompress
+
+-- x0,y0 where to draw to
+-- src   compressed data address
+-- vget  read function (x,y)
+-- vset  write function (x,y,v)
+
+function
+	px9_decomp(x0,y0,src,vget,vset)
+
+	local function vlist_val(l, val)
+		-- find position and move
+		-- to head of the list
+
+		local v,i=l[1],1
+		while v!=val do
+			i+=1
+			v,l[i]=l[i],v
+		end
+		l[1]=val
+	end
+
+	-- read an m-bit num from src
+	local function getval(m)
+		-- $src: 4 bytes at flr(src)
+		-- >>src%1*8: sub-byte pos
+		-- <<32-m: zero high bits
+		-- >>>16-m: shift to int
+		local res=$src >> src%1*8 << 32-m >>> 16-m
+		src+=m>>3 --m/8
+		return res
+	end
+
+	-- get number plus n
+	local function gnp(n)
+		local bits=0
+		repeat
+			bits+=1
+			local vv=getval(bits)
+			n+=vv
+		until vv<(1<<bits)-1
+		return n
+	end
+
+	-- header
+
+	local
+		w_1,h_1,      -- w-1,h-1
+		eb,el,pr,
+		splen,
+		predict
+		=
+		gnp"0",gnp"0",
+		gnp"1",{},{},
+		0
+		--,nil
+
+	for i=1,gnp"1" do
+		add(el,getval(eb))
+	end
+	for y=y0,y0+h_1 do
+		for x=x0,x0+w_1 do
+			splen-=1
+
+			if splen<1 then
+				splen,predict=gnp"1",not predict
+			end
+
+			local a=y>y0 and vget(x,y-1) or 0
+
+			-- create vlist if needed
+			local l=pr[a] or {unpack(el)}
+			pr[a]=l
+
+			-- grab index from stream
+			-- iff predicted, always 1
+
+			local v=l[predict and 1 or gnp"2"]
+
+			-- update predictions
+			vlist_val(l, v)
+			vlist_val(el, v)
+
+			-- set
+			vset(x,y,v)
+		end
+	end
+end
+
+function
+	px9_comp(x0,y0,w,h,dest,vget)
+
+	local dest0=dest
+
+	local function vlist_val(l, val)
+		-- find position and move
+		-- to head of the list
+
+--[ 2-3x faster than block below
+		local v,i=l[1],1
+		while v!=val do
+			i+=1
+			v,l[i]=l[i],v
+		end
+		l[1]=val
+		return i
+--]]
+
+--[[ 8 tokens smaller than above
+		for i,v in ipairs(l) do
+			if v==val then
+				add(l,deli(l,i),1)
+				return i
+			end
+		end
+--]]
+	end
+
+	local bit=1
+	local byte=0
+	local function putbit(bval)
+		if (bval>0) byte+=bit
+		poke(dest, byte) bit<<=1
+		if (bit==256) then
+			bit=1 byte=0
+			dest += 1
+		end
+	end
+
+	local function putval(val, bits)
+		for i=0,bits-1 do
+			putbit(val>>i&1)
+		end
+	end
+
+	local function putnum(val)
+		local bits = 0
+		repeat
+			bits += 1
+			local mx=(1<<bits)-1
+			local vv=min(val,mx)
+			putval(vv,bits)
+			val -= vv
+		until vv<mx
+	end
+
+
+	-- first_used
+
+	local el={}
+	local found={}
+	local highest=0
+	for y=y0,y0+h-1 do
+		for x=x0,x0+w-1 do
+			c=vget(x,y)
+			if not found[c] then
+				found[c]=true
+				add(el,c)
+				highest=max(highest,c)
+			end
+		end
+	end
+
+	-- header
+
+	local bits=1
+	while highest >= 1<<bits do
+		bits+=1
+	end
+
+	putnum(w-1)
+	putnum(h-1)
+	putnum(bits-1)
+	putnum(#el-1)
+	for i=1,#el do
+		putval(el[i],bits)
+	end
+
+
+	-- data
+
+	local pr={} -- predictions
+
+	local dat={}
+
+	for y=y0,y0+h-1 do
+		for x=x0,x0+w-1 do
+			local v=vget(x,y)
+
+			local a=y>y0 and vget(x,y-1) or 0
+
+			-- create vlist if needed
+			local l=pr[a] or {unpack(el)}
+			pr[a]=l
+
+			-- add to vlist
+			add(dat,vlist_val(l,v))
+
+			-- and to running list
+			vlist_val(el, v)
+		end
+	end
+
+	-- write
+	-- store bit-0 as runtime len
+	-- start of each run
+
+	local nopredict
+	local pos=1
+
+	while pos <= #dat do
+		-- count length
+		local pos0=pos
+
+		if nopredict then
+			while dat[pos]!=1 and pos<=#dat do
+				pos+=1
+			end
+		else
+			while dat[pos]==1 and pos<=#dat do
+				pos+=1
+			end
+		end
+
+		local splen = pos-pos0
+		putnum(splen-1)
+
+		if nopredict then
+			-- values will all be >= 2
+			while pos0 < pos do
+				putnum(dat[pos0]-2)
+				pos0+=1
+			end
+		end
+
+		nopredict=not nopredict
+	end
+
+	if(bit>0) dest+=1 -- flush
+
+	return dest-dest0
+end
+
+__sfx__
+0123000023155231251f1551f1251a1551f1552315526155241552412521155211251d1551d1251f1552115523155231251f1551f1251a1551f15523155261552715527125241552412520155201251f15521155
+01230000133351a3322b6250e335133351a3322b6251333511335183322b6250c33511335183322b62511335133351a3322b6250e335133351a3322b62513335143351b3322b6250f335143351b3322b62514335
+0123000007055070250e0550b05507055006330e0550e02505055090550c0550905505055006330c0550c02507055070250e0550b05507055006330e0550e025080550c0550f0550c05508055006330f0550f025
+0123000023155231251f1551f125000001f15523155261552415524125211552112500000000001f1552115523155231251f1551f1252315523125241552615527155271252c1552c12500000000002435526355
+012300002735527325243552432533105381252735524355263552632523355233253210537125263552335524355203551d3552035524355351252735524355263552632523355233253b105371252435526355
+01230000145551b5522b6250f555145551b5522b62514555135551a5522b6250e555135551a5522b6251355511555185522b6250c55511555185522b62511555135551a5522b6250e555135551a5522b62513555
+012300000805508025000000f055080550063300000050550705507025000000e055070550063300000060550505505025000000c055050550063300000060550705507025000000e05507055006330000007055
+0123000027355273252435524325331053812527355243552635526325233552332500000371251f3552335524355203551d355203552435535125273552435526355263252b3552b32500000371251f15521155
+0123000027355273252435524325000003812527355243552b3552b3252635526325000003712524355263552735527325283552832529355293252a3552a3252b3552b325263552632523355233251f25521255
+0123000023255232251a2551f2552325523225212551f25521255212251e2551e22500000000001e2551f25521255212251e2551e22500000000001f2552125523255232251f2551f2250000000000182551a255
+012300001c2551c225182551a2551c2551c2251a255182551a2551a2251f2551f225232552322500000000002425524225232552225523255232251f2551e2551f2551f2251a2551a2251f2551f2251f1551e155
+012300001c1551c125181551a1551c1551c1251a155181551a1551a1251f1551f12523155231251e2551f25521255212251e1551f15521155211251f2551e2551f2551f22523255232251f2551f2251f15521155
+012300000705507025020550202507055006330205502025060550602502055020250605500633020550202506055060250205502025060550063309055090250705507025020550202507055006330205502025
+012300001f42723417266252b4221f42723417266252b4221e42721417266252a4221e42721417266252a4221e42721417266252a4221e42721417266252a4221f42723417266252b4221f42723417266252b422
+01230000040550402507055070250005500633070550702507055070250b0550b02502055006330b0550b025060550602509055090250105500633090550902507055070250e0550e02507055006330e0550e025
+01230000184271c4171f62524422184271c4171f625244221a4271f41723625264221a4271f4172362526422184271e4172362524422184271e41723625244221a4271f41723625264221a4271f4172362526422
+012300001f22723217266252b2271f21723217266252b2222122726217296251d2272121726217296251d2221f22723217266252b2271f21723217266252b2222022724217276252c2272021724217276252c222
+012300002042724417276252c4272041724417276252c4261f42723417266252b4271f41723417266252b4261d4272041724625294271d4172041724625294261f42723417266252b4271f41723417266252b426

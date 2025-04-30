@@ -22,10 +22,7 @@ function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
      mset(_x, _y, _tgt_tile)
      mset(_x + 16, _y, _block)
      _tx, _ty = ((_x - 32) << 1) + 1, (_y << 1) + 1
-     mset(_tx, _ty, _doflip and 253 or _tgt_tl)
-     mset(_tx + 1, _ty, _doflip and _tgt_tl or _tgt_tl + 1)
-     mset(_tx, _ty + 1, _doflip and 253 or _tgt_tl + 16)
-     mset(_tx + 1, _ty + 1, _doflip and _tgt_tl + 16 or _tgt_tl + 17)
+     if (_doflip) then put_mirrored_tile(_tx, _ty, _tgt_tl) else put_x16_tile(_tx, _ty, _tgt_tile) end
     end
    end
   end
@@ -111,4 +108,41 @@ function proc_cracked_floor(_x, _y)
  proc_cracked_floor(_x, _y + 1)
  -- return that we did something
  return true
+end
+
+
+-- roxy note: this only finds the first tile
+function find_tile_loc(_tile)
+ local _w, _h = g_level_width + 32, g_level_height
+ for _dx=32,_w do
+  for _dy=0,_h do
+   if (mget(_dx, _dy) == _tile) return {x=_dx-32, y=_dy}
+  end
+ end
+ -- if we get here, this means we didn't find it
+ return nil
+end
+
+function num_in_range(_num, _x1, _x2)
+ return _num >= _x1 and _num <= _x2
+end
+
+-- tile that's laid out as a block on the tilesheet
+function put_x16_tile(_x, _y, _tile)
+ put_tiles_fin(_x, _y, _tile, _tile + 1, _tile + 16, _tile + 17)
+end
+-- tile that's meant to be mirrored
+function put_mirrored_tile(_x, _y, _tile)
+ put_tiles_fin(_x, _y, 253, _tile, 253, _tile + 16)
+end
+-- fill all four tiles with the given tile
+function put_1x4_tile(_x, _y, _tile)
+ put_tiles_fin(_x, _y, _tile, _tile, _tile, _tile)
+end
+-- wrapper function for the above to save tokens
+function put_tiles_fin(_x, _y, _tl, _tr, _bl, _br)
+ mset(_x, _y, _tl)
+ mset(_x + 1, _y, _tr)
+ mset(_x, _y + 1, _bl)
+ mset(_x + 1, _y + 1, _br)
 end
