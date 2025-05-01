@@ -3,9 +3,17 @@ version 42
 __lua__
 
 function _init()
+ --[[
+	compression types:
+	0: end data stream
+	1: sprite sheet
+	2: sprite flags
+	3: music + sfx patterns
+ ]]
 
  g_offset = 0
  g_byte_max = 17151
+ g_dest_cart = "blobun_mini.p8"
 
  printh("Starting compression...")
  -- compress all the assets
@@ -14,21 +22,41 @@ function _init()
  compress_music("res/m_islander.p8")
 
  printh("Finished compression. "..tostr(g_offset).."/"..tostr(g_byte_max).." ("..tostr((g_offset/g_byte_max)*100).."% used)")
+ 
+ printh("Copying the compressed data to main game...")
+ -- first, clear out the cart of all data
+ memset(0x0, 0x0, 0x4300)
+ -- copy the blank data to the destination cart
+ cstore(0x0, 0x0, 0x4300, g_dest_cart)
+ -- now, copy the compressed data to the destination cart
+ cstore(0x0, 0x8000, g_offset, g_dest_cart)
+ printh("Compression routine complete. Data stored in cart successfully.")
 
  stop()
 end
 
+function write_type_len_bytes(_type, _bytes)
+ -- shift the current data right by one
+ memcpy(0x8000 + g_offset + 2, 0x8000 + g_offset, _bytes)
+ -- write the type and length
+ poke2(0x8000 + g_offset, (_type << 13) | _bytes)
+ g_offset += 2 + _bytes
+end
 
 function compress_spritesheet(_filename, _cartname)
  -- load the sprite sheet and associated sprite flags
  import(_filename)
- reload(0x3000, 0x3000, 0xFF, _cartname)
+ reload(0x3000, 0x3000, 0xff, _cartname)
  cstore(0x0, 0x0, 0x2000, _cartname)
  -- update the sprite sheet of the given cart
  -- compress it
  local _bytes = px9_comp(0, 0, 128, 128, 0x8000 + g_offset, sget)
- g_offset += _bytes
+ write_type_len_bytes(1, _bytes)
  printh("Compressed sprite sheet ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x2000) * 100).."%)")
+ -- add sprite flags to this
+ memcpy(0x0, 0x3000, 0xff)
+ _bytes = px9_comp(0, 0, 128, 4, 0x8000 + g_offset, sget)
+ write_type_len_bytes(2, _bytes)
 end
 
 function compress_music(_filename)
@@ -39,101 +67,13 @@ function compress_music(_filename)
  -- move the sfx data into the sprite sheet area (first 32 patterns)
  memcpy(0x80, 0x3200, 0x880)
  -- compress it
- local _bytes = px9_comp(0, 0, 128, 18, 0x8000 + g_offset, sget)
- g_offset += _bytes
+ local _bytes = px9_comp(0, 0, 128, 36, 0x8000 + g_offset, sget)
+ write_type_len_bytes(3, _bytes)
  printh("Compressed music ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x900) * 100).."%)")
  
 end
 
 -->8
--- px9 decompress
-
--- x0,y0 where to draw to
--- src   compressed data address
--- vget  read function (x,y)
--- vset  write function (x,y,v)
-
-function
-	px9_decomp(x0,y0,src,vget,vset)
-
-	local function vlist_val(l, val)
-		-- find position and move
-		-- to head of the list
-
-		local v,i=l[1],1
-		while v!=val do
-			i+=1
-			v,l[i]=l[i],v
-		end
-		l[1]=val
-	end
-
-	-- read an m-bit num from src
-	local function getval(m)
-		-- $src: 4 bytes at flr(src)
-		-- >>src%1*8: sub-byte pos
-		-- <<32-m: zero high bits
-		-- >>>16-m: shift to int
-		local res=$src >> src%1*8 << 32-m >>> 16-m
-		src+=m>>3 --m/8
-		return res
-	end
-
-	-- get number plus n
-	local function gnp(n)
-		local bits=0
-		repeat
-			bits+=1
-			local vv=getval(bits)
-			n+=vv
-		until vv<(1<<bits)-1
-		return n
-	end
-
-	-- header
-
-	local
-		w_1,h_1,      -- w-1,h-1
-		eb,el,pr,
-		splen,
-		predict
-		=
-		gnp"0",gnp"0",
-		gnp"1",{},{},
-		0
-		--,nil
-
-	for i=1,gnp"1" do
-		add(el,getval(eb))
-	end
-	for y=y0,y0+h_1 do
-		for x=x0,x0+w_1 do
-			splen-=1
-
-			if splen<1 then
-				splen,predict=gnp"1",not predict
-			end
-
-			local a=y>y0 and vget(x,y-1) or 0
-
-			-- create vlist if needed
-			local l=pr[a] or {unpack(el)}
-			pr[a]=l
-
-			-- grab index from stream
-			-- iff predicted, always 1
-
-			local v=l[predict and 1 or gnp"2"]
-
-			-- update predictions
-			vlist_val(l, v)
-			vlist_val(el, v)
-
-			-- set
-			vset(x,y,v)
-		end
-	end
-end
 
 function
 	px9_comp(x0,y0,w,h,dest,vget)

@@ -6,4 +6,5 @@ php level_convert.php
 echo Performing compression routine...
 start /wait pico8.exe -x compress_assets.p8
 echo Starting the game...
-start pico8.exe -run blobun_mini.p8
+start /wait pico8.exe -run blobun_mini.p8
+echo Game closed
