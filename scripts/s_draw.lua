@@ -80,6 +80,14 @@ function draw_gameplay()
  if (g_level_win or g_level_lose) then
   draw_wavy_text(g_level_win and "stage clear!" or "❎ undo", g_level_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
+
+ -- stage transition?
+ local _anim = g_intro_anim * g_outro_anim
+ if (_anim < 1) then
+  local _w = 64 * cos(_anim >> 2)
+  rectfill(0, 0, _w, 127, 1)
+  rectfill(127 - _w, 0, 127, 127, 1)
+ end
 end
 
 function do_tile_mirror()

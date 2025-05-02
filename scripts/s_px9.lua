@@ -1,3 +1,25 @@
+
+
+function decompress_sprites(_index)
+ holdframe()
+ -- load them into the spritesheet area
+ px9_decomp(0, 0, g_px9_sprites[_index], sget, sset)
+ -- load the sprite flags into the screen data area
+ px9_decomp(0, 0, g_px9_spr_flags[_index], pget, pset)
+ -- copy the sprite flags to the correct spot
+ memcpy(0x3000, 0x6000, 0xff)
+end
+
+function decompress_music(_index)
+ holdframe()
+ -- load data into the screen area
+ px9_decomp(0, 0, g_px9_music[_index], pget, pset)
+ -- copy the music patterns
+ memcpy(0x3100, 0x6000, 0x80)
+ -- copy the sfx in the right spot
+ memcpy(0x3200, 0x6080, 0x880)
+end
+
 -- px9 decompress
 
 -- x0,y0 where to draw to

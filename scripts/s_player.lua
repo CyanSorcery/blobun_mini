@@ -109,15 +109,6 @@ function player_step(_obj)
  -- if we've won, make stephanie face down
  if (g_level_win) _obj.dir = 3
 
- -- move camera while binding it to the stage edges/centering it
- local _lw, _lh = g_level_width << 4, g_level_height << 4
- g_cam_x = (g_level_width > 8)
-    and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
-    or (_lw >> 1) - 56
- 
- g_cam_y = (g_level_height > 7)
-    and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
-    or (_lh >> 1) - 60
 end
 
 function player_end_move(_obj)

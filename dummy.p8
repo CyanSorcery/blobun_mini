@@ -3,12 +3,20 @@ version 42
 __lua__
 
 function _init()
+memset(0x2000, 15, 0x1000)
+ -- move the music pattern data into the map area (first 32 frames)
+ --memcpy(0x2000, 0x3100, 0x80)
+ -- move the sfx data into the map area (first 32 patterns)
+ --memcpy(0x2080, 0x3200, 0x880)
+  memcpy(0x2000, 0x3000, 0xff)
+
+cstore(0x2000, 0x2000, 0x1000)
 end
 function _update()
 end
 function _draw()
  rectfill(0, 0, 127, 127, 0)
- memcpy(0x6000, 0x3000, 0xff)
+ memcpy(0x6000, 0x2000, 0x1000)
 end
 
 __gfx__
