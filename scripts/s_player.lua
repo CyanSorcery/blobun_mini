@@ -262,9 +262,9 @@ function player_end_move(_obj)
  if (_doslime == true) then
   g_level_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
-  local _x, _y = (_obj.x << 1) + 1, (_obj.y << 1) + 1
+  local _dx, _dy = (_obj.x << 1) + 1, (_obj.y << 1) + 1
   local _pstate = _obj.pstate << 1
-  put_x16_tile(_x, _y, 218 + _pstate)
+  put_x16_tile(_dx, _dy, 218 + _pstate)
  end
 end
 

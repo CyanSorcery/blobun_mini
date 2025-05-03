@@ -25,9 +25,11 @@ function part_create_item_grab(_x, _y, _col)
  end
 end
 
+--[[
 function part_create_sparkle_raise(_x, _y)
  part_create(_x, _y, 0.5, 90, 168, 171, 7, 20)
 end
+]]
 
 -- sphere 152, 155
 -- sparkle 168, 171

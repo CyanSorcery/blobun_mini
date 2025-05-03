@@ -9,6 +9,7 @@ function _init()
 	1: sprite sheet
 	2: sprite flags
 	3: music + sfx patterns
+	4: map
  ]]
 
  g_offset = 0
@@ -17,9 +18,11 @@ function _init()
 
  printh("Starting compression...")
  -- compress all the assets
+ compress_spritesheet("res/s_title.png", "res/s_title.p8")
  compress_spritesheet("res/s_game.png", "res/s_game.p8")
  compress_music("res/m_pipeworks.p8")
  compress_music("res/m_islander.p8")
+ compress_map("res/s_title.p8", 0, 0, 32, 12)
 
  printh("Finished compression. "..tostr(g_offset).."/"..tostr(g_byte_max).." ("..tostr((g_offset/g_byte_max)*100).."% used)")
  
@@ -70,6 +73,17 @@ function compress_music(_filename)
  local _bytes = px9_comp(0, 0, 128, 36, 0x8000 + g_offset, sget)
  write_type_len_bytes(3, _bytes)
  printh("Compressed music ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x900) * 100).."%)")
+ 
+end
+
+function compress_map(_filename, _x, _y, _w, _h)
+ -- load the map from the given cart into this one
+ reload(0x2000, 0x2000, 0x1000, _filename)
+ -- store the dimensions of the selection
+ -- compress it
+ local _bytes = px9_comp(_x, _y, _w, _h, 0x8000 + g_offset, mget)
+ write_type_len_bytes(4, _bytes)
+ printh("Compressed map from ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / (_w * _h)) * 100)..") at "..tostr(_x)..","..tostr(_y).." with size "..tostr(_w)..","..tostr(_h))
  
 end
 

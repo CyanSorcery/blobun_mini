@@ -20,6 +20,12 @@ function decompress_music(_index)
  memcpy(0x3200, 0x6080, 0x880)
 end
 
+function decompress_map(_index, _x, _y)
+ holdframe()
+ -- load the data into the map area
+ px9_decomp(_x, _y, g_px9_map[_index], mget, mset)
+end
+
 -- px9 decompress
 
 -- x0,y0 where to draw to
