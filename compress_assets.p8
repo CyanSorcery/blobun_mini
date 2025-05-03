@@ -16,15 +16,23 @@ function _init()
  g_byte_max = 17151
  g_dest_cart = "blobun_mini.p8"
 
+ g_bytes_total = {0, 0, 0, 0}
+
  printh("Starting compression...")
  -- compress all the assets
  compress_spritesheet("res/s_title.png", "res/s_title.p8")
  compress_spritesheet("res/s_game.png", "res/s_game.p8")
  compress_music("res/m_pipeworks.p8")
  compress_music("res/m_islander.p8")
+ compress_music("res/m_snowdrift.p8")
  compress_map("res/s_title.p8", 0, 0, 32, 12)
 
  printh("Finished compression. "..tostr(g_offset).."/"..tostr(g_byte_max).." ("..tostr((g_offset/g_byte_max)*100).."% used)")
+ local _spr_bytes = g_bytes_total[1] + g_bytes_total[2]
+ printh("Sprite Data: "..tostr(_spr_bytes).." bytes ("..tostr((_spr_bytes / g_byte_max) * 100).."%)")
+ printh("Music Data: "..tostr(g_bytes_total[3]).." bytes ("..tostr((g_bytes_total[3] / g_byte_max) * 100).."%)")
+ printh("Misc Data: "..tostr(g_bytes_total[4]).." bytes ("..tostr((g_bytes_total[4] / g_byte_max) * 100).."%)")
+ printh("Free Bytes: "..tostr(g_byte_max - g_offset).." bytes ("..tostr(((g_byte_max - g_offset) / g_byte_max) * 100).."%)")
  
  printh("Copying the compressed data to main game...")
  -- first, clear out the cart of all data
@@ -44,6 +52,8 @@ function write_type_len_bytes(_type, _bytes)
  -- write the type and length
  poke2(0x8000 + g_offset, (_type << 13) | _bytes)
  g_offset += 2 + _bytes
+
+ g_bytes_total[_type] += _bytes
 end
 
 function compress_spritesheet(_filename, _cartname)
