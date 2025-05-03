@@ -46,7 +46,8 @@ function draw_gameplay()
  map(0, 0, 0, 0, 32, 32, 2)
 
  -- draw objects
- draw_objects()
+ foreach(g_object_list, function(_obj) _obj:ondraw() end)
+
  draw_particles()
  
  -- get ready to draw the status bar at the top
@@ -213,55 +214,14 @@ end
 
 
 function draw_arrows()
- -- fetch the arrows
- local _arrow_list = g_arrow_list
- local _arrow_count = count(_arrow_list)
- local _arrow, _dir
- -- draw each one
- for i=1,_arrow_count do
-  _arrow = _arrow_list[i]
+ local _dir
+ for _arrow in all(g_arrow_list) do
   _dir = _arrow.dir
   spr(_dir % 2 == 0 and 254 or 255, _arrow.x, _arrow.y, 1, 1, cos(_dir >> 2) < 0, sin(_dir >> 2) >= 0)
  end
 
 end
 
-function draw_objects()
- -- fetch the object list
- local _obj_list = g_object_list
- local _obj_count = count(_obj_list)
- local _obj, _type, _key_spr, _x,  _y, _sx, _sy, _modx
-
- -- process each of the objects
- for i=1,_obj_count do
-  _obj = _obj_list[i]
-  _type = _obj.type
-
-  -- reset this
-  _key_spr = 0
-
-  -- are we drawing stephanie?
-  if (_type == 0) then
-   if (g_puzz_use_portal == false) player_draw(_obj)
-  elseif (_type == 16) then
-    spr(_obj.spr, _obj.x + 4, _obj.y + (sin(_obj.anim) * 2), 1, 2)
-  else
-   
-   -- do we draw a key?
-   _key_spr = _obj.spr
-   -- skip octogems that aren't the current one?
-   if (_type >= 8 and _type <= 15 and _type - 8 != g_puzz_octogems) _key_spr = 0
-
-   if (_key_spr != 0) then
-    _x, _y, _sx, _sy, _modx = _obj.x, _obj.y + (sin(_obj.anim) * 2), (_key_spr % 16) << 3, flr(_key_spr / 16) << 3, ceil(sin(_obj.spin * 0.5) * -8)
-    if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
-    sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
-    sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
-   end
-  end
-
- end
-end
 
 function draw_wavy_text(_str, _x, _y, _col, _px)
  local _len = #_str

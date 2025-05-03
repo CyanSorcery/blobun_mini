@@ -123,9 +123,6 @@ end
 
 
 function _update()
- -- get menu count for later
- local _m_count = count(g_menu);
-
  -- run fillp animation
  g_fillp_anim += 0.2
  g_fillp_anim %= 4
@@ -143,8 +140,8 @@ function _update()
   g_title_scroll += 0.01
   g_title_scroll %= 1
   
-  -- create title menu
-  if (_m_count == 0 and btnp(4)) then menu_create(24, 96, 80, {
+  -- create title menu?
+  if (count(g_menu) == 0 and btnp(4)) then menu_create(24, 96, 80, {
    menu_item_base("start game", function() 
     printh("clicked start game")
    end),
@@ -202,8 +199,6 @@ function _update()
 end
 
 function _draw()
- -- get menu count for later
- local _m_count = count(g_menu);
  -- title
  if (g_game_mode == 0) then
  cls(0)
@@ -217,7 +212,7 @@ function _draw()
 
  print("2025 cyansorcery", 32, 122, 3)
  
- if (_m_count == 0) draw_wavy_text("press 🅾️ to start!", 28, 96, 1, 1.4)
+ if (count(g_menu) == 0) draw_wavy_text("press 🅾️ to start!", 28, 96, 1, 1.4)
   -- gameplay
  elseif (g_game_mode == 2) then
 
@@ -344,7 +339,7 @@ function unpack_level(_index)
    -- don't do this unless the center tile is 0 since
    -- we can know in advance we wont put a tile on the puzzle floor
    if (_mcc == 0) then
--- figure out what each tile is gonna be
+   -- figure out what each tile is gonna be
     _tile = calc_autotile(_mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr)
     -- place the tile into the work area?
     if (_tile > 0 and _tile < 15) mset(_xc + 32, _yc, _tile)
@@ -376,8 +371,7 @@ function unpack_level(_index)
  -- get the level width data that we stored earlier
  _level_width = g_level_width
  _x, _y = 0, 0
- for i=1,_level_arrlen do
-  _tile = _level_data[i]
+ for _tile in all(_level_data) do
   mset(_x + 32, _y, _tile)
   -- place a floor tile + allow collision here?
   -- note: 0 off means cant pass, 1 means can pass, 2 means slimed
@@ -407,11 +401,11 @@ function unpack_level(_index)
 
   -- octogem
   for j=0,7 do
-   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_key(_x, _y, 8 + j, 87))
+   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_octogem(_x, _y, 8 + j))
   end
 
   -- generic key
-  if (_tile == 44) add(g_object_list, create_obj_key(_x, _y, 16, 159))
+  if (_tile == 44) add(g_object_list, create_obj_gen_key(_x, _y))
 
   _x += 1
   if (_x >= _level_width) then
@@ -459,8 +453,7 @@ function calc_lava_water()
  local _t = {176, 192}
  local _id, _id_m, _tile, _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb = 0
  local _w, _h = (g_level_width << 1) + 1, (g_level_height << 1) + 1
- for i=1,2 do
-  _id = _t[i]
+ for _id in all(_t) do
   _id_m = _id + 15
   for _x=0,_w do
    _xl, _xr = _x - 1, min(_x + 1, _w)
@@ -484,12 +477,10 @@ function calc_lava_water()
 end
 
 function calc_autotile(_mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr)
- local _tile = 0
- if (_mbl + _mbc + _mcl + _mcc == 0) _tile |= 1
- if (_mbr + _mbc + _mcr + _mcc == 0) _tile |= 2
- if (_mtr + _mtc + _mcr + _mcc == 0) _tile |= 4
- if (_mtl + _mtc + _mcl + _mcc == 0) _tile |= 8
- return _tile
+ return (_mbl + _mbc + _mcl + _mcc == 0 and 1 or 0)
+  | (_mbr + _mbc + _mcr + _mcc == 0 and 2 or 0)
+  | (_mtr + _mtc + _mcr + _mcc == 0 and 4 or 0)
+  | (_mtl + _mtc + _mcl + _mcc == 0 and 8 or 0)
 end
 
 -->8
@@ -508,18 +499,7 @@ end
 -- 16: generic key
 
 function proc_objects()
-
- -- fetch the object list
- for _obj in all(g_object_list) do
-  if (_obj.type == 0) then player_step(_obj)
-  elseif (_obj.iskey) then
-   -- puzzle key
-   _obj.anim += 0.02
-   _obj.anim %= 1
-   _obj.spin += 0.035
-   _obj.spin %= 1
-  end
- end
+ foreach(g_object_list, function(_obj) _obj:onstep() end)
 
  for _del in all(g_obj_delete) do
   for _obj in all(g_object_list) do
@@ -554,7 +534,38 @@ function create_obj_key(_x, _y, _key, _spr)
     spr=_spr, -- our key sprite
     anim=rnd(1), -- animation offset
     spin=rnd(1), -- for rotating
+    onstep = function(self)
+     self.anim += 0.02
+     self.anim %= 1
+     self.spin += 0.035
+     self.spin %= 1
+    end,
+    ondraw = draw_floating_key
  }
+end
+
+function create_obj_octogem(_x, _y, _key)
+ local _obj = create_obj_key(_x, _y, _key, 87)
+ _obj.ondraw = function(self)
+  -- only draw this octogem if it's the current one
+  if (self.type - 8 == g_puzz_octogems) draw_floating_key(self)
+ end
+ return _obj
+end
+
+function create_obj_gen_key(_x, _y)
+ local _obj = create_obj_key(_x, _y, 16, 159)
+ _obj.ondraw = function(self)
+  spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
+ end
+ return _obj
+end
+
+function draw_floating_key(self)
+ local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, flr(self.spr / 16) << 3, ceil(sin(self.spin * 0.5) * -8)
+ if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
+ sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
+ sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
 end
 
 

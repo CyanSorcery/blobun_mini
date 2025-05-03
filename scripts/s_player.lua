@@ -19,6 +19,8 @@ function player_create(_x, _y)
   startturny = _y,
   isdead = false, -- when the puzzle element destroys stephanie
   haskey = false, -- player is carrying generic key
+  onstep = player_step,
+  ondraw = player_draw
  }, 1)
 
 end
@@ -280,7 +282,8 @@ end
 
 function player_draw(_obj)
  -- if the player was destroyed by something, don't draw
- if (_obj.isdead) return
+ -- also don't draw if the player is in a floor portal
+ if (_obj.isdead or g_puzz_use_portal) return
 
  local _dir, _x, _y, _offset, _dir = _obj.dir, (_obj.x << 4), (_obj.y << 4)
  
@@ -360,8 +363,7 @@ function redraw_slimetrail()
  
  -- add wavy effect to her
  local _fx, _fy, _offset
- for i=0,2 do
-  _offset = i << 3
+ for _offset=0,16,8 do
   _dx1 = 24 + _offset
   clip(_dx1, 104, 8, 8)
   for _subx=0,7 do

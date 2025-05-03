@@ -37,14 +37,14 @@ end
 
 function add_undo()
  local _undo = {}
- local l_object_list, l_count = g_object_list, count(g_object_list)
  -- copy all object references
  _undo.obj_list = {}
- for i=1,l_count do
-  _undo.obj_list[i] = l_object_list[i]
+ for _k,_v in pairs(g_object_list) do
+ _undo.obj_list[_k] = g_object_list[_k]
  end
+
  -- store player parameters
- local _player = l_object_list[1]
+ local _player = g_object_list[1]
  _undo.player_x, _undo.player_y, _undo.player_dir, _undo.player_pstate, _undo.player_coins, _undo.tiles_touched, _undo.player_octogems, _undo.player_haskey, _undo.zapper_turn = _player.startturnx, _player.startturny, _player.dir, _player.pstate, g_puzz_coins, g_level_touched, g_puzz_octogems, _player.haskey, g_puzz_zapper_turn
  add(g_undo_queue, _undo)
  -- store playfield
