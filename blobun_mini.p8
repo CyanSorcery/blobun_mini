@@ -114,8 +114,9 @@ function _init()
  --unpack_level(g_level_index)
  
  -- tmp, put the map data into the game
- decompress_sprites(1)
- decompress_map(1, 0, 0)
+ --decompress_sprites(1)
+ --decompress_map(1, 0, 0)
+ unpack_level(g_level_index)
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 end
@@ -238,7 +239,9 @@ end
 -- this function unpacks the level to the top left corner of the map
 function unpack_level(_index)
 
- -- tmp, decompress sprites and music now
+ g_game_mode = 2
+
+ -- make sure sprites and the appropriate music are decompressed
  decompress_sprites(2)
  decompress_music(1)
  --music(0, 0, 7)
@@ -330,7 +333,7 @@ function unpack_level(_index)
 
  for _xc=0,31 do
   -- set our left and right x, without going into the work area
-  _xl, _xr = _xc - 1, min(_x + 1, 31)
+  _xl, _xr = _xc - 1, min(_xc + 1, 31)
   -- re-initialize the top and center rows (assume they're 0)
   _mtl, _mtc, _mtr, _mcl, _mcc, _mcr = 0, 0, 0, 0, 0, 0
   for _yc=0,31 do
@@ -389,22 +392,22 @@ function unpack_level(_index)
   if (_tile == 33) player_create(_x, _y)
   -- puzzle keys
   for j=0,4 do
-   if (_tile == 2 | (i << 5)) add(g_object_list, create_obj_key(_x, _y, j + 1, 83 + j))
+   if (_tile == 2 | (j << 5)) add(g_object_list, create_obj_key(_x, _y, j + 1, 83 + j))
   end
   
   -- state keys
   for j=0,2 do
-   if (_tile == 8 | (i << 5)) add(g_object_list, create_obj_key(_x, _y, 5 + j, 230 + j))
+   if (_tile == 8 | (j << 5)) add(g_object_list, create_obj_key(_x, _y, 5 + j, 230 + j))
   end
 
   -- arrows
   for j=0,3 do
-   if (_tile == 17 | (i << 5)) add_hint_arrow(_x, _y, j)
+   if (_tile == 17 | (j << 5)) add_hint_arrow(_x, _y, j)
   end
 
   -- octogem
   for j=0,7 do
-   if (_tile == 15 | (i << 5)) add(g_object_list, create_obj_key(_x, _y, 8 + j, 87))
+   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_key(_x, _y, 8 + j, 87))
   end
 
   -- generic key
@@ -507,40 +510,28 @@ end
 function proc_objects()
 
  -- fetch the object list
- local _obj_list, _obj, _type = g_object_list
- local _obj_count, _dopart = count(_obj_list), true
- 
- -- process each of the objects
- for i=1,_obj_count do
-  _obj = _obj_list[i]
-  _type = _obj.type
-  
-  if (_type == 0) then
-   player_step(_obj)
+ for _obj in all(g_object_list) do
+  if (_obj.type == 0) then player_step(_obj)
   elseif (_obj.iskey) then
    -- puzzle key
    _obj.anim += 0.02
    _obj.anim %= 1
    _obj.spin += 0.035
    _obj.spin %= 1
-
   end
  end
- 
- -- delete any objects marked for deletion
- local _poskey
- while (count(g_obj_delete) > 0) do
-  _poskey, _obj_count = g_obj_delete[1], count(_obj_list)
-  for i=1,_obj_count do
-   if (_obj_list[i].pos == _poskey) then
-    deli(_obj_list, i)
+
+ for _del in all(g_obj_delete) do
+  for _obj in all(g_object_list) do
+   if (_obj.pos == _del) then
+    del(g_object_list, _obj)
     break
    end
   end
-  deli(g_obj_delete, 1)
+  del(g_obj_delete, _del)
  end
+ 
 end
-
 
 -- this adds a hint arrow on the floor
 -- 0: right, 1: up, 2: left, 3: down
