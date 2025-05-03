@@ -13,6 +13,7 @@ function _init()
 
  -- figure out what kind of compressed data we have
  g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map = {}, {}, {}, {}
+ g_px9_ind_sprites, g_px9_ind_music = 0, 0
 
  local _offset, _data = 0x8000, peek2(0x8000)
  -- note: this table matches the type order

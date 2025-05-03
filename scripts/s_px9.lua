@@ -1,6 +1,9 @@
 
 
 function decompress_sprites(_index)
+ -- don't do it if we don't have to
+ if (g_px9_ind_sprites == _index) return false
+
  holdframe()
  -- load them into the spritesheet area
  px9_decomp(0, 0, g_px9_sprites[_index], sget, sset)
@@ -8,9 +11,14 @@ function decompress_sprites(_index)
  px9_decomp(0, 0, g_px9_spr_flags[_index], pget, pset)
  -- copy the sprite flags to the correct spot
  memcpy(0x3000, 0x6000, 0xff)
+ -- remember this was the last decompressed
+ g_px9_ind_sprites = _index
 end
 
 function decompress_music(_index)
+ -- don't do it if we don't have to
+ if (g_px9_ind_music == _index) return false
+
  holdframe()
  -- load data into the screen area
  px9_decomp(0, 0, g_px9_music[_index], pget, pset)
@@ -18,6 +26,8 @@ function decompress_music(_index)
  memcpy(0x3100, 0x6000, 0x80)
  -- copy the sfx in the right spot
  memcpy(0x3200, 0x6080, 0x880)
+ -- remember this was the last decompressed
+ g_px9_ind_music = _index
 end
 
 function decompress_map(_index, _x, _y)
