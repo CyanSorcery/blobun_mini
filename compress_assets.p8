@@ -10,13 +10,14 @@ function _init()
 	2: sprite flags
 	3: music + sfx patterns
 	4: map
+	5: game sfx
  ]]
 
  g_offset = 0
  g_byte_max = 17151
  g_dest_cart = "blobun_mini.p8"
 
- g_bytes_total = {0, 0, 0, 0}
+ g_bytes_total = {0, 0, 0, 0, 0}
 
  printh("Starting compression...")
  -- compress all the assets
@@ -26,13 +27,15 @@ function _init()
  compress_music("res/m_islander.p8")
  compress_music("res/m_snowdrift.p8")
  compress_map("res/s_title.p8", 0, 0, 32, 12)
+ compress_sfx("res/sfx.p8")
 
- printh("Finished compression. "..tostr(g_offset).."/"..tostr(g_byte_max).." ("..tostr((g_offset/g_byte_max)*100).."% used)")
+ printh("Finished compression. "..g_offset.."/"..g_byte_max.." ("..((g_offset/g_byte_max)*100).."% used)")
  local _spr_bytes = g_bytes_total[1] + g_bytes_total[2]
- printh("Sprite Data: "..tostr(_spr_bytes).." bytes ("..tostr((_spr_bytes / g_byte_max) * 100).."%)")
- printh("Music Data: "..tostr(g_bytes_total[3]).." bytes ("..tostr((g_bytes_total[3] / g_byte_max) * 100).."%)")
- printh("Misc Data: "..tostr(g_bytes_total[4]).." bytes ("..tostr((g_bytes_total[4] / g_byte_max) * 100).."%)")
- printh("Free Bytes: "..tostr(g_byte_max - g_offset).." bytes ("..tostr(((g_byte_max - g_offset) / g_byte_max) * 100).."%)")
+ printh("Sprite Data: ".._spr_bytes.." bytes ("..((_spr_bytes / g_byte_max) * 100).."%)")
+ printh("Music Data: "..g_bytes_total[3].." bytes ("..((g_bytes_total[3] / g_byte_max) * 100).."%)")
+ local _spr_bytes = g_bytes_total[4] + g_bytes_total[5]
+ printh("Misc Data: ".._spr_bytes.." bytes ("..((_spr_bytes / g_byte_max) * 100).."%)")
+ printh("Free Bytes: "..(g_byte_max - g_offset).." bytes ("..(((g_byte_max - g_offset) / g_byte_max) * 100).."%)")
  
  printh("Copying the compressed data to main game...")
  -- first, clear out the cart of all data
@@ -84,6 +87,17 @@ function compress_music(_filename)
  write_type_len_bytes(3, _bytes)
  printh("Compressed music ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x900) * 100).."%)")
  
+end
+
+function compress_sfx(_filename)
+ -- load the sfx from the given cart into this one (last 32 patterns)
+ reload(0x3A80, 0x3A80, 0x880, _filename)
+ -- move the data into the sprite sheet area
+ memcpy(0x0, 0x3A80, 0x880)
+ -- compress it
+ local _bytes = px9_comp(0, 0, 128, 34, 0x8000 + g_offset, sget)
+ write_type_len_bytes(5, _bytes)
+ printh("Compressed sfx ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x880) * 100).."%)")
 end
 
 function compress_map(_filename, _x, _y, _w, _h)

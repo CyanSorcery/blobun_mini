@@ -36,6 +36,12 @@ function decompress_map(_index, _x, _y)
  px9_decomp(_x, _y, g_px9_map[_index], mget, mset)
 end
 
+function decompress_sfx(_index)
+ holdframe()
+ px9_decomp(0, 0, g_px9_sfx[_index], pget, pset)
+ memcpy(0x3A80, 0x6000, 0x880)
+end
+
 -- px9 decompress
 
 -- x0,y0 where to draw to

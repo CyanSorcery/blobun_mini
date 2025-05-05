@@ -12,12 +12,12 @@ function _init()
  memset(0x0, 0, 0x4300)
 
  -- figure out what kind of compressed data we have
- g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map = {}, {}, {}, {}
+ g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx = {}, {}, {}, {}, {}
  g_px9_ind_sprites, g_px9_ind_music = 0, 0
 
  local _offset, _data = 0x8000, peek2(0x8000)
  -- note: this table matches the type order
- local _t = {g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map}
+ local _t = {g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx}
  while _data != 0 do
   -- figure our what type of data we have, offset, and length
   add(_t[(_data >> 13)&0x7], _offset+2)
@@ -32,6 +32,8 @@ function _init()
  g_cam_x, g_cam_y = 0, -8
  -- levels
  #include res/r_levels.lua
+ -- sound effects
+ #include res/r_sfx.lua
 
  --[[
    gameplay modes
@@ -40,6 +42,9 @@ function _init()
    2: gameplay
  ]]
  g_game_mode = 0
+
+ -- if we're to play a sound effect this frame, this is the data for it
+ g_play_sfx = nil
 
  g_fillp_diag = {0xc936, 0x6c93, 0x36c9, 0x936c}
  g_fillp_anim, g_wavy_anim = 0, 0
@@ -109,6 +114,9 @@ function _init()
  
  -- this holds any menus that are on screen right now
  g_menu = {}
+
+ -- decompress the game's sound effects
+ decompress_sfx(1)
 
  -- unpack the first level
  --unpack_level(g_level_index)
@@ -196,6 +204,12 @@ function _update()
  -- process menus (if we have em)
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
+ -- play a sound effect this frame?
+ if (g_play_sfx != nil) then
+  sfx(g_play_sfx[1], 3, g_play_sfx[2], g_play_sfx[3])
+  g_play_sfx = nil
+ end
+
 end
 
 function _draw()
@@ -239,7 +253,7 @@ function unpack_level(_index)
  -- make sure sprites and the appropriate music are decompressed
  decompress_sprites(2)
  decompress_music(1)
- --music(0, 0, 7)
+ music(0, 0, 7)
 
  -- clear the map to be ready for incoming data
  memset(0x2000, 0, 0x1000)
@@ -571,12 +585,16 @@ end
 
 
 -->8
--- includes
 #include scripts/s_draw.lua
+-->8
 #include scripts/s_util.lua
+-->8
 #include scripts/s_player.lua
+-->8
 #include scripts/s_particles.lua
+-->8
 #include scripts/s_px9.lua
+-->8
 #include scripts/s_menu.lua
 
 __gfx__
@@ -711,7 +729,10 @@ f489c0594c596a12f38bc3fdeb9a3a35df7a7d37d7bd4ac12e17cc0f9bc3fdeb9dc1dd33d777d37d
 __map__
 f9637ff4f8e187bbdb76fe13dffd4f8eaae0beaeefdb8e698e69f65ffa7d5fb76ddbb6adffdaa5ceef8f5f12619ee911fbc9f1ff37c3ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f230c1581ff971faeffbf66bfe3018201a100914c289539bd0e0a
 8946a492e9844aa956ac002c269bd16ab61b2ea7dbf18041e19058341e9149e592098fcba151e9945ab55eb159ed961b098bc764f3199d56afd9fe93244992244992397a3c571fdf8f3ddffb87eb7ff3c72fff244992244992fcf4d76ffffdf8e7affffefcf7efff83ffc3ffe2b75ffe1fff93ffcbffe6fff33ffa3ffdaffe5f
-ffb3ffdbffeefff7c76fffcfffe1fff17ff9fffc9ffe5fffb7ffdffff1fff97ffdfffe9fffdffff7ff7f204992244992e4ff1ffcff85fffff0ff27feffc5ffdff8ff1fff7fe4ff9ffcff95fffff2ff67feffcdffdff9ed97ffbff0ff7ffeffd0ff3ffaff4bfdff4fff7feaff5ffdffadfffff5ffc7feffd90fbf39ffffff0400
+ffb3ffdbffeefff7c76fffcfffe1fff17ff9fffc9ffe5fffb7ffdffff1fff97ffdfffe9fffdffff7ff7f204992244992e4ff1ffcff85fffff0ff27feffc5ffdff8ff1fff7fe4ff9ffcff95fffff2ff67feffcdffdff9ed97ffbff0ff7ffeffd0ff3ffaff4bfdff4fff7feaff5ffdffadfffff5ffc7feffd90fbf39ffffff041f
+a1fffffff0ffe93f102a3596db7f48fcffff15e1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ff
+ffdf08ffffbf11feff7f23ecc8f47025f6ac9ab492fa7f25bbbeefdcf61dddbbedd8bd1f76ee8ffdd0efed1f3fec9cfb5dbe9de7f5fc71f97f3fc9b53dbff8c31fdf768ab7dbb1edde766c13e9b65fb67569137d7e207eb0ebfd438e371efdc3c1e38f208fefe69cd386fde175fce10dce3c3f4c5c9abce68f38f63cb7f48fa4
+7f78e7971fbcfb25679e3ccb1f831dfbe4128f5d386ff9e1d975d7cefc020e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
