@@ -39,14 +39,6 @@ function _init()
  -- sound effects
  #include res/r_sfx.lua
 
- --[[
-   gameplay modes
-   0: title screen
-   1: stage select
-   2: gameplay
- ]]
- g_game_mode = 0
-
  -- if we're to play a sound effect this frame, this is the data for it
  g_play_sfx = nil
 
@@ -66,6 +58,10 @@ function _init()
  g_level_select = g_level_index
  -- when we're to load a new puzzle, this is set
  g_level_target = nil
+ -- what game mode we start with
+ g_game_mode = nil
+ -- when we're to load a new gameplay mode, this is set
+ g_game_mode_target = 0
  -- current level name
  g_level_name = "Unset"
  -- current level size
@@ -111,7 +107,7 @@ function _init()
  g_particles = {}
  
  -- intro and exit animations for coming and going in stages
- g_intro_anim, g_outro_anim = 0, 1
+ g_intro_anim, g_outro_anim = 0, 0
 
  -- animation for title screen background scrolling
  g_title_scroll   = 0
@@ -121,18 +117,34 @@ function _init()
 
  -- decompress the game's sound effects
  decompress_sfx(1)
-
- -- unpack the first level
- --unpack_level(g_level_index)
  
- -- tmp, put the map data into the game
- --decompress_sprites(1)
- --decompress_map(1, 0, 0)
- unpack_level(g_level_index)
+ -- send us to the intro
+ unpack_intro()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 end
 
+
+ --[[
+   gameplay modes
+   0: title screen
+   1: stage select
+   2: gameplay
+   3: intro screen
+ ]]
+
+-- the second parameter may be nil, that's fine
+function set_game_mode(_mode, _level_target)
+ g_game_mode_target = _mode
+ g_level_target = _level_target
+ -- get rid of any menus
+ for _pane in all(g_menu) do
+  _pane.m_anim_incr = -0.25
+ end
+ for i=1,5 do menuitem(i) end
+ -- stop music
+ music(-1)
+end
 
 function _update()
  -- run fillp animation
@@ -149,60 +161,22 @@ function _update()
 
  -- title
  if (g_game_mode == 0) then
-  g_title_scroll += 0.01
-  g_title_scroll %= 1
-  
-  -- create title menu?
-  if (count(g_menu) == 0 and btnp(4)) then menu_create(24, 96, 80, {
-   menu_item_base("start game", function() 
-    printh("clicked start game")
-   end),
-   menu_item_base("options", function()
-    printh("clicked options")
-    menu_create(24, 96, 80, {
-      menu_item_base("option 1", function() end),
-      menu_item_base("option 2", function() end),
-      menu_item_base("option 3", function() end),
-      menu_item_base("option 4", function() end),
-      menu_item_base("option 5", function() end)
-    })
-   end),
-   menu_item_base("credits", function()
-    printh("clicked credits")
-   end)
- })
- end
-
+  update_title()
  -- gameplay
  elseif (g_game_mode == 2) then
-  -- update blinking
-  g_player_blink -= 1
-  if (g_player_blink <= 0) g_player_blink = 30 + flr(rnd(60))
-
-  g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + 0.2 or g_bottom_msg_anim - 0.2, 1)
-  
-  -- move camera while binding it to the stage edges/centering it
-  local _obj = g_object_list[1]
-  local _lw, _lh = g_level_width << 4, g_level_height << 4
-  g_cam_x = (g_level_width > 8)
-     and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
-     or (_lw >> 1) - 56
- 
-  g_cam_y = (g_level_height > 7)
-     and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
-     or (_lh >> 1) - 60
-
-  -- process objects, but only if the stage animation is done
-  if (g_intro_anim * g_outro_anim == 1) then
-   proc_objects()
-   proc_particles()
-  end
+  update_gameplay()
  end
 
  g_intro_anim = min(g_intro_anim + 0.1, 1)
- if (g_level_target != nil) then
+ if (g_game_mode_target != nil) then
   g_outro_anim = max(g_outro_anim - 0.1)
-  if (g_outro_anim == 0) unpack_level(g_level_target)
+  if (g_outro_anim == 0) then
+   if (g_game_mode_target == 0) then unpack_title()
+   elseif (g_game_mode_target == 2 and g_level_target != nil) then unpack_level(g_level_target)
+   end
+   -- reset everything
+   g_intro_anim, g_outro_anim, g_game_mode_target, g_level_target = 0, 1
+  end
  end
  
  -- process menus (if we have em)
@@ -219,18 +193,7 @@ end
 function _draw()
  -- title
  if (g_game_mode == 0) then
- cls(0)
- -- background graphics
- map(0, 0, -24 * g_title_scroll, 32, 19, 2)
- map(0, 2, -24 * ((g_title_scroll * 2) % 1), 48, 19, 3)
- map(0, 5, -24 * ((g_title_scroll * 3) % 1), 72, 19, 7)
- -- title logo
- palt(0b0000010000000000)
- map(19, 0, 12, 8 + (sin(g_title_scroll) * 4), 13, 7)
-
- print("2025 cyansorcery", 32, 122, 3)
- 
- if (count(g_menu) == 0) draw_wavy_text("press 🅾️ to start!", 28, 96, 1, 1.4)
+  draw_title()
   -- gameplay
  elseif (g_game_mode == 2) then
 
@@ -239,6 +202,14 @@ function _draw()
  
  -- draw menus (if we have em)
  for i,_pane in pairs(g_menu) do _pane:m_draw(i) end
+
+ -- draw transition?
+ local _anim = g_intro_anim * g_outro_anim
+ if (_anim < 1) then
+  local _w = 64 * cos(_anim >> 2)
+  rectfill(0, 0, _w, 127, 1)
+  rectfill(127 - _w, 0, 127, 127, 1)
+ end
  
 --show sprite table
 --palt(0, false)
@@ -249,7 +220,26 @@ end
 
 -->8
 
--- this function unpacks the level to the top left corner of the map
+-- this function puts us on the intro screen
+function unpack_intro()
+ music(-1)
+ decompress_sprites(1)
+ g_game_mode = 3
+end
+
+ -- this function puts us on the title screen
+function unpack_title()
+ --decompress_music(1)
+ -- tmp, just stop the music
+ music(-1)
+ -- decompress the sprite and map data needed here
+ decompress_map(1, 0, 0)
+ decompress_sprites(1)
+
+ g_game_mode = 0
+end
+
+-- this function opens up the game to a given level
 function unpack_level(_index)
 
  g_game_mode = 2
@@ -269,24 +259,28 @@ function unpack_level(_index)
  -- clamp this output
  _index = mid(1, _index, count(g_levels))
  -- store the level index
- g_level_index, g_level_select, g_level_target = _index, _index, nil
- g_intro_anim, g_outro_anim = 0, 1
+ g_level_index, g_level_select = _index, _index
 
  -- add menuitems for this
  
  menuitem(1, "restart puzzle",
  function()
-  unpack_level(g_level_index)
+  g_level_target = g_level_index
  end
  )
  menuitem(2, "skip puzzle",
   function()
-   unpack_level(g_level_index + 1)
+  g_level_target = g_level_index + 1
   end
+ )
+ menuitem(3, "go to title",
+  function()
+   set_game_mode(0)
+  end 
  )
  
  -- debug function
- menuitem(3, "goto stage "..tostr(g_level_select),
+ menuitem(4, "goto stage "..tostr(g_level_select),
   function(b)
    if (b&2 > 0) g_level_select += 1
    if (b&1 > 0) g_level_select -= 1
@@ -587,9 +581,10 @@ function draw_floating_key(self)
 end
 
 
-
 -->8
-#include scripts/s_draw.lua
+#include scripts/s_nongame.lua
+-->8
+#include scripts/s_gameplay.lua
 -->8
 #include scripts/s_util.lua
 -->8

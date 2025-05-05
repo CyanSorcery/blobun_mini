@@ -81,14 +81,6 @@ function draw_gameplay()
  if (g_level_win or g_level_lose) then
   draw_wavy_text(g_level_win and "stage clear!" or "❎ undo", g_level_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
-
- -- stage transition?
- local _anim = g_intro_anim * g_outro_anim
- if (_anim < 1) then
-  local _w = 64 * cos(_anim >> 2)
-  rectfill(0, 0, _w, 127, 1)
-  rectfill(127 - _w, 0, 127, 127, 1)
- end
 end
 
 function do_tile_mirror()
@@ -222,10 +214,27 @@ function draw_arrows()
 
 end
 
+function update_gameplay()
+ -- update blinking
+ g_player_blink -= 1
+ if (g_player_blink <= 0) g_player_blink = 30 + flr(rnd(60))
 
-function draw_wavy_text(_str, _x, _y, _col, _px)
- local _len = #_str
- for i=1,_len do
-  _x = print(sub(_str, i, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
+ g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + 0.2 or g_bottom_msg_anim - 0.2, 1)
+ 
+ -- move camera while binding it to the stage edges/centering it
+ local _obj = g_object_list[1]
+ local _lw, _lh = g_level_width << 4, g_level_height << 4
+ g_cam_x = (g_level_width > 8)
+    and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
+    or (_lw >> 1) - 56
+
+ g_cam_y = (g_level_height > 7)
+    and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
+    or (_lh >> 1) - 60
+ 
+ -- process objects, but only if the stage animation is done
+ if (g_intro_anim * g_outro_anim == 1) then
+  proc_objects()
+  proc_particles()
  end
 end

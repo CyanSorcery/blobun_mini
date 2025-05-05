@@ -146,3 +146,10 @@ function put_tiles_fin(_x, _y, _tl, _tr, _bl, _br)
  mset(_x, _y + 1, _bl)
  mset(_x + 1, _y + 1, _br)
 end
+
+function draw_wavy_text(_str, _x, _y, _col, _px)
+ local _len = #_str
+ for i=1,_len do
+  _x = print(sub(_str, i, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
+ end
+end
