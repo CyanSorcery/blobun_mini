@@ -2,6 +2,9 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()
+ -- debug functions (remove later)
+ --#include scripts/s_debug.lua
+
  -- ashe note: this just looks nicer
  cls(1)
  print("loading...", 1, 122, 13)
@@ -13,6 +16,7 @@ function _init()
 
  -- figure out what kind of compressed data we have
  g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx = {}, {}, {}, {}, {}
+ -- offset of the currently loaded data (so we don't reload it if not necessary)
  g_px9_ind_sprites, g_px9_ind_music = 0, 0
 
  local _offset, _data = 0x8000, peek2(0x8000)
@@ -206,7 +210,7 @@ function _update()
 
  -- play a sound effect this frame?
  if (g_play_sfx != nil) then
-  sfx(g_play_sfx[1], 3, g_play_sfx[2], g_play_sfx[3])
+  sfx((g_play_sfx >> 10) & 0x3f, 3, (g_play_sfx >> 5) & 0x1f, g_play_sfx & 0x1f)
   g_play_sfx = nil
  end
 

@@ -1,16 +1,17 @@
--- format for this table: {pattern, offset, length}
+-- format for this table: {pattern << 10, offset << 5, length}
+-- use compress_sfx(pattern, offset, length) to get the number
 g_sfx_lut = {
  octo = {
-  {63, 0, 3},
-  {63, 3, 3},
-  {63, 6, 3},
-  {63, 9, 3},
-  {63, 12, 3},
-  {63, 15, 3},
-  {63, 18, 3},
-  {63, 24, 8}
+  -1021,
+  -925,
+  -829,
+  -733,
+  -637,
+  -541,
+  -445,
+  -248
  },
- t_switch = {63, 21, 3},
- t_coin = {62, 0, 6},
- p_state = {{62, 20, 12}, {62, 6, 6}, {62, 12, 8}}
+ t_switch = -349,
+ t_coin = -2042,
+ p_state = {-1396, -1850, -1656}
 }
