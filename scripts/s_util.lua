@@ -123,10 +123,6 @@ function find_tile_loc(_tile)
  return nil
 end
 
-function num_in_range(_num, _x1, _x2)
- return _num >= _x1 and _num <= _x2
-end
-
 -- tile that's laid out as a block on the tilesheet
 function put_x16_tile(_x, _y, _tile)
  put_tiles_fin(_x, _y, _tile, _tile + 1, _tile + 16, _tile + 17)

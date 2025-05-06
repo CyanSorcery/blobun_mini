@@ -36,7 +36,7 @@ end
 
 function proc_particles()
  for _part in all(g_particles) do
-  _factor = _part.dir / 360
+  local _factor = _part.dir / 360
   _part.x += _part.spd * cos(_factor)
   _part.y += _part.spd * sin(_factor)
 

@@ -58,8 +58,6 @@ function _init()
  g_level_select = g_level_index
  -- when we're to load a new puzzle, this is set
  g_level_target = nil
- -- what game mode we start with
- g_game_mode = nil
  -- when we're to load a new gameplay mode, this is set
  g_game_mode_target = nil
  -- current level name
@@ -125,7 +123,8 @@ function _init()
  decompress_sfx(1)
  
  -- send us to the intro
- unpack_intro()
+ --unpack_intro()
+ unpack_level(1)
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 end
@@ -152,7 +151,6 @@ function set_game_mode(_mode, _level_target)
  music(-1)
 end
 function finalize_game_mode(_mode, _func_update, _func_draw)
- g_game_mode = _mode
  g_func_update = _func_update
  g_func_draw = _func_draw
  pal()
@@ -252,7 +250,7 @@ function unpack_level(_index)
  -- make sure sprites and the appropriate music are decompressed
  decompress_sprites(2)
  decompress_music(1)
- music(0, 0, 7)
+ --music(0, 0, 7)
 
  -- clear the map to be ready for incoming data
  memset(0x2000, 0, 0x1000)
@@ -318,66 +316,32 @@ function unpack_level(_index)
  -- read the data
  -- coco note: since we have to add 2 to the offset to get past the
  -- data length bytes, go ahead and save a call here by chaining it into the loop
- local _tile, _x, _y, _mod = 0, 1, 1, 0
+ local _dstile, _dsx, _dsy, _mod = 0, 1, 1, 0
  -- convert the level width to grid tile space, offset by one
  _level_width = (_level_width << 1) + 1
  for i=1,_data_len do
   _offset += 2
-  _tile = tonum(sub(_data, _offset, _offset + 1), 0x1)
-  _level_data[i] = _tile
-  _mod = ((_x + _y) % 4 == 2) and 1 or 0
+  _dstile = tonum(sub(_data, _offset, _offset + 1), 0x1)
+  _level_data[i] = _dstile
+  _mod = ((_dsx + _dsy) % 4 == 2) and 1 or 0
   -- now, read this out onto the playfield
-  if (_tile > 0) then
-   put_mirrored_tile(_x, _y, 16 + _mod)
+  if (_dstile > 0) then
+   put_mirrored_tile(_dsx, _dsy, 16 + _mod)
   end
   -- move ahead in the tileset, moving to the next row as needed
-  _x += 2
-  if (_x >= _level_width) then
-   _x = 1
-   _y += 2
+  _dsx += 2
+  if (_dsx >= _level_width) then
+   _dsx = 1
+   _dsy += 2
   end
 
  end
- local _level_arrlen = count(_level_data)
+ 
+ -- do the perimeter autotiling
+ proc_autotile(0, 0, 32, function(_tile, _x, _y)
+  if (_tile > 0 and _tile < 15) mset(_x + 32, _y, _tile)
+ end)
 
- -- do the autotiling around the perimeter of the level
- local _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb = 0
-
- for _xc=0,31 do
-  -- set our left and right x, without going into the work area
-  _xl, _xr = _xc - 1, min(_xc + 1, 31)
-  -- re-initialize the top and center rows (assume they're 0)
-  _mtl, _mtc, _mtr, _mcl, _mcc, _mcr = 0, 0, 0, 0, 0, 0
-  for _yc=0,31 do
-   -- get the bottom row, without going into the work area
-   _yb = min(_yc + 1, 31)
-   _mbl, _mbc, _mbr = mget(_xl, _yb), mget(_xc, _yb), mget(_xr, _yb)
-
-   -- don't do this unless the center tile is 0 since
-   -- we can know in advance we wont put a tile on the puzzle floor
-   if (_mcc == 0) then
-   -- figure out what each tile is gonna be
-    _tile = calc_autotile(_mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr)
-    -- place the tile into the work area?
-    if (_tile > 0 and _tile < 15) mset(_xc + 32, _yc, _tile)
-   end
-
-   -- store these for the next row
-   _mtl, _mtc, _mtr = _mcl, _mcc, _mcr
-   _mcl, _mcc, _mcr = _mbl, _mbc, _mbr
-  end
- end
- -- finally, copy the output data from the work area to the play area,
- -- while also clearing the work area for later usage
- for _dx = 0,31 do
-  for _dy = 0,31 do
-   -- copy the boundary from the work area over
-   _tile = mget(_dx + 32, _dy)
-   if (_tile > 0) mset(_dx, _dy, _tile)
-   -- clear the work area
-   mset(_dx + 32, _dy, 0)
-  end
- end
  -- in the top right of the work area, mark all tiles as solid
  for _dx=48,64 do
   for _dy=0,16 do
@@ -386,48 +350,47 @@ function unpack_level(_index)
  end
  -- now, unpack the level data into the top left screen of the work area so we can read it easily
  -- get the level width data that we stored earlier
- _level_width = g_level_width
- _x, _y = 0, 0
+ _dsx, _dsy, _level_width = 0, 0, g_level_width
  for _tile in all(_level_data) do
-  mset(_x + 32, _y, _tile)
+  mset(_dsx + 32, _dsy, _tile)
   -- place a floor tile + allow collision here?
   -- note: 0 off means cant pass, 1 means can pass, 2 means slimed
   if (_tile != 0) then
    -- place free tile, may be overwritten below though
-   mset(_x + 48, _y, 1)
-   place_puzz_tile(_x, _y, _tile)
+   mset(_dsx + 48, _dsy, 1)
+   place_puzz_tile(_dsx, _dsy, _tile)
    g_level_tiles += 1
   end
 
   -- do we need to add objects to the object list?
-  if (_tile == 33) player_create(_x, _y)
+  if (_tile == 33) player_create(_dsx, _dsy)
   -- puzzle keys
   for j=0,4 do
-   if (_tile == 2 | (j << 5)) add(g_object_list, create_obj_key(_x, _y, j + 1, 83 + j))
+   if (_tile == 2 | (j << 5)) add(g_object_list, create_obj_key(_dsx, _dsy, j + 1, 83 + j))
   end
   
   -- state keys
   for j=0,2 do
-   if (_tile == 8 | (j << 5)) add(g_object_list, create_obj_key(_x, _y, 5 + j, 230 + j))
+   if (_tile == 8 | (j << 5)) add(g_object_list, create_obj_key(_dsx, _dsy, 5 + j, 230 + j))
   end
 
   -- arrows
   for j=0,3 do
-   if (_tile == 17 | (j << 5)) add_hint_arrow(_x, _y, j)
+   if (_tile == 17 | (j << 5)) add_hint_arrow(_dsx, _dsy, j)
   end
 
   -- octogem
   for j=0,7 do
-   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_octogem(_x, _y, 8 + j))
+   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_octogem(_dsx, _dsy, 8 + j))
   end
 
   -- generic key
-  if (_tile == 44) add(g_object_list, create_obj_gen_key(_x, _y))
+  if (_tile == 44) add(g_object_list, create_obj_gen_key(_dsx, _dsy))
 
-  _x += 1
-  if (_x >= _level_width) then
-   _y += 1
-   _x = 0
+  _dsx += 1
+  if (_dsx >= _level_width) then
+   _dsy += 1
+   _dsx = 0
   end
  end
 
@@ -465,39 +428,63 @@ function place_puzz_tile(_x, _y, _tile_id)
  end
 end
 
+-- do autotiling on the lava and water
 function calc_lava_water()
- -- note: this is similar to a function earlier in the code, see that for comments
- local _t = {176, 192}
- local _id, _id_m, _tile, _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb = 0
- local _w, _h = (g_level_width << 1) + 1, (g_level_height << 1) + 1
- for _id in all(_t) do
-  _id_m = _id + 15
-  for _x=0,_w do
-   _xl, _xr = _x - 1, min(_x + 1, _w)
-   _mtl, _mtc, _mtr, _mcl, _mcc, _mcr = 1, 1, 1, 1, 1, 1
-   for _y=0,_h do
-    _yb = min(_y + 1, _h)
-    _mbl, _mbc, _mbr = (num_in_range(mget(_xl, _yb), _id, _id_m)) and 0 or 1,
-       (num_in_range(mget(_x, _yb), _id, _id_m)) and 0 or 1,
-       (num_in_range(mget(_xr, _yb), _id, _id_m)) and 0 or 1
-    if (_mcc == 0) then
-     _tile = calc_autotile(_mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr)
-     -- place tile, optionally placing grid marker
-     if (_tile > 0) mset(_x, _y, (_x % 2 == 0 and _y % 2 == 0 and _tile == 15) and _id or _id + _tile)
-
-    end
-    _mtl, _mtc, _mtr = _mcl, _mcc, _mcr
-    _mcl, _mcc, _mcr = _mbl, _mbc, _mbr
-   end
-  end
+ local _t = {191, 207}
+ for _ti in all(_t) do
+  proc_autotile(1, _ti, 64, function(_tile, _x, _y, _id)
+   if (_tile > 0) mset(_x + 64, _y, (_x % 2 == 0 and _y % 2 == 0 and _tile == 15) and _id - 15 or _id + _tile - 15)
+  end)
  end
 end
 
-function calc_autotile(_mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr)
- return (_mbl + _mbc + _mcl + _mcc == 0 and 1 or 0)
-  | (_mbr + _mbc + _mcr + _mcc == 0 and 2 or 0)
-  | (_mtr + _mtc + _mcr + _mcc == 0 and 4 or 0)
-  | (_mtl + _mtc + _mcl + _mcc == 0 and 8 or 0)
+--[[
+   initial: what to initialize the lookup tiles with
+   id: the tile id to compare to for a hit
+   work_x: the work area to put the completed tiles
+   place_func: function to run when we put a tile
+]]
+function proc_autotile(_initial, _id, _work_x, _place_func)
+ local _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb, _tile = 0
+ local _w, _h = (g_level_width << 1) + 1, (g_level_height << 1) + 1
+
+ for _xc=0,_w do
+  -- set our left and right x, without going into the work area
+  _xl, _xr = max(_xc - 1), min(_xc + 1, 31)
+  -- re-initialize the top and center rows
+  _mtl, _mtc, _mtr, _mcl, _mcc, _mcr = _initial, _initial, _initial, _initial, _initial, _initial
+  for _yc=0,_h do
+   -- get the bottom row, without going into the work area
+   _yb = min(_yc + 1, _h)
+   _mbl, _mbc, _mbr = mget(_xl, _yb) == _id and 0 or 1,
+      mget(_xc, _yb) == _id and 0 or 1,
+      mget(_xr, _yb) == _id and 0 or 1
+
+   -- don't do this unless the center tile is 0 since
+   -- we can know in advance we wont put a tile
+   if (_mcc == 0) then
+   -- figure out what each tile is gonna be, then run the function on it
+    _place_func((_mbl + _mbc + _mcl + _mcc == 0 and 1 or 0)
+     | (_mbr + _mbc + _mcr + _mcc == 0 and 2 or 0)
+     | (_mtr + _mtc + _mcr + _mcc == 0 and 4 or 0)
+     | (_mtl + _mtc + _mcl + _mcc == 0 and 8 or 0), _xc, _yc, _id)
+   end
+
+   -- store these for the next row
+   _mtl, _mtc, _mtr = _mcl, _mcc, _mcr
+   _mcl, _mcc, _mcr = _mbl, _mbc, _mbr
+  end
+ end
+ -- copy the data from the work area
+ for _dx = 0,31 do
+  for _dy = 0,31 do
+   -- copy the boundary from the work area over
+   _tile = mget(_dx + _work_x, _dy)
+   if (_tile > 0) mset(_dx, _dy, _tile)
+   -- clear the work area
+   mset(_dx + _work_x, _dy, 0)
+  end
+ end
 end
 
 -->8
@@ -584,6 +571,7 @@ function draw_floating_key(self)
  sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
  sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
 end
+
 
 
 -->8

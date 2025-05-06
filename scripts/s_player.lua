@@ -369,12 +369,12 @@ function redraw_slimetrail()
  end
  
  -- add wavy effect to her
- local _fx, _fy, _offset
- for _offset=0,16,8 do
-  _dx1 = 24 + _offset
+ local _fx, _fy
+ for _foffset=0,16,8 do
+  _dx1 = 24 + _foffset
   clip(_dx1, 104, 8, 8)
   for _subx=0,7 do
-   sspr(_subx + _offset, 104, 1, 8, _dx1 + sin(_sta + (_subx / 8)) + _subx, 104)
+   sspr(_subx + _foffset, 104, 1, 8, _dx1 + sin(_sta + (_subx / 8)) + _subx, 104)
   end
  end
  clip()
