@@ -13,28 +13,58 @@ function draw_title()
  if (count(g_menu) == 0 and g_game_mode_target == nil) draw_wavy_text("press 🅾️ to start!", 28, 96, 1, 1.4)
 end
 
+function draw_intro()
+ local _anim = (g_intro_anim * g_outro_anim) * 8
+ cls(1)
+ rectfill(0, 56, 127, 72, 12)
+ map(0, 12, -24 * g_title_scroll, 56 - _anim, 19, 1)
+ map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
+ _anim = _anim * 0.5
+ print("presented by", 39, 60 - _anim, 1)
+ map(19, 7, 18, 60 + _anim, 11, 1)
+end
+
+function update_intro()
+ g_title_scroll += 0.025
+ g_title_scroll %= 1
+
+ if (g_intro_countdown > 0) then
+  g_intro_countdown -= 1
+  -- skip countdown?
+  if (btnp() & 0x30 > 0) g_intro_countdown = 0 
+  if (g_intro_countdown == 0) set_game_mode(0)
+ end
+end
+
 function update_title()
  g_title_scroll += 0.01
  g_title_scroll %= 1
  
- -- create title menu?
- if (count(g_menu) == 0 and btnp(4)) then menu_create(24, 96, 80, {
-  menu_item_base("start game", function() 
-   set_game_mode(2, 1)
-  end),
-  menu_item_base("options", function()
-   printh("clicked options")
+ if (count(g_menu) == 0) then
+  -- create title menu?
+  if (btnp(4)) then 
    menu_create(24, 96, 80, {
-     menu_item_base("option 1", function() end),
-     menu_item_base("option 2", function() end),
-     menu_item_base("option 3", function() end),
-     menu_item_base("option 4", function() end),
-     menu_item_base("option 5", function() end)
-   })
-  end),
-  menu_item_base("credits", function()
-   printh("clicked credits")
-  end)
- })
+   menu_item_base("start game", function() 
+    set_game_mode(2, 1)
+   end),
+   menu_item_base("options", function()
+    printh("clicked options")
+    menu_create(24, 96, 80, {
+      menu_item_base("option 1", function() end),
+      menu_item_base("option 2", function() end),
+      menu_item_base("option 3", function() end),
+      menu_item_base("option 4", function() end),
+      menu_item_base("option 5", function() end)
+    })
+   end),
+   menu_item_base("credits", function()
+    printh("clicked credits")
+   end)
+  })
+  -- back button to go back to title screen?
+  elseif (btnp(5)) then
+   set_game_mode(3)
+  end
  end
+ 
 end
