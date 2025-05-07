@@ -53,17 +53,13 @@ function _init()
  g_object_list, g_arrow_list = {}, {}
 
  -- current level
- g_level_index = 1
- -- for level select
- g_level_select = g_level_index
+ g_puzz_world_index = 1
+ g_puzz_level_index = 1
  -- when we're to load a new puzzle, this is set
- g_level_target = nil
+ g_puzz_world_target = nil
+ g_puzz_level_target = nil
  -- when we're to load a new gameplay mode, this is set
  g_game_mode_target = nil
- -- current level name
- g_level_name = "Unset"
- -- current level size
- g_level_width, g_level_height = 1, 1
 
  -- how many tiles the level has/been touched
  g_level_tiles, g_level_touched = 0, 0
@@ -119,12 +115,16 @@ function _init()
 
  g_intro_countdown = 90
 
+ -- parse the level data
+ parse_levels()
+
  -- decompress the game's sound effects
  decompress_sfx(1)
  
  -- send us to the intro
  --unpack_intro()
- unpack_level(1)
+ unpack_level(1, 1)
+ --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 end
@@ -139,9 +139,10 @@ end
  ]]
 
 -- the second parameter may be nil, that's fine
-function set_game_mode(_mode, _level_target)
+function set_game_mode(_mode, _world_target, _level_target)
  g_game_mode_target = _mode
- g_level_target = _level_target
+ g_puzz_world_target = _world_target
+ g_puzz_level_target = _level_target
  -- get rid of any menus
  for _pane in all(g_menu) do
   _pane.m_anim_incr = -0.25
@@ -178,13 +179,13 @@ function _update()
   if (g_outro_anim == 0) then
    if (g_game_mode_target == 0) then
     unpack_title()
-   elseif (g_game_mode_target == 2 and g_level_target != nil) then
-    unpack_level(g_level_target)
+   elseif (g_game_mode_target == 2) then
+    unpack_level(g_puzz_world_target, g_puzz_level_target)
    elseif (g_game_mode_target == 3) then
     unpack_intro()
    end
    -- reset everything
-   g_intro_anim, g_outro_anim, g_game_mode_target, g_level_target = 0, 1
+   g_intro_anim, g_outro_anim, g_game_mode_target, g_puzz_world_target, g_puzz_level_target = 0, 1
   end
  end
  
@@ -243,8 +244,15 @@ function unpack_title()
  finalize_game_mode(0, update_title, draw_title)
 end
 
+function unpack_stage_select()
+ decompress_sprites(1)
+ decompress_map(1, 0, 0)
+ music(-1)
+ finalize_game_mode(1, update_stage_select, draw_stage_select)
+end
+
 -- this function opens up the game to a given level
-function unpack_level(_index)
+function unpack_level(_world, _stage)
  finalize_game_mode(2, update_gameplay, draw_gameplay)
 
  -- make sure sprites and the appropriate music are decompressed
@@ -259,60 +267,42 @@ function unpack_level(_index)
  g_level_tiles, g_level_touched, g_bottom_msg_anim, g_puzz_coins, g_puzz_octogems = 0, 0, 0, 0, 0
  g_redraw_coin, g_btn4_held, g_level_win, g_level_lose = true, false, false, false
  g_puzz_zapper_turn, g_redraw_zappers, g_particles = 0, true, {}
- -- clamp this output
- _index = mid(1, _index, count(g_levels))
- -- store the level index
- g_level_index, g_level_select = _index, _index
+ 
+ -- clamp the world index
+ _world = mid(1, _world, count(g_levels))
+ -- clamp the stage index
+ _stage = mid(1, _stage, count(g_levels[_world]))
+ -- store it
+ g_puzz_world_index, g_puzz_level_index = _world, _stage
 
  -- add menuitems for this
  
  menuitem(1, "restart puzzle",
  function()
-  g_level_target = g_level_index
+  set_game_mode(2, g_puzz_world_target, g_puzz_level_target)
  end
  )
  menuitem(2, "skip puzzle",
   function()
-  g_level_target = g_level_index + 1
+  set_game_mode(2, g_puzz_world_target, g_puzz_level_target + 1)
   end
  )
- menuitem(3, "go to title",
+ menuitem(3, "stage select",
+  function()
+   set_game_mode(1)
+  end 
+ )
+ menuitem(4, "go to title",
   function()
    set_game_mode(0)
   end 
  )
- 
- -- debug function
- menuitem(4, "goto stage "..tostr(g_level_select),
-  function(b)
-   if (b&2 > 0) g_level_select += 1
-   if (b&1 > 0) g_level_select -= 1
-   g_level_select = mid(1, g_level_select, count(g_levels))
-   menuitem(nil, "goto stage "..tostr(g_level_select))
-   if (b&32) then
-    g_level_target = g_level_select
-    return false
-   end
-   return true
-  end
- )
 
- -- get the level data
- local _data = g_levels[_index]
- -- find out how long the title is
- local _title_len = tonum(sub(_data, 1, 1), 0x1)
- -- store the level name
- g_level_name = sub(_data, 2, 1 + _title_len)
- -- store the stage width
- local _level_width = tonum(sub(_data, 2 + _title_len, 2 + _title_len), 0x1)
- g_level_width = _level_width
+
  -- get ready to parse the level data
  local _level_data = {}
- -- how long is our level data?
- local _offset = 3 + _title_len
- -- ashe note: we shouldn't need the 0x here, but for whatever reason it wont work without it
- local _data_len = tonum("0x"..sub(_data, _offset, _offset + 1, 0x1))
- g_level_height = (_data_len / g_level_width) >> 1
+ local _fst = g_levels[_world][_stage]
+ local _data_len, _data, _offset, _level_width = #_fst.l_data, _fst.l_data, 1, _fst.l_width
  -- read the data
  -- coco note: since we have to add 2 to the offset to get past the
  -- data length bytes, go ahead and save a call here by chaining it into the loop
@@ -350,7 +340,7 @@ function unpack_level(_index)
  end
  -- now, unpack the level data into the top left screen of the work area so we can read it easily
  -- get the level width data that we stored earlier
- _dsx, _dsy, _level_width = 0, 0, g_level_width
+ _dsx, _dsy, _level_width = 0, 0, _fst.l_width
  for _tile in all(_level_data) do
   mset(_dsx + 32, _dsy, _tile)
   -- place a floor tile + allow collision here?
@@ -446,7 +436,8 @@ end
 ]]
 function proc_autotile(_initial, _id, _work_x, _place_func)
  local _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb, _tile = 0
- local _w, _h = (g_level_width << 1) + 1, (g_level_height << 1) + 1
+ local _fst = g_levels[g_puzz_world_index][g_puzz_level_index]
+ local _w, _h = (_fst.l_width << 1) + 1, (_fst.l_height << 1) + 1
 
  for _xc=0,_w do
   -- set our left and right x, without going into the work area
@@ -572,6 +563,50 @@ function draw_floating_key(self)
  sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
 end
 
+-- this converts the level table from a bunch of strings to worlds/stages
+function parse_levels()
+ local _lv, _bytes, _offset = {}
+
+ for _w, _wt in ipairs(g_levels) do
+  _lv[_w]   = {}
+  for _s, _str in ipairs(_wt) do
+   -- prep a stage struct
+   local _fst = {}
+   _offset = 1
+   -- get the name
+   _bytes = tonum(sub(_str, 1, 1), 0x1)
+   _fst.l_name = sub(_str, 2, 1 + _bytes)
+   _offset += 1 + _bytes
+   -- get the author
+   _bytes = tonum(sub(_str, _offset, _offset), 0x1)
+   _offset += 1
+   _fst.l_author = sub(_str, _offset, _offset + _bytes - 1)
+   _offset += _bytes
+   -- get the stage width
+   _fst.l_width = tonum(sub(_str, _offset, _offset), 0x1)
+   _offset += 1
+   -- get the stage hints
+   _bytes = ceil(tonum(sub(_str, _offset, _offset), 0x1) / 2)
+   _fst.l_hintcount = _bytes
+   _offset += 1
+   if (_bytes == 0) then _fst.l_hintstr = ""
+   else
+    _fst.l_hintstr = sub(_str, _offset, _offset + _bytes - 1)
+   end
+   _offset += _bytes
+   -- get the level data itself
+   _bytes = tonum(sub(_str, _offset, _offset + 1), 0x1)
+   _offset += 2
+   _fst.l_data = sub(_str, _offset, _offset + _bytes - 1)
+   -- figure out the height
+   _fst.l_height = (#_fst.l_data / _fst.l_width) >> 1
+   -- store this level data
+   _lv[_w][_s] = _fst
+  end
+ end
+ -- replace the level table with this one
+ g_levels = _lv
+end
 
 
 -->8

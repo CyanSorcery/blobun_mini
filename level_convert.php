@@ -3,55 +3,117 @@
 //open up the worldpak and parse it
 $worldpak = json_decode(file_get_contents('C:/Users/spark/AppData/Local/Blobun/worldpak/usermade/pak_cyansorcery_pico8wp.json'), true);
 
-$levels 	= [];
+//$worldpak = json_decode(file_get_contents('C:/Users/spark/AppData/Local/Blobun/worldpak/official2/cyansorcery_base.json'), true);
+
+$worlds 	= [];
 
 //go through each of the stages in the worldpak and add them to our array
-foreach ($worldpak['pak_worlds'][0]['world_stages'] as $stage)
+foreach ($worldpak['pak_worlds'] as $world)
 {
-	array_push($levels, [
-		'w' => $stage['stage_width'],
-		'd' => $stage['stage_data'],
-		'n' => $stage['stage_name']
-	]);
+	$levels = [];
+	foreach ($world['world_stages'] as $stage)
+	{
+		array_push($levels, [
+			'w' => $stage['stage_width'],
+			'd' => $stage['stage_data'],
+			'n' => $stage['stage_name'],
+			'a' => $stage['stage_author'],
+			'r' => $stage['stage_replay_data'],
+			'h' => $stage['stage_hint_count']
+		]);
+	}
+	array_push($worlds, $levels);
 }
 
+//Go through each world/stage and add them to the final output
+$finstr = "g_levels = {\r\n";
 
-$arrlen 	= count($levels);
+$worldcount = count($worlds);
 
-$finstr 	= " g_levels = {\r\n";
-
-for ($i = 0; $i < $arrlen; $i++)
+for ($world = 0; $world < $worldcount; $world++)
 {
-	
-	$output_str 	= "";
+	$finstr .= " {\r\n";
 
-	//The stage name (16 chars max)
-	$s_name 		= $levels[$i]['n'];
-	$output_str 	.= dechex(strlen($s_name));
-	$output_str 	.= strtolower($s_name);
-	//The stage width (16 tiles max)
-	$output_str 	.= dechex($levels[$i]['w']);
+	$stages = $worlds[$world];
 
-	//The actual stage data
-	$decode_bin 	= base64_decode($levels[$i]['d']);
-	$uncompressed 	= zlib_decode($decode_bin);
-	$strhex 		= bin2hex($uncompressed);
-	//The amount of tiles (256 max)
-	$output_str 	.= str_pad(dechex(strlen($strhex)), 2, "0", STR_PAD_LEFT);
-	//The actual puzzle data
-	$output_str		.= $strhex;
+	$stagecount = count($stages);
 
-	$offset 	= $i + 1;
+	for ($stage = 0; $stage < $stagecount; $stage++)
+	{
+		$output_str 	= "";
+		$currstage 		= $stages[$stage];
 
-	$finstr 	.= "  \"{$output_str}\"";
+		//The stage name (16 chars max)
+		$s_name 		= $currstage['n'];
+		$output_str 	.= dechex(strlen($s_name));
+		$output_str 	.= strtolower($s_name);
+		//The stage author (16 chars max)
+		$s_author 		= $currstage['a'];
+		$output_str 	.= dechex(strlen($s_author));
+		$output_str 	.= strtolower($s_author);
+		//The stage width (16 tiles max)
+		$output_str 	.= dechex($currstage['w']);
+		//The hint arrows
+		$hint_arrows 	= [];
+		$hint_count 	= 0;
+		if ($currstage['r'] != "")
+		{
+			$decode_bin		= base64_decode($currstage['r']);
+			$uncompressed	= zlib_decode($decode_bin);
+			$strhex 		= bin2hex($uncompressed);
+			//How many moves are in this?
 
-	if ($i + 1 < $arrlen)
-		$finstr .= ",";
+			//For whatever reason, Gamemaker stores 16bit values with bits flipped
+			//so we have to flip them back
+			$move_count 	= hexdec(substr($strhex, 2, 2).substr($strhex, 0, 2));
+			$hint_count 	= min($move_count, $currstage['h'], 16);
 
-	$finstr .= "\r\n";
+			//parse the hint arrows. This way we can put *exactly* the hint arrows we need
+			$hintstr 	= substr($strhex, 4, strlen($strhex) - 4);
+			for ($i = 0; $i < $hint_count; $i++)
+			{
+				$int	= hexdec(substr($hintstr, $i >> 1, 1));
+				$sub 	= ($int >> ($i % 2 == 0 ? 2 : 0)) & 0x3;
+				array_push($hint_arrows, $sub);
+			}
+		}
+		//Create a string for the hints
+		$hintstr 		= "";
+		for ($i = 0; $i < $hint_count; $i += 2)
+		{
+			$int	= $hint_arrows[$i] << 2;
+			if ($i + 1 < $hint_count) $int |= $hint_arrows[$i + 1];
+			$hintstr .= dechex($int);
+		}
+		//How many hints there are (limit 16)
+		$output_str 	.= dechex($hint_count);
+		//the hint string
+		$output_str		.= $hintstr;
+
+		//The actual stage data
+		$decode_bin 	= base64_decode($currstage['d']);
+		$uncompressed 	= zlib_decode($decode_bin);
+		$strhex 		= bin2hex($uncompressed);
+		//The amount of tiles (256 max)
+		$output_str 	.= str_pad(dechex(strlen($strhex)), 2, "0", STR_PAD_LEFT);
+		//The actual puzzle data
+		$output_str		.= $strhex;
+
+		$finstr 	.= "  \"{$output_str}\"";
+
+		if ($stage + 1 < $stagecount)
+			$finstr .= ",";
+
+		$finstr .= "\r\n";
+	}
+
+	//how do we terminate this?
+	if ($world + 1 < $worldcount)
+	 $finstr .= " },\r\n";
+	else
+	 $finstr .= " }\r\n}";
 }
 
-$finstr .= " }";
 
 file_put_contents('res/r_levels.lua', $finstr);
 

@@ -68,3 +68,16 @@ function update_title()
  end
  
 end
+
+
+function update_stage_select()
+
+end
+
+function draw_stage_select()
+ cls(1)
+ --tmp
+ for _y,_st in ipairs(g_levels[1]) do
+  print(_st.l_name, 10, _y * 8, 7)
+ end
+end
