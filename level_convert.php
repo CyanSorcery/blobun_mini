@@ -95,7 +95,7 @@ for ($world = 0; $world < $worldcount; $world++)
 		$uncompressed 	= zlib_decode($decode_bin);
 		$strhex 		= bin2hex($uncompressed);
 		//The amount of tiles (256 max)
-		$output_str 	.= str_pad(dechex(strlen($strhex)), 2, "0", STR_PAD_LEFT);
+		//$output_str 	.= str_pad(dechex(strlen($strhex)), 2, "0", STR_PAD_LEFT);
 		//The actual puzzle data
 		$output_str		.= $strhex;
 

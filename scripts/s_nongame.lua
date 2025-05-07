@@ -14,14 +14,19 @@ function draw_title()
 end
 
 function draw_intro()
- local _anim = (g_intro_anim * g_outro_anim) * 8
+ local _baseanim = g_intro_anim * g_outro_anim
+ local _anim = _baseanim * 8
  cls(1)
  rectfill(0, 56, 127, 72, 12)
  map(0, 12, -24 * g_title_scroll, 56 - _anim, 19, 1)
  map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
- _anim = _anim * 0.5
- print("presented by", 39, 60 - _anim, 1)
- map(19, 7, 18, 60 + _anim, 11, 1)
+ local _anim2 = _anim * 0.5
+ print("presented by", 39, 60 - _anim2, 1)
+ map(19, 7, 18, 60 + _anim2, 11, 1)
+ palt()
+ fillp(g_fillp_transition[flr(lerp(1, 4, _baseanim))])
+ rectfill(0, 56, 127, 72, 12)
+ fillp()
 end
 
 function update_intro()

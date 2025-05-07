@@ -74,7 +74,7 @@ function draw_gameplay()
  rect(96, 1, 126, 7, 7)
  fillp(g_fillp_diag[ceil(g_fillp_anim)])
  rectfill(124 - max(1, (g_level_touched / g_level_tiles) * 26), 3, 124, 5, 59)
- fillp(0)
+ fillp()
 
  -- did we win or lose?
  if (g_level_win or g_level_lose) then
@@ -221,13 +221,12 @@ function update_gameplay()
  g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + 0.2 or g_bottom_msg_anim - 0.2, 1)
  
  -- move camera while binding it to the stage edges/centering it
- local _obj, _fst = g_object_list[1], g_levels[g_puzz_world_index][g_puzz_level_index]
- local _lw, _lh = _fst.l_width << 4, _fst.l_height << 4
- g_cam_x = (_fst.l_width > 8)
+ local _obj, _lw, _lh = g_object_list[1], g_puzz_curr_fst.l_width << 4, g_puzz_curr_fst.l_height << 4
+ g_cam_x = (g_puzz_curr_fst.l_width > 8)
     and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
     or (_lw >> 1) - 56
 
- g_cam_y = (_fst.l_height > 7)
+ g_cam_y = (g_puzz_curr_fst.l_height > 7)
     and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
     or (_lh >> 1) - 60
  

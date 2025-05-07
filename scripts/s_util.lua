@@ -113,8 +113,7 @@ end
 
 -- roxy note: this only finds the first tile
 function find_tile_loc(_tile)
- local _fst = g_levels[g_puzz_world_index][g_puzz_level_index]
- local _w, _h = _fst.l_width + 32, _fst.l_height
+ local _w, _h = g_puzz_curr_fst.l_width + 32, g_puzz_curr_fst.l_height
  for _dx=32,_w do
   for _dy=0,_h do
    if (mget(_dx, _dy) == _tile) return {x=_dx-32, y=_dy}
