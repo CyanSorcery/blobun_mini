@@ -26,7 +26,8 @@ foreach ($worldpak['pak_worlds'] as $world)
 }
 
 //Go through each world/stage and add them to the final output
-$finstr = "g_levels = {\r\n";
+$finstr = "g_cart_name = \"cyansorcery_blobun_wp_pico8\"\r\n";
+$finstr .= "g_levels = {\r\n";
 
 $worldcount = count($worlds);
 

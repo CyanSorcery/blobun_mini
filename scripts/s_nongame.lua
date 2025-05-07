@@ -6,7 +6,9 @@ function draw_title()
  map(0, 5, -24 * ((g_title_scroll * 3) % 1), 72, 19, 7)
  -- title logo
  palt(0b0000010000000000)
- map(19, 0, 12, 8 + (sin(g_title_scroll) * 4), 13, 7)
+ local _y_mod = (sin(g_title_scroll) * 4)
+ map(19, 0, 12, 8 + _y_mod, 13, 7)
+ if (not setting_get(6)) map(19, 8, 28, 8 + _y_mod, 4, 5)
 
  print("2025 cyansorcery", 32, 122, 3)
  
@@ -22,7 +24,7 @@ function draw_intro()
  map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
  local _anim2 = _anim * 0.5
  print("presented by", 39, 60 - _anim2, 1)
- map(19, 7, 18, 60 + _anim2, 11, 1)
+ if (setting_get(6)) map(19, 7, 18, 60 + _anim2, 11, 1)
  palt()
  fillp(g_fillp_transition[flr(lerp(1, 4, _baseanim))])
  rectfill(0, 56, 127, 72, 12)
@@ -53,13 +55,13 @@ function update_title()
     set_game_mode(2, 1)
    end),
    menu_item_base("options", function()
-    printh("clicked options")
-    menu_create(24, 96, 80, {
-      menu_item_base("option 1", function() end),
-      menu_item_base("option 2", function() end),
-      menu_item_base("option 3", function() end),
-      menu_item_base("option 4", function() end),
-      menu_item_base("option 5", function() end)
+    menu_create(16, 92, 96, {
+      menu_item_setting("show timers", 1),
+      menu_item_setting("slime overlap", 2),
+      menu_item_setting("sprint by default", 3),
+      menu_item_setting("music", 4),
+      menu_item_setting("sound effects", 5),
+      menu_item_setting("lesbians allowed", 6)
     })
    end),
    menu_item_base("credits", function()

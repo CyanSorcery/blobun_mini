@@ -25,6 +25,8 @@ function player_create(_x, _y)
 
 end
 function player_step(_obj)
+ -- if lesbians aren't allowed, don't do this
+ if (not setting_get(6)) return
 
  -- jiggle animation countdown
  _obj.jiggle = max(_obj.jiggle - 0.2, 0)
@@ -57,8 +59,7 @@ function player_step(_obj)
   if (_new_dir != -1 or g_puzz_use_portal) then
    -- do a check if this is solid or not. if we're on portal, we can move
    local _can_move, _check, _chx, _chy = g_puzz_use_portal, 1, _obj.x + cos(_new_dir >> 2), _obj.y + sin(_new_dir >> 2)
-   -- ashe note: allow for prevent self overlap later
-   if (g_puzz_on_convey or true) _check = 3 -- allow for move on slime
+   if (g_puzz_on_convey or setting_get(2)) _check = 3 -- allow for move on slime
    _can_move = mget(_chx + 48, _chy) & _check > 0
    -- if the future block is an ice block, and the player is in the fire state, let em through
    local _nextblock = mget(_chx + 32, _chy)
@@ -84,7 +85,7 @@ function player_step(_obj)
     end
 
     -- reset move factor, set if move is sprint, set she's moving
-    _obj.anim, _obj.sprint, _obj.ismove = 0, btn(4), true
+    _obj.anim, _obj.sprint, _obj.ismove = 0, tonum(setting_get(3)) ^^ tonum(btn(4)) == 1, true
     -- set where she's moving from
     if (g_puzz_use_portal == false) _obj.oldx, _obj.oldy = _obj.x, _obj.y
     if (_new_dir >= 0) _obj.x, _obj.y = _chx, _chy
@@ -290,7 +291,8 @@ end
 function player_draw(_obj)
  -- if the player was destroyed by something, don't draw
  -- also don't draw if the player is in a floor portal
- if (_obj.isdead or g_puzz_use_portal) return
+ -- or if lesbians are not allowed
+ if (_obj.isdead or g_puzz_use_portal or not setting_get(6)) return
 
  local _dir, _x, _y, _offset, _dir = _obj.dir, (_obj.x << 4), (_obj.y << 4)
  

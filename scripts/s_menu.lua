@@ -29,6 +29,7 @@ function menu_create(_x, _y, _w, _items)
    if (self.m_anim_factor == 0 and self.m_anim_incr < 0) deli(g_menu)
   end,
   m_draw = function(self, _index)
+   palt()
    local _m_count = count(g_menu)
    local _is_top_pane = _index == _m_count
    -- should we show this?
@@ -49,22 +50,36 @@ function menu_create(_x, _y, _w, _items)
      if (_base_y < _y2 - 9) then 
       _sx1, _sy1, _sx2, _sy2 = _x1 + 3, _base_y - 3, _x2 - 3, _base_y + 7
       _is_hilite = _ind == self.m_highlight
-	  if (_is_hilite) rectfill(_sx1, _sy1, _sx2, _sy2, 2)
-      print(_item.i_label, _base_x, _base_y, _is_hilite and 7 or 13)
+	    if (_is_hilite) rectfill(_sx1, _sy1, _sx2, _sy2, 2)
+      pal(7, _is_hilite and 7 or 13)
+      print(_item.i_label, _base_x, _base_y, 7)
       if (_is_hilite) then
        fillp(g_fillp_diag[ceil(g_fillp_anim)])
-	   rect(_sx1, _sy1, _sx2, _sy2, 154)
-	   fillp(0)
-	  end
-	 end
+	     rect(_sx1, _sy1, _sx2, _sy2, 154)
+	     fillp(0)
+	    end
+      if (_item.i_setting != nil) then
+       spr(setting_get(_item.i_setting) and 101 or 96, _x2 - 11, _base_y - 2)
+      end
+	   end
      _base_y += 10
     end
+    pal()
    end
  })
 end
 function menu_item_base(_str, _func)
  return {
 	i_label = _str,
-	i_onclick = _func
+	i_onclick = _func,
+  i_setting = nil
  }
+end
+-- setting is the offset of the setting this represents
+function menu_item_setting(_str, _setting)
+ local _item = menu_item_base(_str, function(self)
+   setting_set(self.i_setting, setting_get(self.i_setting) == false)
+  end)
+ _item.i_setting = _setting
+ return _item
 end
