@@ -37,15 +37,21 @@ function player_step(_obj)
  -- show pause menu on victory? (tmp)
  if (btnp(4) and g_level_win and g_bottom_msg_anim == 1) extcmd("pause")
 
+ 
+ -- do the move animation
+ _obj.anim = min(_obj.anim + ((_obj.sprint or g_puzz_on_convey or g_puzz_use_portal) and 0.2 or 0.1111), 1)
+ 
+
  -- allow input buffer?
- if (_obj.anim >= 0.8) then
+ if (_obj.anim >= 0.65) then
   if (btn(0)) g_new_dir = 2
   if (btn(1)) g_new_dir = 0
   if (btn(2)) g_new_dir = 1
   if (btn(3)) g_new_dir = 3
  end
-
- if (_obj.anim == 1 and not g_level_win and not g_level_lose) then
+ 
+ -- fix fractional precision errors
+ if (_obj.anim + 0.001 >= 1 and not g_level_win and not g_level_lose) then
   -- did she just stop moving?
   if (_obj.ismove == true) player_end_move(_obj)
 
@@ -71,6 +77,8 @@ function player_step(_obj)
    g_new_dir, _obj.dir = -1, _new_dir
    -- can we actually move here?
    if (_can_move and not g_level_lose) then
+
+    g_level_started = true
    
     -- record the playfield before making a move?
     if (not g_puzz_use_portal and not g_puzz_on_convey) then
@@ -94,16 +102,13 @@ function player_step(_obj)
   end
  end
 
- -- do the move animation
- _obj.anim = min(_obj.anim + ((_obj.sprint or g_puzz_on_convey or g_puzz_use_portal) and 0.2 or 0.1111), 1)
- 
  -- have we won?
  if (g_level_win == false and g_level_touched >= g_level_tiles) then
   g_level_win = true
   -- add option for next stage, and remove "skip puzzle" option
   menuitem(1, "next stage",
    function()
-    unpack_level(g_level_index + 1)
+   set_game_mode(2, g_puzz_world_index, g_puzz_level_index + 1)
    end
   )
   menuitem(2)
@@ -111,6 +116,9 @@ function player_step(_obj)
 
  -- if we've won, make stephanie face down
  if (g_level_win) _obj.dir = 3
+ 
+ -- timer
+ if (g_level_started and not g_level_win) g_level_time = min(g_level_time + (time() - g_time), 599.999)
 
 end
 

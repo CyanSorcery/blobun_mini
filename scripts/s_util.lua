@@ -150,3 +150,8 @@ function draw_wavy_text(_str, _x, _y, _col, _px)
   _x = print(sub(_str, i, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
  end
 end
+
+function format_time(_num)
+ -- mika note: we add to the time to guarantee 0's in the padding
+ return (_num >= 60 and flr(_num / 60)..":" or "")..sub(flr(_num % 60) + 100, 2, 3).."."..sub(flr((_num % 1) * 1000) + 1000, 2, 4)
+end

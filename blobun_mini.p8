@@ -50,6 +50,8 @@ function _init()
 
  g_even_frame = false
 
+ g_time = time()
+
  -- objects/hint arrows that are in the playfield
  g_object_list, g_arrow_list = {}, {}
 
@@ -73,6 +75,10 @@ function _init()
  g_level_win = false
  -- when the player has lost, this is set
  g_level_lose = false
+ -- the time for the current level
+ g_level_time  = 0
+ -- if the player has started the level or not
+ g_level_started  = false
 
  -- how many puzzle coins/octogems the player has
  g_puzz_coins, g_puzz_octogems = 0, 0
@@ -129,7 +135,7 @@ function _init()
  -- send us to the intro
  --unpack_intro()
  --unpack_title()
- unpack_level(1, 1)
+ unpack_level(1, 2)
  --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
@@ -204,7 +210,11 @@ function _update()
   if (setting_get(5)) sfx((g_play_sfx >> 10) & 0x3f, 3, (g_play_sfx >> 5) & 0x1f, g_play_sfx & 0x1f)
   g_play_sfx = nil
  end
-
+ 
+ 
+ g_time = time()
+ -- if time rolls over, stop the game since timers will break
+ if (g_time < 0) stop("Game has been running for too long. Take a break!")
 end
 
 function _draw()
@@ -271,7 +281,7 @@ function unpack_level(_world, _stage)
  g_object_list, g_arrow_list, g_undo_queue = {}, {}, {}
  g_level_tiles, g_level_touched, g_bottom_msg_anim, g_puzz_coins, g_puzz_octogems = 0, 0, 0, 0, 0
  g_redraw_coin, g_btn4_held, g_level_win, g_level_lose = true, false, false, false
- g_puzz_zapper_turn, g_redraw_zappers, g_particles = 0, true, {}
+ g_puzz_zapper_turn, g_redraw_zappers, g_particles, g_level_time, g_level_started = 0, true, {}, 0, false
  
  -- clamp the world index
  _world = mid(1, _world, count(g_levels))
@@ -284,12 +294,12 @@ function unpack_level(_world, _stage)
  
  menuitem(1, "restart puzzle",
  function()
-  set_game_mode(2, g_puzz_world_target, g_puzz_level_target)
+  set_game_mode(2, g_puzz_world_index, g_puzz_level_index)
  end
  )
  menuitem(2, "skip puzzle",
   function()
-  set_game_mode(2, g_puzz_world_target, g_puzz_level_target + 1)
+  set_game_mode(2, g_puzz_world_index, g_puzz_level_index + 1)
   end
  )
  menuitem(3, "stage select",
@@ -591,7 +601,7 @@ function parse_levels()
    _bytes = ceil(tonum(sub(_str, _offset, _offset), 0x1) / 2)
    _fst.l_hintcount, _fst.l_hintstr = _bytes, _bytes == 0 and "" or sub(_str, _offset + 1, _offset + _bytes)
    -- get the level data itself
-   _fst.l_data = sub(_str, _offset + _bytes + 1)
+   _fst.l_data = sub(_str, _offset + _bytes - 1)
    -- figure out the height
    _fst.l_height = (#_fst.l_data / _fst.l_width) >> 1
    -- store this level data

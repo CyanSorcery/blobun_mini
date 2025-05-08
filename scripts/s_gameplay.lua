@@ -68,7 +68,7 @@ function draw_gameplay()
  if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
  pal()
  poke(0x5F54, 0x00)
- print("level name here", 2, 2, 7)
+ print(format_time(g_level_time), 2, 2, 7)
  -- draw slimebar
  --rectfill(95, 0, 127, 8, 0)
  rect(96, 1, 126, 7, 7)
