@@ -1,4 +1,4 @@
-function init_config()
+function init_config(_force_reset)
  -- first, initialize this cartridge's save data
  cartdata(g_cart_name)
 
@@ -13,7 +13,7 @@ function init_config()
 	6: lesbians (on)
 
 	slot 62:
-	4 bits per world, 4 worlds total
+	4 bits per world (max 8)
 	0 means player hasn't unlocked world, anything above
 	means they have (up to 15 stages)
 
@@ -22,7 +22,7 @@ function init_config()
  ]]
 
  -- if the first bit isn't set in the last slot, we need to initialize this
- if (dget(63) == 0) then
+ if (dget(63) == 0 or _force_reset) then
   -- set initial options
   dset(63, 0b01110101)
   -- set initial time on all stages (means it hasn't been beaten)

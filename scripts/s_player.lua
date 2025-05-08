@@ -34,7 +34,7 @@ function player_step(_obj)
  -- do undo?
  if (btnp(5) and not g_level_win) perform_undo()
 
- -- show pause menu on victory?
+ -- show pause menu on victory? (tmp)
  if (btnp(4) and g_level_win and g_bottom_msg_anim == 1) extcmd("pause")
 
  -- allow input buffer?

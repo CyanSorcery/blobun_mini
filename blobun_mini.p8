@@ -121,15 +121,15 @@ function _init()
  parse_levels()
 
  -- initialize the save data
- init_config()
+ init_config(false)
 
  -- decompress the game's sound effects
  decompress_sfx(1)
  
  -- send us to the intro
  --unpack_intro()
- unpack_title()
- --unpack_level(1, 1)
+ --unpack_title()
+ unpack_level(1, 1)
  --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")

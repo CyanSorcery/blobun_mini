@@ -56,6 +56,7 @@ end
 function perform_undo()
  -- find out the top undo and, if it's not the last one, delete it
  local _count = count(g_undo_queue)
+ if (_count == 0) return -- unlikely scenario, but prevents crash
  local _undo = g_undo_queue[_count]
  if (_count > 1) deli(g_undo_queue)
  -- replace object list
@@ -64,7 +65,7 @@ function perform_undo()
  local _player = g_object_list[1]
  _player.x, _player.y, _player.oldx, _player.oldy, _player.anim, _player.dir, _player.pstate, g_puzz_coins, g_level_touched, g_puzz_octogems, _player.haskey, g_puzz_zapper_turn = _undo.player_x, _undo.player_y, _undo.player_x, _undo.player_y, 1, _undo.player_dir, _undo.player_pstate, _undo.player_coins, _undo.tiles_touched, _undo.player_octogems, _undo.player_haskey, _undo.zapper_turn
  -- reset the buffered direction and lose state, and redraw the coins
- g_new_dir, g_level_lose, _player.isdead, g_redraw_coin, g_redraw_zappers = -1, false, false, true, true
+ g_new_dir, g_level_lose, _player.isdead, g_redraw_coin, g_redraw_zappers, _player.ismove = -1, false, false, true, true, false
  -- restore the playfield
  unpack_undo_tiles(_undo.playfield_walls, 32, 16)
  unpack_undo_tiles(_undo.playfield_slime, 48, 16)
