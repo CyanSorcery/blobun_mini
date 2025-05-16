@@ -83,3 +83,25 @@ function menu_item_setting(_str, _setting)
  _item.i_setting = _setting
  return _item
 end
+
+function menu_create_puzz_win()
+ menu_create(16, 64, 96,{
+  menu_item_base("next puzzle", menuitem_puzz_skip),
+  menu_item_base("restart puzzle", menuitem_puzz_restart),
+  menu_item_base("stage select", menuitem_puzz_stage_select),
+  menu_item_base("go to title", menuitem_puzz_goto_title)
+ })
+end
+
+function menuitem_puzz_restart()
+ set_game_mode(2, g_puzz_world_index, g_puzz_level_index)
+end
+function menuitem_puzz_skip()
+ set_game_mode(2, g_puzz_world_index, g_puzz_level_index + 1)
+end
+function menuitem_puzz_stage_select()
+ set_game_mode(1)
+end
+function menuitem_puzz_goto_title()
+ set_game_mode(0)
+end

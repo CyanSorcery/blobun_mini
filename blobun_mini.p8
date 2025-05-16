@@ -132,6 +132,8 @@ function _update()
   if (g_outro_anim == 0) then
    if (g_game_mode_target == 0) then
     unpack_title()
+   elseif (g_game_mode_target == 1) then
+    unpack_stage_select()
    elseif (g_game_mode_target == 2) then
     unpack_level(g_puzz_world_target, g_puzz_level_target)
    elseif (g_game_mode_target == 3) then
@@ -271,28 +273,10 @@ function unpack_level(_world, _stage)
  g_puzz_world_index, g_puzz_level_index, g_puzz_curr_fst = _world, _stage, g_levels[_world][_stage]
 
  -- add menuitems for this
- 
- menuitem(1, "restart puzzle",
- function()
-  set_game_mode(2, g_puzz_world_index, g_puzz_level_index)
- end
- )
- menuitem(2, "skip puzzle",
-  function()
-  set_game_mode(2, g_puzz_world_index, g_puzz_level_index + 1)
-  end
- )
- menuitem(3, "stage select",
-  function()
-   set_game_mode(1)
-  end 
- )
- menuitem(4, "go to title",
-  function()
-   set_game_mode(0)
-  end 
- )
-
+ menuitem(1, "restart puzzle", menuitem_puzz_restart)
+ menuitem(2, "skip puzzle", menuitem_puzz_skip)
+ menuitem(3, "stage select", menuitem_puzz_stage_select)
+ menuitem(4, "go to title", menuitem_puzz_goto_title)
 
  -- get ready to parse the level data
  local _level_data = {}

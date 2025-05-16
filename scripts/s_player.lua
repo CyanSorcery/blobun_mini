@@ -28,14 +28,17 @@ function player_step(_obj)
  -- if lesbians aren't allowed, don't do this
  if (not setting_get(6)) return
 
+ local _btn4_press = btn(4) and g_btn4_held == false
+ g_btn4_held = btn(4)
+
  -- jiggle animation countdown
  _obj.jiggle = max(_obj.jiggle - 0.2, 0)
 
  -- do undo?
  if (btnp(5) and not g_level_win) perform_undo()
 
- -- show pause menu on victory? (tmp)
- if (btnp(4) and g_level_win and g_bottom_msg_anim == 1) extcmd("pause")
+ -- show pause menu on victory?
+ if (_btn4_press and g_level_win and g_bottom_msg_anim == 1 and count(g_menu) == 0) menu_create_puzz_win()
 
  
  -- do the move animation
@@ -56,8 +59,7 @@ function player_step(_obj)
   if (_obj.ismove == true) player_end_move(_obj)
 
   -- sprint jiggle?
-  if (btn(4) and g_btn4_held == false) _obj.jiggle = 1
-  g_btn4_held = btn(4)
+  if (_btn4_press) _obj.jiggle = 1
 
   -- move her around the playfield?
   _obj.sprint = false
@@ -105,13 +107,8 @@ function player_step(_obj)
  -- have we won?
  if (g_level_win == false and g_level_touched >= g_level_tiles) then
   g_level_win = true
-  -- add option for next stage, and remove "skip puzzle" option
-  menuitem(1, "next stage",
-   function()
-   set_game_mode(2, g_puzz_world_index, g_puzz_level_index + 1)
-   end
-  )
-  menuitem(2)
+  -- get rid of menu options since we have our own
+  for i=1,5 do menuitem(i) end
  end
 
  -- if we've won, make stephanie face down

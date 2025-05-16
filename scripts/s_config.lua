@@ -4,13 +4,13 @@ function init_config(_force_reset)
 
  --[[
 	slot 63:
-	0: save initialized
-	1: show timers (off)
-	2: slime overlap (on)
-	3: sprint by default (off)
-	4: music (on)
-	5: sfx (on)
-	6: lesbians (on)
+	1: save initialized
+	2: show timers (off)
+	3: slime overlap (on)
+	4: sprint by default (off)
+	5: music (on)
+	6: sfx (on)
+	7: lesbians (on)
 
 	slot 62:
 	4 bits per world (max 8)
