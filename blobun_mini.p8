@@ -32,8 +32,6 @@ function _init()
 
  -- tile lut
  #include res/r_tile_lut.lua
- -- camera position
- g_cam_x, g_cam_y = 0, -8
  -- levels
  #include res/r_levels.lua
  -- sound effects
@@ -46,73 +44,20 @@ function _init()
  g_fillp_anim, g_wavy_anim = 0, 0
  g_fillp_transition = {0x8001.8, 0xa5a5.8, 0xedb7.8, 0xffff.8}
 
- g_player_blink = 5
-
+ -- if this is an even or odd frame
  g_even_frame = false
 
+ -- how long (in real time) the game has been running, used for timers
  g_time = time()
 
- -- objects/hint arrows that are in the playfield
- g_object_list, g_arrow_list = {}, {}
-
- -- current level
- g_puzz_world_index = 1
- g_puzz_level_index = 1
- g_puzz_curr_fst = {}
  -- when we're to load a new puzzle, this is set
  g_puzz_world_target = nil
  g_puzz_level_target = nil
  -- when we're to load a new gameplay mode, this is set
  g_game_mode_target = nil
 
- -- how many tiles the level has/been touched
- g_level_tiles, g_level_touched = 0, 0
- -- used for input buffering
- g_new_dir = -1
- -- used to detect when sprint has just been pressed
- g_btn4_held = false
- -- when the player has won, this is set
- g_level_win = false
- -- when the player has lost, this is set
- g_level_lose = false
- -- the time for the current level
- g_level_time  = 0
- -- if the player has started the level or not
- g_level_started  = false
-
- -- how many puzzle coins/octogems the player has
- g_puzz_coins, g_puzz_octogems = 0, 0
- -- if the player is on a conveyer/portal this turn
- g_puzz_on_convey, g_puzz_use_portal = false, false
- -- what turn the floor zappers are on. 012 = cmy
- g_puzz_zapper_turn, g_redraw_zappers = 0, true
-
- -- we need to redraw the coins blocks?
- g_redraw_coin = false
-
- -- table for objects we need to delete
- g_obj_delete = {}
-
- -- lookup table for water/lava shimmer
- g_shimmer_water = 0b1111000111110000.1110000111111000
-
- -- slime trail animation
- g_slime_trail_anim = 0
-
- -- undo queue
- g_undo_queue = {}
-
- -- when animating the bottom message, this is incremented
- g_bottom_msg_anim = 0
-
- -- particle table
- g_particles = {}
- 
- -- intro and exit animations for coming and going in stages
+ -- intro and exit animations for coming and going in stages/game states
  g_intro_anim, g_outro_anim = 0, 1
-
- -- animation for title screen background scrolling
- g_title_scroll   = 0
  
  -- this holds any menus that are on screen right now
  g_menu = {}
@@ -120,8 +65,6 @@ function _init()
  -- when doing the game update, these are the functions to call
  g_func_update = nil
  g_func_draw = nil
-
- g_intro_countdown = 90
 
  -- parse the level data
  parse_levels()
@@ -179,9 +122,6 @@ function _update()
  g_wavy_anim %= 1
 
  g_even_frame = g_even_frame == false
-
- g_slime_trail_anim += 0.075
- g_slime_trail_anim %= 1
 
  -- run the update function
  g_func_update()
@@ -259,6 +199,9 @@ end
 function unpack_title()
  unpack_nongameplay(-1)
  finalize_game_mode(0, update_title, draw_title)
+
+ -- animation for title screen background scrolling
+ g_title_scroll   = 0
 end
 
 function unpack_stage_select()
@@ -277,17 +220,54 @@ function unpack_level(_world, _stage)
 
  -- clear the map to be ready for incoming data
  memset(0x2000, 0, 0x1000)
- -- reset the drawlist for the incoming elements
- g_object_list, g_arrow_list, g_undo_queue = {}, {}, {}
- g_level_tiles, g_level_touched, g_bottom_msg_anim, g_puzz_coins, g_puzz_octogems = 0, 0, 0, 0, 0
- g_redraw_coin, g_btn4_held, g_level_win, g_level_lose = true, false, false, false
- g_puzz_zapper_turn, g_redraw_zappers, g_particles, g_level_time, g_level_started = 0, true, {}, 0, false
+ -- (re)set all the variables involved with levels
+ --[[
+   g_object_list - all objects in the stage (player is index 1)
+   g_arrow_list - arrows that are shown on the playfield
+   g_undo_queue - queue of undo steps for this puzzle
+   g_particles - all particles currently in use
+   g_shimmer_water - for animating water/lava
+ ]]
+ g_object_list, g_arrow_list, g_undo_queue, g_particles, g_shimmer_water = {}, {}, {}, {}, 0b1111000111110000.1110000111111000
  
+ --[[
+   g_level_tiles - how many tiles in the stage
+   g_level_touched - how many tiles the player touched
+   g_bottom_msg_anim - incremented to show a message at the bottom of the screen
+   g_puzz_coins - how many coins the player has collected
+   g_puzz_octogems - how many octogems the player has
+   g_cam_x/y - initial position of the camera (updated before player can see)
+ ]]
+ g_level_tiles, g_level_touched, g_bottom_msg_anim, g_puzz_coins, g_puzz_octogems, g_cam_x, g_cam_y = 0, 0, 0, 0, 0, 0, -8
+ --[[
+   g_redraw_coin - when set, update the visuals on coin blocks
+   g_btn4_held - used to detect when the button has *just* been pressed
+   g_level_win - set when the player has won
+   g_level_lose - set when the player has lost. can undo from this state
+   g_puzz_on_convey - player is on a conveyer belt
+   g_puzz_use_portal - player is in a floor portal
+ ]]
+ g_redraw_coin, g_btn4_held, g_level_win, g_level_lose, g_puzz_on_convey, g_puzz_use_portal = true, false, false, false, false, false
+ --[[
+   g_puzz_zapper_turn - which zapper is the active one, in this order: 012 = cmy
+   g_redraw_zappers - when set, update the visuals on the floor zappers
+   g_level_time - how much time the player has spent on this stage
+   g_level_started - the player has started the puzzle
+   g_new_dir - used for input buffering, stores upcoming direction
+   g_player_blink - how many frames until the player blinks
+   g_slime_trail_anim - animation factor for the player slime trail
+ ]]
+ g_puzz_zapper_turn, g_redraw_zappers, g_level_time, g_level_started, g_new_dir, g_player_blink, g_slime_trail_anim = 0, true, 0, false, -1, 5, 0
+
  -- clamp the world index
  _world = mid(1, _world, count(g_levels))
  -- clamp the stage index
  _stage = mid(1, _stage, count(g_levels[_world]))
- -- store it
+ --[[
+   g_puzz_world_index - the current world in play
+   g_puzz_level_index - the current stage in play
+   g_puzz_curr_fst - the puzzle data object in play
+ ]]
  g_puzz_world_index, g_puzz_level_index, g_puzz_curr_fst = _world, _stage, g_levels[_world][_stage]
 
  -- add menuitems for this
@@ -492,90 +472,6 @@ function proc_autotile(_initial, _id, _work_x, _place_func)
  end
 end
 
--->8
--- for creating and processing objects
-
--- object table
--- 0: stephanie
--- 1: heart key
--- 2: diamond key
--- 3: triangle key
--- 4: coin key
--- 5: normal state
--- 6: fire state
--- 7: ice state
--- 8-15: octogems
--- 16: generic key
-
-function proc_objects()
- foreach(g_object_list, function(_obj) _obj:onstep() end)
-
- for _del in all(g_obj_delete) do
-  for _obj in all(g_object_list) do
-   if (_obj.pos == _del) then
-    del(g_object_list, _obj)
-    break
-   end
-  end
-  del(g_obj_delete, _del)
- end
- 
-end
-
--- this adds a hint arrow on the floor
--- 0: right, 1: up, 2: left, 3: down
-function add_hint_arrow(_x, _y, _dir)
- add(g_arrow_list, {
-  dir=_dir,
-  x=(_x << 4) + 12,
-  y=(_y << 4) + 12
- })
-end
-
--- this creates keys we can grab
-function create_obj_key(_x, _y, _key, _spr)
- return {
-    type=_key,
-    iskey=true,
-    x=(_x << 4) + 8,
-    y=(_y << 4) + 5,
-    pos=(_x << 4) | _y, -- positional key
-    spr=_spr, -- our key sprite
-    anim=rnd(1), -- animation offset
-    spin=rnd(1), -- for rotating
-    onstep = function(self)
-     self.anim += 0.02
-     self.anim %= 1
-     self.spin += 0.035
-     self.spin %= 1
-    end,
-    ondraw = draw_floating_key
- }
-end
-
-function create_obj_octogem(_x, _y, _key)
- local _obj = create_obj_key(_x, _y, _key, 87)
- _obj.ondraw = function(self)
-  -- only draw this octogem if it's the current one
-  if (self.type - 8 == g_puzz_octogems) draw_floating_key(self)
- end
- return _obj
-end
-
-function create_obj_gen_key(_x, _y)
- local _obj = create_obj_key(_x, _y, 16, 159)
- _obj.ondraw = function(self)
-  spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
- end
- return _obj
-end
-
-function draw_floating_key(self)
- local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, flr(self.spr / 16) << 3, ceil(sin(self.spin * 0.5) * -8)
- if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
- sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
- sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
-end
 
 -- this converts the level table from a bunch of strings to worlds/stages
 function parse_levels()
@@ -753,24 +649,31 @@ b4d16ede175847b487ed74371b384a2b1c2f3037199484842f8561d4be19b6f8178329db19385e56
 9fd5a8833b89e704274c3b4895cd4e0780919df97bde79d67983ab55c67e16ba8defc56e8e6051747b30421f8940cf0678f16ef083e0bdf2bc4eae6b88b298f1
 0fc059cf227c2b9d129cf2646ef9d17adead68bead60f4209489f74239369d2399bca901fcafdf0f7c33c76ef8bebcdea8f3c1293cf12297814c8a7f99e3fc37
 c5988fe0f57df7a9b1e57d59c3eaf7c5e41f079b5ecf7c5e1cbc3edb7a93eabeb80b3adf5271574bd7e70ecb2794883e27c10f78d3d1715fdb46c45a17577b6e
-7933390fad52e877c74cb7e8f4b77485f78c1b810d36ffffff0ff7aef408fe41235679abcde19c45e88a56074dcc5f4aaa675e1b6a989d2383e033fc79b679c5
-76b3f5c5f6b3d8bed67a17ddde43eaf1ad96c5f74b3d8be7967a17df3de1e83c1fb89f36a23846e1bbc46aa2401e1364663b910310660cc089103306668d97df
-27e5797df39f73ff88b67d2fb439059e11fd8d23c7bfe8b83ccea546d7c5a255743612d32bc0bff3ddf07b7c3fbc974f9f7c99cf2edf748be71afc9ef9f7abd6
-d44b7cf23e795e7878f61ff42ea9b20cbe8454adff9830c13cb9b4242afc59621daf83212167b7eae6b5ff9f58e6e8f581442174275f96a432ffb3930f6e28f7
-21d7c1701ae99e30f7c339f5e88c339b07522fff84f8e6b5f9de8d6bd62222deff040787cb93e785c574cea87abe8a3bcf08f5428075693062ea95817542600c
-bf4f8a8caff30128df029a5cbd8d5b77ddb883bc983a906ef9c334367daf9eced3244067cbcf26777f7c67c6b6ff5306873f84c976cebd37c1bb017bc19c2e3c
+7933390fad52e877c74cb7e8f4b77485f78c1b81b536ffffff0ff7aef408a419b23cd567fe05137537874d575e279abebc5e2dc3e4fa9bee455d3f34eed92fcf
+1dea2fcf1662fccc4e9999c3333976662fccc4e9999c333393666336c6679d56c818d56c8ccefffdcdfe3f3c1faf1ed36787f79d2fb4ce94298b4c6fb4c5b95e
+98d2944c7e71b57cbbd2b852942ef11bdb9b5dd94c7846d09ff1cf7bef1bf3c1dbfaf1ead3f7cd2cdf6bdf8e383e6cf198777c7d6796f08937bf81cdf4bd058d
+3ef069c93e7097f9c97dbf3cecb6b7ef6e8ff29c3f7c85faebbc1f48bf796bfb0d707cb1426b7e786bf09e0ee7adef041ec7adef21d0403fbc32c2d7276b7c44
+affa48ef7f427d3f8cb7c5dc274e2ee3bde8e14a5299b393e86bf74a51cc9b581c7d6bc3c3262cb99c7a271fd1fc67c6bffbc5d729e34f7837395a972a95a271
+3e63df326b4e1d3672b117ad674c69cc69f729db95e8527eb29e573319b6befc4d7ed8f3a1f7421c194daee8c67f37983e9942ed76e4c0199c421ff46ef10c92
 __map__
-fedadb6e5b8fedd8d6e9967e477ca47573b81ffe2f72fd507dee95d4926bf98824b2f8b0f9c7932709e662c8991fba6d5bd23f32ffec785d4fb7adfd9fc86c579f3e7daac76a8b25ff10cb9c4d16549f708523dec499b988237379fefae13ab6add7b5675bfbafe1b876edfae5891e62c9b73c39d85c43bd4fb85c6f58def828
-9b238fe7c8d3f67fa038ae35fd125d63f349306f2432a7631e09c9fe39e20dfbc1fbf0e8fa872667586cc77b77fd9fd8a58e3d3daa5b2dd972308df8eac2a63b22d7f1a54bdee42093ef893f2e2c8945fe27e0f8a16ddbfaa5b5e45a2ee249fcf1b0598ee1b8dcc7b13fc42dbae5842d6d82dff2b5dbd67b3bb6b5ffcad80fc7
-7a5d5bdfc515ff401c09715eaecbfd241287b167fe49fc91f8e7f2cf75789bfd0f64b23fac6dea58be17ee5fce2fca0fb8ee1f7ef0dd7fb8ba79373bb11badfe5021fa09ff07f2a26bfe596dcbb6c31f4b5cc9d7a7f95b0eafe3f0cb15c7f1fc7172fcf3c72ffb47771d9fe6dab66f7f78eef3fd05e7f9a679ebe9711ccde5b8
-ae1c598e2ed976ac9cd9c8a1e27fc4448f1dafcf9d3f2efef1a97d3b67edb11ec773f6979ecf796e93624ead4b7e38bf5defcea9a7bbaa6fff78be779bfe4f980c95c495a6213fb83cdfbea9a353fda7d7737ddba41ce271ccf0b93cdfbed91cdd337d773dd7b74dff278cf99c72921f72321ef73f3fdcdbbae797b6477ff963
-7ff4f8e187bbdb76fe13dffd4f8eaae0beaeefdb8e698e69f65ffa7d5fb76ddbb6adffdaa5ceef8f5f12619ee911fbc9f1ff37c3ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f230cae81ff979fbeffff6d7787072030405000213141513147570712
-2232425262728292a2b2c21200132333435363738393a3b3c303142434445464748494a4b4c404172707152535455565758595a5b5c5151126364666768696a6b6c6e6d6f6d6d2d4f3d705182838485868788898a8b898a7b7c7d8e8c8d7e7e73f49922449922499a3c773f5f1fdd8f3bd7fb8fe377ffcf24f9224499224c94f
-7ffdf6df8f7ffefaefcf7ffffe3ff83ffc2f7efbe5fff13ff9bffc6ffe3fffa3ffd3ffeafff53ffbbffdeffe7f7ffcf6fffc1ffe1fff97ffcfffe9fff57ffbfffd1fff9fffd7ffeffff9fffd7fffff07922449922449feffc1ff5ff8ff0fff7fe2ff5ffcff8dfffff1ff47feffc9ff5ff9ff2fff7fe6ffdffcff9ddf7ef9ff0b
-ffffe7ff0ffdffa3ffbfd4fffff4ffa7feffd5ffdffaff5fff7fecff9ffdf0db0fff7fedffbffdffb9ff7ff7fff7feffdfff1f7cfeff61ae9f7e3cfeffdeffdffbff8bff7fef8824bb7fecff7ffcff93fffff2ff6ffe1ffaff3fffffe8ff3ffdffabff87feff9ffffffaff67ffffedf9dfffdffdffbfff7f384992244992c4fe
-fff1ff5ffeffcfe7fefff4ffbffeffdb3ff9dffeff251fa1fffffff0ffe93f102a3596db7f48fcffff15e1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f
-23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23ecc8f47025f6ac9ab492fa7f25bbbeefdcf61dddbbedd8bd1f76ee8ffdd0efed1f3fec9cfb5dbe9de7f5fc71f97f3fc9b53dbff8c31fdf768ab7dbb1edde766c13e9b65fb67569137d7e207eb0ebfd438e371efdc3c1e38f208fefe69cd3
-86fde175fce10dce3c3f4c5c9abce68f38f63cb7f48fa47f78e7971fbcfb25679e3ccb1f831dfbe4128f5d386ff9e1d975d7cefc020e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+599aff07f5b8b3a7e14c8e2cbfccf2105f1259af81d9fe89ed3944635bd57ccc55e99d789f11f33157fc92c72322d2feaefde35964b1c5972d8c25771e47e624bbe6ba7479275db69b398ee417f1cb8e55bfac632adf755dfb65dbcf48b432662272278ee4f821f1e6057ffcf0875fe87cc3b11f7ec83ff02c07c43289b90872
+50879bcd012497d49dfd1dea0f2e70f10f8f0476488e497f310ff3de732e976e7f5cfc423d4bf28ec00f8ed40f2226525ba6eba48eec6fd7e1951ed178e48cbdeffc93fc719ff37de211abd8e3b25f3281a8d76935d7651ef3ced64c882462c496f98b637fecd8b163f78ec53fcdb3eed9b167c7e29a1fee3872fcb23cf5ed1f
+7df61e89270346f28f1d788db10123f9c50e30c6068cb101636cc0c8757c3ff4ecc7a7b2f9a23ffcf0cbf111fed8f187efb9edfbe5935b0a8117643ee39d777e390efec05ee49503027ec181134f7765d39f7c3d2a57f31c9eafb7e7f3cb4bfc20b9f48763a77f1284e3cdee23b69c76396d9698f561e7f00f6cd86b56f3c7d1
+acedfc71fe71ec3afe388e7b91c60f599e799f1d479c4f8f77fbbe977fe6c1953c71fd0ff887ff3f94cfffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f8401d063fffffff07fea4f80ef14326597
+badc1ec9548ea86570d4ccf5a4aa76e5b1a689d932380e33cf976b975c673b5f5c6f3b8deb6da771dded34ae1fda695c7fb4d3b87e69a771fdd31e8ec3f18bf9632a83641ebb4ca62a04e1314666b319300166c00c9801336066d879fd725e97d73ff937ff886bd7f24b9350e911dfd8327cfb8e8bc3ec5a647d5c2a55476321
+3db20cfb3fdd0fb7c7f3cb79f4f9c799fce2fd47b87ea1cfe99f7fba6d4db4c72fe397e587876ff14fe29a2bc0eb4845daff89031cc39b4b42a2cf9526d1fa381212767bae6e5bfff9856e8e5f1844124772f5694a23ff3b39f0e6827f127d1c07a19ee9037f3c935f8ec833b97025f2ff488f6e5b9fedd8b66d2222edff4070
+78bc397e585c47ec8aa7eba8b3fc805f240857960326ae5918572406c0fbf4a8c8fa3f1082fd20a9c5dbd8b577dd8b38cb89a309e69f3c4363d7fae9ec3d420476bcfc6277f7c7766c6bff356078f3489c67ecdb731cbb10b71cc9e2c3fedadb6e5b8fedd8d6e9967e477ca47573b81ffe2f72fd507dee95d4926bf98824b2f8
+b0f9c7932709e662c8991fba6d5bd23f32ffec785d4fb7adfd9fc86c579f3e7daac76a8b25ff10cb9c4d16549f708523dec499b988237379fefae13ab6add7b5675bfbafe1b876edfae5891e62c9b73c39d85c43bd4fb85c6f58def8289b238fe7c8d3f67fa038ae35fd125d63f349306f2432a7631e09c9fe39e20dfbc1fbf0
+e8fa872667586cc77b77fd9fd8a58e3d3daa5b2dd972308df8eac2a63b22d7f1a54bdee42093ef893f2e2c8945fe27e0f8a16ddbfaa5b5e45a2ee249fcf1b0598ee1b8dcc7b13fc42dbae5842d6d82dff2b5dbd67b3bb6b5ffcad80fc77a5d5bdfc515ff401c09715eaecbfd241287b167fe49fc91f8e7f2cf75789bfd0f64b2
+3fac6dea58be17ee5fce2fca0fb8ee1f7ef0dd7fb8ba79373bb11badfe5021fa09ff07f2a26bfe596dcbb6c31f4b5cc9d7a7f95b0eafe3f0cb15c7f1fc7172fcf3c72ffb47771d9fe6dab66f7f78eef3fd05e7f9a679ebe9711ccde5b8ae1c598e2ed976ac9cd9c8a1e27fc4448f1dafcf9d3f2efef1a97d3b67edb11ec773f6
+979ecf796e93624ead4b7e38bf5defcea9a7bbaa6fff78be779bfe4f980c95c495a6213fb83cdfbea9a353fda7d7737ddba41ce271ccf0b93cdfbed91cdd337d773dd7b74dff278cf99c72921f72321ef73f3fdcdbbae797b6477ff9637ff4f8e187bbdb76fe13dffd4f8eaae0beaeefdb8e698e69f65ffa7d5fb76ddbb6adff
+daa5ceef8f5f12619ee911fbc9f1ff37c3ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f230cae81ff979fbeffff6d77870720304050002131415131475707122232425262728292a2b2c21200132333435363738393a3b3c303142434445464748494
+a4b4c404172707152535455565758595a5b5c5151126364666768696a6b6c6e6d6f6d6d2d4f3d705182838485868788898a8b898a7b7c7d8e8c8d7e7e73f49922449922499a3c773f5f1fdd8f3bd7fb8fe377ffcf24f9224499224c94f7ffdf6df8f7ffefaefcf7ffffe3ff83ffc2f7efbe5fff13ff9bffc6ffe3fffa3ffd3ff
+eafff53ffbbffdeffe7f7ffcf6fffc1ffe1fff97ffcfffe9fff57ffbfffd1fff9fffd7ffeffff9fffd7fffff07922449922449feffc1ff5ff8ff0fff7fe2ff5ffcff8dfffff1ff47feffc9ff5ff9ff2fff7fe6ffdffcff9ddf7ef9ff0bffffe7ff0ffdffa3ffbfd4fffff4ffa7feffd5ffdffaff5fff7fecff9ffdf0db0fff7f
+edffbffdffb9ff7ff7fff7feffdfff1f7cfeff61ae9f7e3cfeffdeffdffbff8bff7fef8824bb7fecff7ffcff93fffff2ff6ffe1ffaff3fffffe8ff3ffdffabff87feff9ffffffaff67ffffedf9dfffdffdffbfff7f384992244992c4fefff1ff5ffeffcfe7fefff4ffbffeffdb3ff9dffeff251fa1fffffff0ffe93f102a3596
+db7f48fcffff15e1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23ec
+c8f47025f6ac9ab492fa7f25bbbeefdcf61dddbbedd8bd1f76ee8ffdd0efed1f3fec9cfb5dbe9de7f5fc71f97f3fc9b53dbff8c31fdf768ab7dbb1edde766c13e9b65fb67569137d7e207eb0ebfd438e371efdc3c1e38f208fefe69cd386fde175fce10dce3c3f4c5c9abce68f38f63cb7f48fa47f78e7971fbcfb25679e3ccb
+1f831dfbe4128f5d386ff9e1d975d7cefc020e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

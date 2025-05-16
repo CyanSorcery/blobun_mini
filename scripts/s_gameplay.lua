@@ -214,6 +214,10 @@ function draw_arrows()
 end
 
 function update_gameplay()
+
+ g_slime_trail_anim += 0.075
+ g_slime_trail_anim %= 1
+
  -- update blinking
  g_player_blink -= 1
  if (g_player_blink <= 0) g_player_blink = 30 + flr(rnd(60))
@@ -235,4 +239,90 @@ function update_gameplay()
   proc_objects()
   proc_particles()
  end
+end
+
+
+-->8
+-- for creating and processing objects
+
+-- object table
+-- 0: stephanie
+-- 1: heart key
+-- 2: diamond key
+-- 3: triangle key
+-- 4: coin key
+-- 5: normal state
+-- 6: fire state
+-- 7: ice state
+-- 8-15: octogems
+-- 16: generic key
+
+function proc_objects()
+ foreach(g_object_list, function(_obj) _obj:onstep() end)
+
+ for _del in all(g_obj_delete) do
+  for _obj in all(g_object_list) do
+   if (_obj.pos == _del) then
+    del(g_object_list, _obj)
+    break
+   end
+  end
+  del(g_obj_delete, _del)
+ end
+ 
+end
+
+-- this adds a hint arrow on the floor
+-- 0: right, 1: up, 2: left, 3: down
+function add_hint_arrow(_x, _y, _dir)
+ add(g_arrow_list, {
+  dir=_dir,
+  x=(_x << 4) + 12,
+  y=(_y << 4) + 12
+ })
+end
+
+-- this creates keys we can grab
+function create_obj_key(_x, _y, _key, _spr)
+ return {
+    type=_key,
+    iskey=true,
+    x=(_x << 4) + 8,
+    y=(_y << 4) + 5,
+    pos=(_x << 4) | _y, -- positional key
+    spr=_spr, -- our key sprite
+    anim=rnd(1), -- animation offset
+    spin=rnd(1), -- for rotating
+    onstep = function(self)
+     self.anim += 0.02
+     self.anim %= 1
+     self.spin += 0.035
+     self.spin %= 1
+    end,
+    ondraw = draw_floating_key
+ }
+end
+
+function create_obj_octogem(_x, _y, _key)
+ local _obj = create_obj_key(_x, _y, _key, 87)
+ _obj.ondraw = function(self)
+  -- only draw this octogem if it's the current one
+  if (self.type - 8 == g_puzz_octogems) draw_floating_key(self)
+ end
+ return _obj
+end
+
+function create_obj_gen_key(_x, _y)
+ local _obj = create_obj_key(_x, _y, 16, 159)
+ _obj.ondraw = function(self)
+  spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
+ end
+ return _obj
+end
+
+function draw_floating_key(self)
+ local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, flr(self.spr / 16) << 3, ceil(sin(self.spin * 0.5) * -8)
+ if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
+ sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
+ sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
 end
