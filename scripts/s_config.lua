@@ -24,7 +24,7 @@ function init_config()
  ]]
 
  -- if the first bit isn't set in the last slot, we need to initialize this
- if (dget(63) == 0) then
+ if dget(63) == 0 then
   -- set initial options
   dset(63, 0b01110101)
   -- set initial time on all stages (means it hasn't been beaten)

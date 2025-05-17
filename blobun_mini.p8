@@ -19,7 +19,7 @@ function _init()
  -- offset of the currently loaded data (so we don't reload it if not necessary)
  g_px9_ind_sprites, g_px9_ind_music = 0, 0
 
- local _offset, _data = 0x8000, peek2(0x8000)
+ local _offset, _data = 0x8000, %0x8000
  -- note: this table matches the type order
  local _t = {g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx}
  while _data != 0 do
@@ -27,7 +27,7 @@ function _init()
   add(_t[(_data >> 13)&0x7], _offset+2)
   -- move forward and see what the next data is
   _offset += 2 + (_data&0x1fff)
-  _data = peek2(_offset)
+  _data = %_offset
  end
 
  -- tile lut
@@ -120,16 +120,16 @@ function _update()
  g_func_update()
 
  g_intro_anim = min(g_intro_anim + 0.1, 1)
- if (g_game_mode_target != nil) then
+ if g_game_mode_target != nil then
   g_outro_anim = max(g_outro_anim - 0.1)
-  if (g_outro_anim == 0) then
-   if (g_game_mode_target == 0) then
+  if g_outro_anim == 0 then
+   if g_game_mode_target == 0 then
     unpack_title()
-   elseif (g_game_mode_target == 1) then
+   elseif g_game_mode_target == 1 then
     unpack_stage_select()
-   elseif (g_game_mode_target == 2) then
+   elseif g_game_mode_target == 2 then
     unpack_level(g_puzz_world_target, g_puzz_level_target)
-   elseif (g_game_mode_target == 3) then
+   elseif g_game_mode_target == 3 then
     unpack_intro()
    end
    -- reset everything
@@ -141,7 +141,7 @@ function _update()
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
  -- play a sound effect this frame?
- if (g_play_sfx != nil) then
+ if g_play_sfx != nil then
   if (setting_get(5)) sfx((g_play_sfx >> 10) & 0x3f, 3, (g_play_sfx >> 5) & 0x1f, g_play_sfx & 0x1f)
   g_play_sfx = nil
  end
@@ -161,7 +161,7 @@ function _draw()
 
  -- draw transition?
  local _anim = g_intro_anim * g_outro_anim
- if (_anim < 1) then
+ if _anim < 1 then
   local _w = 64 * cos(_anim >> 2)
   rectfill(0, 0, _w, 127, 1)
   rectfill(127 - _w, 0, 127, 127, 1)
@@ -226,9 +226,10 @@ function unpack_level(_world, _stage)
    g_arrow_list - arrows that are shown on the playfield
    g_undo_queue - queue of undo steps for this puzzle
    g_particles - all particles currently in use
+   g_obj_delete - objects to delete this frame
    g_shimmer_water - for animating water/lava
  ]]
- g_object_list, g_arrow_list, g_undo_queue, g_particles, g_shimmer_water = {}, {}, {}, {}, 0b1111000111110000.1110000111111000
+ g_object_list, g_arrow_list, g_undo_queue, g_particles, g_obj_delete, g_shimmer_water = {}, {}, {}, {}, {}, 0b1111000111110000.1110000111111000
  
  --[[
    g_level_tiles - how many tiles in the stage
@@ -293,12 +294,12 @@ function unpack_level(_world, _stage)
   _level_data[i] = _dstile
   _mod = ((_dsx + _dsy) % 4 == 2) and 1 or 0
   -- now, read this out onto the playfield
-  if (_dstile > 0) then
+  if _dstile > 0 then
    put_mirrored_tile(_dsx, _dsy, 16 + _mod)
   end
   -- move ahead in the tileset, moving to the next row as needed
   _dsx += 2
-  if (_dsx >= _level_width) then
+  if _dsx >= _level_width then
    _dsx = 1
    _dsy += 2
   end
@@ -323,7 +324,7 @@ function unpack_level(_world, _stage)
   mset(_dsx + 32, _dsy, _tile)
   -- place a floor tile + allow collision here?
   -- note: 0 off means cant pass, 1 means can pass, 2 means slimed
-  if (_tile != 0) then
+  if _tile != 0 then
    -- place free tile, may be overwritten below though
    mset(_dsx + 48, _dsy, 1)
    place_puzz_tile(_dsx, _dsy, _tile)
@@ -356,7 +357,7 @@ function unpack_level(_world, _stage)
   if (_tile == 44) add(g_object_list, create_obj_gen_key(_dsx, _dsy))
 
   _dsx += 1
-  if (_dsx >= _level_width) then
+  if _dsx >= _level_width then
    _dsy += 1
    _dsx = 0
   end
@@ -377,14 +378,14 @@ function place_puzz_tile(_x, _y, _tile_id)
  local _tile_tl = tonum("0x"..sub(g_tile_lut, _offset, _offset+1))
 
  -- do we place a tile?
- if (_tile_tl != 0) then
+ if _tile_tl != 0 then
   -- offset for cracked floors
   if (_tile_tl == 124 and (_x + _y) % 2 == 0) _tile_tl += 2
   -- figure out the map coordinates
   local _map_x, _map_y = (_x << 1) + 1, (_y << 1) + 1
-  if (_tile_tl == 191 or _tile_tl == 207) then
+  if _tile_tl == 191 or _tile_tl == 207 then
    put_1x4_tile(_map_x, _map_y, _tile_tl)
-  elseif (_tile_tl < 83) then
+  elseif _tile_tl < 83 then
    put_mirrored_tile(_map_x, _map_y, _tile_tl)
   else
    put_x16_tile(_map_x, _map_y, _tile_tl)
@@ -431,7 +432,7 @@ function proc_autotile(_initial, _id, _work_x, _place_func)
 
    -- don't do this unless the center tile is 0 since
    -- we can know in advance we wont put a tile
-   if (_mcc == 0) then
+   if _mcc == 0 then
    -- figure out what each tile is gonna be, then run the function on it
     _place_func((_mbl + _mbc + _mcl + _mcc == 0 and 1 or 0)
      | (_mbr + _mbc + _mcr + _mcc == 0 and 2 or 0)

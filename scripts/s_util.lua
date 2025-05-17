@@ -9,20 +9,20 @@ function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
    _tile = mget(_x, _y)
    
    -- only do this if this tile hasn't been slimed
-   if (mget(_x + 16, _y) & 2 == 0) then
-    if (_tile == _src_tile) then
+   if mget(_x + 16, _y) & 2 == 0 then
+    if _tile == _src_tile then
      _tgt_tile, _tgt_tl, _block = _dst_tile, _dst_tl, 1
-    elseif (_tile == _dst_tile) then
+    elseif _tile == _dst_tile then
      _tgt_tile, _tgt_tl, _block = _src_tile, _src_tl, 0
     end
  
     -- swap the tile ids in the workspace as well as the visuals
-    if (_tgt_tile != nil) then
+    if _tgt_tile != nil then
      _doflip = _dst_tl < 56
      mset(_x, _y, _tgt_tile)
      mset(_x + 16, _y, _block)
      _tx, _ty = ((_x - 32) << 1) + 1, (_y << 1) + 1
-     if (_doflip) then put_mirrored_tile(_tx, _ty, _tgt_tl) else put_x16_tile(_tx, _ty, _tgt_tile) end
+     if _doflip then put_mirrored_tile(_tx, _ty, _tgt_tl) else put_x16_tile(_tx, _ty, _tgt_tile) end
     end
    end
   end

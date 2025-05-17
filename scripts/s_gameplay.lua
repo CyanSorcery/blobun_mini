@@ -16,7 +16,7 @@ function draw_gameplay()
  if (g_redraw_coin) redraw_coin_blocks()
 
  -- update conveyer belts? otherwise, redraw lava
- if (g_even_frame) then redraw_conveyers() else redraw_waterlava() end
+ if g_even_frame then redraw_conveyers() else redraw_waterlava() end
 
  redraw_slimetrail()
 
@@ -79,7 +79,7 @@ function draw_gameplay()
  fillp()
 
  -- did we win or lose?
- if (g_level_win or g_level_lose) then
+ if g_level_win or g_level_lose then
   draw_wavy_text(g_level_win and "stage clear!" or "❎ undo", g_level_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
 end
@@ -237,7 +237,7 @@ function update_gameplay()
     or (_lh >> 1) - 60
  
  -- process objects, but only if the stage animation is done
- if (g_intro_anim * g_outro_anim == 1) then
+ if g_intro_anim * g_outro_anim == 1 then
   proc_objects()
   proc_particles()
  end
@@ -264,7 +264,7 @@ function proc_objects()
 
  for _del in all(g_obj_delete) do
   for _obj in all(g_object_list) do
-   if (_obj.pos == _del) then
+   if _obj.pos == _del then
     del(g_object_list, _obj)
     break
    end

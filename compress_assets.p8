@@ -148,7 +148,7 @@ function
 	local function putbit(bval)
 		if (bval>0) byte+=bit
 		poke(dest, byte) bit<<=1
-		if (bit==256) then
+		if bit==256 then
 			bit=1 byte=0
 			dest += 1
 		end

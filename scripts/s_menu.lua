@@ -11,7 +11,7 @@ function menu_create(_x, _y, _w, _items)
   m_step = function(self, _index)
    local _m_count = count(g_menu)
    local _is_top_pane = _index == _m_count
-   if (self.m_anim_incr > 0 and self.m_anim_factor == 1) then
+   if self.m_anim_incr > 0 and self.m_anim_factor == 1 then
     if (btnp(2)) self.m_highlight = max(self.m_highlight - 1, 1)
     if (btnp(3)) self.m_highlight = min(self.m_highlight + 1, count(self.m_items))
     -- confirm
@@ -47,18 +47,18 @@ function menu_create(_x, _y, _w, _items)
 
    local _base_x, _base_y = _x1 + 8, _y1 + 6
     for _ind,_item in pairs(self.m_items) do
-     if (_base_y < _y2 - 9) then 
+     if _base_y < _y2 - 9 then 
       _sx1, _sy1, _sx2, _sy2 = _x1 + 3, _base_y - 3, _x2 - 3, _base_y + 7
       _is_hilite = _ind == self.m_highlight
 	    if (_is_hilite) rectfill(_sx1, _sy1, _sx2, _sy2, 2)
       pal(7, _is_hilite and 7 or 13)
       ?_item.i_label, _base_x, _base_y, 7
-      if (_is_hilite) then
+      if _is_hilite then
        fillp(g_fillp_diag[ceil(g_fillp_anim)])
 	     rect(_sx1, _sy1, _sx2, _sy2, 154)
 	     fillp(0)
 	    end
-      if (_item.i_setting != nil) then
+      if _item.i_setting != nil then
        spr(setting_get(_item.i_setting) and 101 or 96, _x2 - 11, _base_y - 2)
       end
 	   end

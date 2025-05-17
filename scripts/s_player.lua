@@ -46,7 +46,7 @@ function player_step(_obj)
  
 
  -- allow input buffer?
- if (_obj.anim >= 0.65) then
+ if _obj.anim >= 0.65 then
   if (btn(0)) g_new_dir = 2
   if (btn(1)) g_new_dir = 0
   if (btn(2)) g_new_dir = 1
@@ -54,7 +54,7 @@ function player_step(_obj)
  end
  
  -- fix fractional precision errors
- if (_obj.anim + 0.001 >= 1 and not g_level_win and not g_level_lose) then
+ if _obj.anim + 0.001 >= 1 and not g_level_win and not g_level_lose then
   -- did she just stop moving?
   if (_obj.ismove == true) player_end_move(_obj)
 
@@ -64,7 +64,7 @@ function player_step(_obj)
   -- move her around the playfield?
   _obj.sprint = false
   local _new_dir = g_new_dir
-  if (_new_dir != -1 or g_puzz_use_portal) then
+  if _new_dir != -1 or g_puzz_use_portal then
    -- do a check if this is solid or not. if we're on portal, we can move
    local _can_move, _check, _chx, _chy = g_puzz_use_portal, 1, _obj.x + cos(_new_dir >> 2), _obj.y + sin(_new_dir >> 2)
    if (g_puzz_on_convey or setting_get(2)) _check = 3 -- allow for move on slime
@@ -78,12 +78,12 @@ function player_step(_obj)
    -- reset the buffered input and face us in this direction
    g_new_dir, _obj.dir = -1, _new_dir
    -- can we actually move here?
-   if (_can_move and not g_level_lose) then
+   if _can_move and not g_level_lose then
 
     g_level_started = true
    
     -- record the playfield before making a move?
-    if (not g_puzz_use_portal and not g_puzz_on_convey) then
+    if not g_puzz_use_portal and not g_puzz_on_convey then
      -- update the end turn position for the next undo
      _obj.startturnx, _obj.startturny = _obj.x, _obj.y
      add_undo()
@@ -105,7 +105,7 @@ function player_step(_obj)
  end
 
  -- have we won?
- if (g_level_win == false and g_level_touched >= g_level_tiles) then
+ if g_level_win == false and g_level_touched >= g_level_tiles then
   g_level_win = true
   -- get rid of menu options since we have our own
   for i=1,5 do menuitem(i) end
@@ -133,27 +133,27 @@ function player_end_move(_obj)
  if (_tile == 73 and _obj.pstate == 2) _tile = 105
  
  -- toggle keys
- if (_tile == 2) then
+ if _tile == 2 then
   do_key_swap(3, 4, 19, 20) -- heart
   _collectcol = {8, 7}
   g_play_sfx = g_sfx_lut.t_switch
  end
- if (_tile == 34) then 
+ if _tile == 34 then 
   do_key_swap(35, 36, 21, 22) -- diamond
   _collectcol = {11, 7}
   g_play_sfx = g_sfx_lut.t_switch
  end
- if (_tile == 66) then 
+ if _tile == 66 then 
   do_key_swap(67, 68, 23, 24) -- triangle
   _collectcol = {12, 7}
   g_play_sfx = g_sfx_lut.t_switch
  end
 
- if (_tile == 98) then
+ if _tile == 98 then
   g_puzz_coins += 1
   _collectcol = {10, 9, 7}
   g_play_sfx = g_sfx_lut.t_coin
-  if (g_puzz_coins == 3) then
+  if g_puzz_coins == 3 then
    g_puzz_coins = 0
    do_key_swap(99, 100, 25, 26)
    g_play_sfx = g_sfx_lut.t_switch
@@ -164,7 +164,7 @@ function player_end_move(_obj)
  -- states: 0 normal, 1 fire, 2 ice
  local _st = {{11, 3, 1}, {10, 9, 8}, {7, 6, 13}}
  for i=0,2 do
-  if (_tile == 8 | (i << 5)) then 
+  if _tile == 8 | (i << 5) then 
    _obj.pstate = i
    _collectcol = _st[i + 1]
    g_play_sfx = g_sfx_lut.p_state[i + 1]
@@ -173,11 +173,11 @@ function player_end_move(_obj)
 
  -- is this an octogem?
  for i=0,7 do
-  if (_tile == 15 | (i << 5) and g_puzz_octogems == i) then
+  if _tile == 15 | (i << 5) and g_puzz_octogems == i then
    g_puzz_octogems += 1
    _collectcol = {14, 7}
    -- find the destination octogem
-   if (g_puzz_octogems < 8) then
+   if g_puzz_octogems < 8 then
     local _dest = find_tile_loc(15 | (g_puzz_octogems << 5))
     if (_dest != nil) part_create_octogem(_xcenter, _ycenter, (_dest.x << 4) + 12, (_dest.y << 4) + 12)
    end
@@ -185,14 +185,14 @@ function player_end_move(_obj)
   end
  end
  -- did we just get the last octogem? if so, process it and reset
- if (g_puzz_octogems == 8) then
+ if g_puzz_octogems == 8 then
   do_key_swap(74,106,27, 28)
   g_puzz_octogems = 0
  end
 
  -- is this a key? if we don't have one, go ahead and pick it up
- if (_tile == 44) then
-  if (_obj.haskey) then _destroy_obj = false else
+ if _tile == 44 then
+  if _obj.haskey then _destroy_obj = false else
    _obj.haskey = true
    _collectcol = {6, 13, 5}
   end
@@ -205,7 +205,7 @@ function player_end_move(_obj)
  local _oldx, _oldy = _obj.oldx, _obj.oldy
  local _prevtile = mget(_oldx + 32, _oldy)
  -- was the tile previous a slime trap?
- if (_prevtile == 137) then
+ if _prevtile == 137 then
   -- unslime this spot and clear it for re-entry
   -- this just sets the tile ID to a clear spot
   place_puzz_tile(_oldx, _oldy, 160)
@@ -234,11 +234,11 @@ function player_end_move(_obj)
 
  -- are we on a floor portal?
  g_puzz_use_portal = false
- if (_tile == 5 or _tile == 37 or _tile == 69 or _tile == 101) then
+ if _tile == 5 or _tile == 37 or _tile == 69 or _tile == 101 then
   -- delete portal, then find pair
   mset(_x + 32, _y, 1)
   local _pair_loc = find_tile_loc(_tile)
-  if (_pair_loc != nil) then
+  if _pair_loc != nil then
    -- set our new position to where we're going
    _obj.oldx, _obj.oldy = _obj.x, _obj.y
    _obj.x, _obj.y = _pair_loc.x - 32, _pair_loc.y
@@ -250,14 +250,14 @@ function player_end_move(_obj)
  if (_collectcol != nil) part_create_item_grab(_xcenter, _ycenter, _collectcol)
 
  -- is this the end of this turn?
- --if (not g_puzz_use_portal and not g_puzz_on_convey) then
+ --if not g_puzz_use_portal and not g_puzz_on_convey then
  --end
  
  -- coco note: this *could* be optimized, but let's keep the code readable unless we need those tokens
  -- did we overlap our own trail?
  if (mget(_obj.x + 48, _obj.y) & 2 == 2) player_destroy(_obj)
  -- process stuff that destroys stephanie
- if ( 
+ if  
  -- did we step on a lava tile and aren't in the right state
   (_tile == 41 and _obj.pstate == 0) or
  -- did we step on an ice tile and aren't in the right state
@@ -268,13 +268,13 @@ function player_end_move(_obj)
   (_tile == 39 and g_puzz_zapper_turn == 2) or -- cyan
   (_tile == 7 and g_puzz_zapper_turn == 1) or -- magenta
   (_tile == 71 and g_puzz_zapper_turn == 0) -- yellow
- ) then
+  then
   player_destroy(_obj, true)
   _doslime = false
  end
 
  -- put slime on the playfield here?
- if (_doslime == true) then
+ if _doslime then
   g_level_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
   local _dx, _dy = (_obj.x << 1) + 1, (_obj.y << 1) + 1
@@ -285,7 +285,7 @@ end
 
 function player_destroy(_obj, _kill)
  g_level_lose = true
- if (_kill == true) then 
+ if _kill == true then 
   _obj.isdead = true
   local _col = _obj.pstate == 1 and {4, 9,10} or {1, 3,11}
   if (_obj.pstate == 2) _col = {5, 13,6}
@@ -302,21 +302,21 @@ function player_draw(_obj)
  local _dir, _x, _y, _offset, _dir = _obj.dir, (_obj.x << 4), (_obj.y << 4)
  
  -- fire/ice states respectively
- if (_obj.pstate == 1) then
+ if _obj.pstate == 1 then
   pal(3,8)
   pal(11,9)
- elseif (_obj.pstate == 2) then
+ elseif _obj.pstate == 2 then
   pal(3,13)
   pal(11,6)
  end
 
  -- do animation?
- if (_obj.anim < 1) then
+ if _obj.anim < 1 then
   -- if on conveyer, use linear animation
   -- if not, use curved animation
-  if (g_puzz_on_convey) then
+  if g_puzz_on_convey then
    _offset = _obj.anim
-  elseif (_obj.anim < 0.5) then
+  elseif _obj.anim < 0.5 then
    _offset = 0.5 + (cos(_obj.anim * 0.5) * -0.5)
   else
    _offset = 0.5 - (cos(_obj.anim * 0.5) * 0.5)
@@ -332,7 +332,7 @@ function player_draw(_obj)
  
  local _xflip, _yflip = cos(_obj.dir >> 2) < 0, sin(_obj.dir >> 2) < 0
  local _xpos, _ypos = _xflip and _x or _x - 8, _yflip and _y or _y - 8
- if (_obj.dir % 2 == 0) then
+ if _obj.dir % 2 == 0 then
   spr(211, _xpos, _y + 7, 3, 1, _xflip)
   spr(211, _xpos, _y, 3, 1, _xflip, true)
  else
@@ -370,7 +370,7 @@ function redraw_slimetrail()
  palt()
 
  -- does she have the key? if so, draw the extra circle
- if (_obj.haskey) then
+ if _obj.haskey then
   spr(144, 32, 104)
   spr(144, 39, 104, 1, 1, true)
  end
@@ -386,7 +386,7 @@ function redraw_slimetrail()
  end
  clip()
  -- draw the second circle?
- if (_obj.haskey) then
+ if _obj.haskey then
   spr(145, 32, 104)
   spr(145, 39, 104, 1, 1, true)
  end

@@ -35,7 +35,7 @@ function update_intro()
  g_title_scroll += 0.025
  g_title_scroll %= 1
 
- if (g_intro_countdown > 0) then
+ if g_intro_countdown > 0 then
   g_intro_countdown -= 1
   -- skip countdown?
   if (btnp() & 0x30 > 0) g_intro_countdown = 0 
@@ -47,9 +47,9 @@ function update_title()
  g_title_scroll += 0.01
  g_title_scroll %= 1
  
- if (count(g_menu) == 0) then
+ if count(g_menu) == 0 then
   -- create title menu?
-  if (btnp(4)) then 
+  if btnp(4) then 
    menu_create(24, 96, 80, {
    menu_item_base("start game", function() 
     set_game_mode(1)
@@ -74,7 +74,7 @@ function update_title()
    end)
   })
   -- back button to go back to title screen?
-  elseif (btnp(5)) then
+  elseif btnp(5) then
    set_game_mode(3)
   end
  end
@@ -119,11 +119,11 @@ function draw_stage_select()
  local _sy1, _end, _is_hilite = 22 - (_start * 10), _start + 10
  for _y,_st in ipairs(g_levels[g_sss_menu_world]) do
   _is_hilite, _sy2 = _y == g_sss_menu_stage, _sy1 + 10
-  if (_y > _start and _y < _end) then
+  if _y > _start and _y < _end then
    if (_is_hilite) rectfill(4, _sy1, 88, _sy2, 2)
    pal(7, _is_hilite and 7 or 3)
    ?(_y > 9 and "" or " ").._y.." ".._st.l_name, 8, _sy1 + 3, 7
-   if (_is_hilite) then
+   if _is_hilite then
     fillp(g_fillp_diag[ceil(g_fillp_anim)])
     rect(4, _sy1, 88, _sy2, 154)
     fillp(0)
