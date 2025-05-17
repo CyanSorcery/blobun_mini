@@ -295,8 +295,19 @@ function create_obj_key(_x, _y, _key, _spr)
     spr=_spr, -- our key sprite
     anim=rnd(1), -- animation offset
     spin=rnd(1), -- for rotating
-    ondraw = draw_floating_key
  }
+ function _obj:ondraw()
+  -- is this a generic key?
+  if (self.type == 16) then
+   spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
+  -- if this is an octogem on the right sequence, or isn't an octogem at all
+  elseif (self.type - 8 == g_puzz_octogems or self.type < 8 or self.type > 15) then
+   local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * 0.5) * -8)
+   if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
+   sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
+   sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
+  end
+ end
  function _obj:onstep()
   self.anim += 0.02
   self.anim %= 1
@@ -304,28 +315,4 @@ function create_obj_key(_x, _y, _key, _spr)
   self.spin %= 1
  end
  return _obj
-end
-
-function create_obj_octogem(_x, _y, _key)
- local _obj = create_obj_key(_x, _y, _key, 87)
- function _obj:ondraw()
-  -- only draw this octogem if it's the current one
-  if (self.type - 8 == g_puzz_octogems) self:draw_floating_key()
- end
- return _obj
-end
-
-function create_obj_gen_key(_x, _y)
- local _obj = create_obj_key(_x, _y, 16, 159)
- function _obj:ondraw()
-  spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
- end
- return _obj
-end
-
-function draw_floating_key(self)
- local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * 0.5) * -8)
- if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
- sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
- sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
 end

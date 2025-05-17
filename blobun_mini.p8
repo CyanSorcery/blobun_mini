@@ -14,7 +14,7 @@ function _init()
  memcpy(0x8000, 0x0, 0x4300)
  memset(0x0, 0, 0x4300)
 
- -- figure out what kind of compressed data we have
+
  g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx = {}, {}, {}, {}, {}
  -- offset of the currently loaded data (so we don't reload it if not necessary)
  g_px9_ind_sprites, g_px9_ind_music = 0, 0
@@ -149,7 +149,7 @@ function _update()
  
  g_time = time()
  -- if time rolls over, stop the game since timers will break
- if (g_time < 0) stop("Game has been running for too long. Take a break!")
+ if (g_time < 0) stop("game has been running for too long. take a break!")
 end
 
 function _draw()
@@ -350,11 +350,11 @@ function unpack_level(_world, _stage)
 
   -- octogem
   for j=0,7 do
-   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_octogem(_dsx, _dsy, 8 + j))
+   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_key(_dsx, _dsy, 8 + j, 87))
   end
 
   -- generic key
-  if (_tile == 44) add(g_object_list, create_obj_gen_key(_dsx, _dsy))
+  if (_tile == 44) add(g_object_list, create_obj_key(_dsx, _dsy, 16, 159))
 
   _dsx += 1
   if _dsx >= _level_width then
