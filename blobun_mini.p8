@@ -149,7 +149,7 @@ function _update()
  
  g_time = time()
  -- if time rolls over, stop the game since timers will break
- if (g_time < 0) stop("game has been running for too long. take a break!")
+ if (g_time < 0) stop"game has been running for too long. take a break!"
 end
 
 function _draw()
