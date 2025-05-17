@@ -6,9 +6,9 @@ function decompress_sprites(_index)
 
  holdframe()
  -- load them into the spritesheet area
- px9_decomp(0, 0, g_px9_sprites[_index], sget, sset)
+ px9_decomp(0, 0, g_px9_data[1][_index], sget, sset)
  -- load the sprite flags into the screen data area
- px9_decomp(0, 0, g_px9_spr_flags[_index], pget, pset)
+ px9_decomp(0, 0, g_px9_data[2][_index], pget, pset)
  -- copy the sprite flags to the correct spot
  memcpy(0x3000, 0x6000, 0xff)
  -- remember this was the last decompressed
@@ -21,7 +21,7 @@ function decompress_music(_index)
 
  holdframe()
  -- load data into the screen area
- px9_decomp(0, 0, g_px9_music[_index], pget, pset)
+ px9_decomp(0, 0, g_px9_data[3][_index], pget, pset)
  -- copy the music patterns
  memcpy(0x3100, 0x6000, 0x80)
  -- copy the sfx in the right spot
@@ -33,12 +33,12 @@ end
 function decompress_map(_index, _x, _y)
  holdframe()
  -- load the data into the map area
- px9_decomp(_x, _y, g_px9_map[_index], mget, mset)
+ px9_decomp(_x, _y, g_px9_data[4][_index], mget, mset)
 end
 
 function decompress_sfx(_index)
  holdframe()
- px9_decomp(0, 0, g_px9_sfx[_index], pget, pset)
+ px9_decomp(0, 0, g_px9_data[5][_index], pget, pset)
  memcpy(0x3A80, 0x6000, 0x880)
 end
 

@@ -135,24 +135,20 @@ function player_end_move(_obj)
  -- toggle keys
  if _tile == 2 then
   do_key_swap(3, 4, 19, 20) -- heart
-  _collectcol = {8, 7}
-  g_play_sfx = g_sfx_lut.t_switch
+  _collectcol, g_play_sfx = {8, 7}, g_sfx_lut.t_switch
  end
  if _tile == 34 then 
   do_key_swap(35, 36, 21, 22) -- diamond
-  _collectcol = {11, 7}
-  g_play_sfx = g_sfx_lut.t_switch
+  _collectcol, g_play_sfx = {11, 7}, g_sfx_lut.t_switch
  end
  if _tile == 66 then 
   do_key_swap(67, 68, 23, 24) -- triangle
-  _collectcol = {12, 7}
-  g_play_sfx = g_sfx_lut.t_switch
+  _collectcol, g_play_sfx = {12, 7}, g_sfx_lut.t_switch
  end
 
  if _tile == 98 then
   g_puzz_coins += 1
-  _collectcol = {10, 9, 7}
-  g_play_sfx = g_sfx_lut.t_coin
+  _collectcol, g_play_sfx = {10, 9, 7}, g_sfx_lut.t_coin
   if g_puzz_coins == 3 then
    g_puzz_coins = 0
    do_key_swap(99, 100, 25, 26)
@@ -164,24 +160,19 @@ function player_end_move(_obj)
  -- states: 0 normal, 1 fire, 2 ice
  local _st = {{11, 3, 1}, {10, 9, 8}, {7, 6, 13}}
  for i=0,2 do
-  if _tile == 8 | (i << 5) then 
-   _obj.pstate = i
-   _collectcol = _st[i + 1]
-   g_play_sfx = g_sfx_lut.p_state[i + 1]
-  end
+  if (_tile == 8 | (i << 5)) _obj.pstate, _collectcol, g_play_sfx = i, _st[i + 1], g_sfx_lut.p_state[i + 1]
  end
 
  -- is this an octogem?
  for i=0,7 do
   if _tile == 15 | (i << 5) and g_puzz_octogems == i then
    g_puzz_octogems += 1
-   _collectcol = {14, 7}
    -- find the destination octogem
    if g_puzz_octogems < 8 then
     local _dest = find_tile_loc(15 | (g_puzz_octogems << 5))
     if (_dest != nil) part_create_octogem(_xcenter, _ycenter, (_dest.x << 4) + 12, (_dest.y << 4) + 12)
    end
-   g_play_sfx = g_sfx_lut.octo[i + 1]
+   _collectcol, g_play_sfx = {14, 7}, g_sfx_lut.octo[i + 1]
   end
  end
  -- did we just get the last octogem? if so, process it and reset

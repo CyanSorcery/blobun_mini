@@ -14,17 +14,17 @@ function _init()
  memcpy(0x8000, 0x0, 0x4300)
  memset(0x0, 0, 0x4300)
 
-
- g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx = {}, {}, {}, {}, {}
+ -- figure out what kind of compressed data we have
+ -- note: this has to match the data group offsets
+ g_px9_data = {{},{},{},{},{}}
  -- offset of the currently loaded data (so we don't reload it if not necessary)
  g_px9_ind_sprites, g_px9_ind_music = 0, 0
 
  local _offset, _data = 0x8000, %0x8000
  -- note: this table matches the type order
- local _t = {g_px9_sprites, g_px9_spr_flags, g_px9_music, g_px9_map, g_px9_sfx}
  while _data != 0 do
   -- figure our what type of data we have, offset, and length
-  add(_t[(_data >> 13)&0x7], _offset+2)
+  add(g_px9_data[(_data >> 13)&0x7], _offset+2)
   -- move forward and see what the next data is
   _offset += 2 + (_data&0x1fff)
   _data = %_offset
@@ -400,8 +400,7 @@ end
 
 -- do autotiling on the lava and water
 function calc_lava_water()
- local _t = {191, 207}
- for _ti in all(_t) do
+ for _ti in all({191, 207}) do
   proc_autotile(1, _ti, 64, function(_tile, _x, _y, _id)
    if (_tile > 0) mset(_x + 64, _y, (_x % 2 == 0 and _y % 2 == 0 and _tile == 15) and _id - 15 or _id + _tile - 15)
   end)
