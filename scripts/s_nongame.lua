@@ -52,8 +52,13 @@ function update_title()
   if (btnp(4)) then 
    menu_create(24, 96, 80, {
    menu_item_base("start game", function() 
-    set_game_mode(2, 1)
+    set_game_mode(1)
    end),
+   menu_item_base("continue", function()
+    local _ws = last_worldstage_get()
+    set_game_mode(2, _ws.world, _ws.stage)
+   end
+   ),
    menu_item_base("options", function()
     menu_create(16, 92, 96, {
       menu_item_setting("show timers", 1),
@@ -78,13 +83,52 @@ end
 
 
 function update_stage_select()
+ g_title_scroll += 0.02
+ g_title_scroll %= 1
+ -- roxy note: cap this to the count of unlocked worlds later
+ local _worlds = count(g_levels)
+ 
+ -- pick the world
+ if (btnp(0)) g_sss_menu_world = max(g_sss_menu_world - 1, 1)
+ if (btnp(1)) g_sss_menu_world = min(g_sss_menu_world + 1, _worlds)
 
+ -- roxy note: cap this to the count of unlocked stages in the above world later
+ local _stages = count(g_levels[g_sss_menu_world])
+ -- pick the stage
+ if (btnp(2)) g_sss_menu_stage -= 1
+ if (btnp(3)) g_sss_menu_stage += 1
+ g_sss_menu_stage = mid(1, g_sss_menu_stage, _stages)
+ 
+ -- select the stage?
+ if (btnp(4)) set_game_mode(2, g_sss_menu_world, g_sss_menu_stage)
+ -- go back to the title?
+ if (btnp(5)) set_game_mode(0)
 end
 
 function draw_stage_select()
  cls(1)
- --tmp
- for _y,_st in ipairs(g_levels[1]) do
-  print(_st.l_name, 10, _y * 8, 7)
+ -- draw slime borders
+ -- roxy note: allow lookup of slime colors later
+ pal(1, 3)
+ map(0, 14, -24 + (24 * g_title_scroll), -4, 19, 3)
+ map(0, 0, -24 * g_title_scroll, 116, 19, 2)
+ pal()
+ -- draw the stages
+ local _stages = count(g_levels[g_sss_menu_world])
+ local _start = max(min(g_sss_menu_stage - flr(_stages >> 1), _stages - 9), 0)
+ local _sy1, _end, _is_hilite = 22 - (_start * 10), _start + 10
+ for _y,_st in ipairs(g_levels[g_sss_menu_world]) do
+  _is_hilite, _sy2 = _y == g_sss_menu_stage, _sy1 + 10
+  if (_y > _start and _y < _end) then
+   if (_is_hilite) rectfill(4, _sy1, 88, _sy2, 2)
+   pal(7, _is_hilite and 7 or 3)
+   print((_y > 9 and "" or " ").._y.." ".._st.l_name, 8, _sy1 + 3, 7)
+   if (_is_hilite) then
+    fillp(g_fillp_diag[ceil(g_fillp_anim)])
+    rect(4, _sy1, 88, _sy2, 154)
+    fillp(0)
+   end
+  end
+  _sy1 = _sy2
  end
 end
