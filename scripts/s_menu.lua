@@ -52,7 +52,7 @@ function menu_create(_x, _y, _w, _items)
       _is_hilite = _ind == self.m_highlight
 	    if (_is_hilite) rectfill(_sx1, _sy1, _sx2, _sy2, 2)
       pal(7, _is_hilite and 7 or 13)
-      print(_item.i_label, _base_x, _base_y, 7)
+      ?_item.i_label, _base_x, _base_y, 7
       if (_is_hilite) then
        fillp(g_fillp_diag[ceil(g_fillp_anim)])
 	     rect(_sx1, _sy1, _sx2, _sy2, 154)

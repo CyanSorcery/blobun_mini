@@ -10,7 +10,7 @@ function draw_title()
  map(19, 0, 12, 8 + _y_mod, 13, 7)
  if (not setting_get(6)) map(19, 8, 28, 8 + _y_mod, 4, 5)
 
- print("2025 cyansorcery", 32, 122, 3)
+ ?"2025 cyansorcery", 32, 122, 3
  
  if (count(g_menu) == 0 and g_game_mode_target == nil) draw_wavy_text("press 🅾️ to start!", 28, 96, 1, 1.4)
 end
@@ -23,7 +23,7 @@ function draw_intro()
  map(0, 12, -24 * g_title_scroll, 56 - _anim, 19, 1)
  map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
  local _anim2 = _anim * 0.5
- print("presented by", 39, 60 - _anim2, 1)
+ ?"presented by", 39, 60 - _anim2, 1
  if (setting_get(6)) map(19, 7, 18, 60 + _anim2, 11, 1)
  palt()
  fillp(g_fillp_transition[flr(lerp(1, 4, _baseanim))])
@@ -122,7 +122,7 @@ function draw_stage_select()
   if (_y > _start and _y < _end) then
    if (_is_hilite) rectfill(4, _sy1, 88, _sy2, 2)
    pal(7, _is_hilite and 7 or 3)
-   print((_y > 9 and "" or " ").._y.." ".._st.l_name, 8, _sy1 + 3, 7)
+   ?(_y > 9 and "" or " ").._y.." ".._st.l_name, 8, _sy1 + 3, 7
    if (_is_hilite) then
     fillp(g_fillp_diag[ceil(g_fillp_anim)])
     rect(4, _sy1, 88, _sy2, 154)

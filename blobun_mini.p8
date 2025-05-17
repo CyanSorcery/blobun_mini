@@ -7,7 +7,7 @@ function _init()
 
  -- ashe note: this just looks nicer
  cls(1)
- print("loading...", 1, 122, 13)
+ ?"loading...", 1, 122, 13
  flip()
 
  -- move compressed data to the general use space, then clear everything
@@ -37,34 +37,27 @@ function _init()
  -- sound effects
  #include res/r_sfx.lua
 
- -- if we're to play a sound effect this frame, this is the data for it
- g_play_sfx = nil
+ -- different fillp patterns
+ g_fillp_diag, g_fillp_transition = {0xc936, 0x6c93, 0x36c9, 0x936c}, {0x8001.8, 0xa5a5.8, 0xedb7.8, 0xffff.8}
 
- g_fillp_diag = {0xc936, 0x6c93, 0x36c9, 0x936c}
- g_fillp_anim, g_wavy_anim = 0, 0
- g_fillp_transition = {0x8001.8, 0xa5a5.8, 0xedb7.8, 0xffff.8}
-
- -- if this is an even or odd frame
- g_even_frame = false
-
- -- how long (in real time) the game has been running, used for timers
- g_time = time()
-
- -- when we're to load a new puzzle, this is set
- g_puzz_world_target = nil
- g_puzz_level_target = nil
- -- when we're to load a new gameplay mode, this is set
- g_game_mode_target = nil
-
- -- intro and exit animations for coming and going in stages/game states
- g_intro_anim, g_outro_anim = 0, 1
- 
- -- this holds any menus that are on screen right now
- g_menu = {}
-
- -- when doing the game update, these are the functions to call
- g_func_update = nil
- g_func_draw = nil
+ --[[
+   g_fillp_anim - fillp animation factor
+   g_wavy_anim - wavy text anim factor
+   g_even_frame - if it's an even or odd frame
+   g_time - how long the game has been running
+   g_intro_anim, g_outro_anim - intro/outro animations for changing game states
+   g_menu - list of menus that are active
+ ]]
+ g_fillp_anim, g_wavy_anim, g_even_frame, g_time, g_intro_anim, g_outro_anim, g_menu = 0, 0, false, time(), 0, 1, {}
+ --[[
+   g_play_sfx - sound effect to play this frame
+   g_puzz_world_target - when loading a new puzzle, these are set
+   g_puzz_level_target - related to above
+   g_game_mode_target - what game mode we're gonna use
+   g_func_update - the update function for the current game mode
+   g_func_draw - the draw function for the current game mode
+ ]]
+ g_play_sfx, g_puzz_world_target, g_puzz_level_target, g_game_mode_target, g_func_update, g_func_draw = nil
 
  -- parse the level data
  parse_levels()

@@ -55,9 +55,9 @@ function draw_gameplay()
  
 
  -- cpu
- print(flr((stat(1)) * 100).."%", 72, 122, 7)
+?flr((stat(1)) * 100).."%", 72, 122, 7
  -- mem
- print(flr(stat(0)).."/2048kb", 88, 122, 7)
+ ?flr(stat(0)).."/2048kb", 88, 122, 7
 
  local _show_timers = dget(63) & 0x2 == 0x2
  local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 95
@@ -69,7 +69,7 @@ function draw_gameplay()
  if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
  pal()
  poke(0x5F54, 0x00)
- if (_show_timers) print(format_time(g_level_time), 2, 2, 7)
+ if (_show_timers) ?format_time(g_level_time), 2, 2, 7
 
  -- draw slimebar
  --rectfill(95, 0, 127, 8, 0)
