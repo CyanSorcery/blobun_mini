@@ -128,23 +128,15 @@ function player_end_move(_obj)
  local _xcenter, _ycenter, _collectcol = (_x << 4) + 12, (_y << 4) + 12
  local _tile = mget(_x + 32, _y)
 
-
  -- if we're on a water tile and in the ice state, freeze that tile
  if (_tile == 73 and _obj.pstate == 2) _tile = 105
  
- -- toggle keys
- if _tile == 2 then
-  do_key_swap(3, 4, 19, 20) -- heart
-  _collectcol, g_play_sfx = {8, 7}, g_sfx_lut.t_switch
- end
- if _tile == 34 then 
-  do_key_swap(35, 36, 21, 22) -- diamond
-  _collectcol, g_play_sfx = {11, 7}, g_sfx_lut.t_switch
- end
- if _tile == 66 then 
-  do_key_swap(67, 68, 23, 24) -- triangle
-  _collectcol, g_play_sfx = {12, 7}, g_sfx_lut.t_switch
- end
+ -- heart
+ if (_tile == 2) do_key_swap(3, 4, 19, 20) _collectcol, g_play_sfx = {8, 7}, g_sfx_lut.t_switch
+ -- diamond
+ if (_tile == 34) do_key_swap(35, 36, 21, 22) _collectcol, g_play_sfx = {11, 7}, g_sfx_lut.t_switch
+ -- triangle
+ if (_tile == 66) do_key_swap(67, 68, 23, 24) _collectcol, g_play_sfx = {12, 7}, g_sfx_lut.t_switch
 
  if _tile == 98 then
   g_puzz_coins += 1
@@ -160,15 +152,15 @@ function player_end_move(_obj)
  -- states: 0 normal, 1 fire, 2 ice
  local _st = {{11, 3, 1}, {10, 9, 8}, {7, 6, 13}}
  for i=0,2 do
-  if (_tile == 8 | (i << 5)) _obj.pstate, _collectcol, g_play_sfx = i, _st[i + 1], g_sfx_lut.p_state[i + 1]
+  if (_tile == 8 | i << 5) _obj.pstate, _collectcol, g_play_sfx = i, _st[i + 1], g_sfx_lut.p_state[i + 1]
  end
 
  -- is this an octogem?
  for i=0,7 do
-  if _tile == 15 | (i << 5) and g_puzz_octogems == i then
+  if _tile == 15 | i << 5 and g_puzz_octogems == i then
    g_puzz_octogems += 1
    -- find the destination octogem
-   if g_puzz_octogems < 8 then
+   if (g_puzz_octogems < 8) then
     local _dest = find_tile_loc(15 | (g_puzz_octogems << 5))
     if (_dest != nil) part_create_octogem(_xcenter, _ycenter, (_dest.x << 4) + 12, (_dest.y << 4) + 12)
    end
@@ -176,10 +168,7 @@ function player_end_move(_obj)
   end
  end
  -- did we just get the last octogem? if so, process it and reset
- if g_puzz_octogems == 8 then
-  do_key_swap(74,106,27, 28)
-  g_puzz_octogems = 0
- end
+ if (g_puzz_octogems == 8) do_key_swap(74,106,27, 28) g_puzz_octogems = 0
 
  -- is this a key? if we don't have one, go ahead and pick it up
  if _tile == 44 then
@@ -211,7 +200,7 @@ function player_end_move(_obj)
  -- directions: 0 e, 1 n, 2 w, 3 s
  local _dir = -1
  for i=0,3 do
-  if (_tile == 6 | (i << 5)) _dir = i
+  if (_tile == 6 | i << 5) _dir = i
  end
  
  -- are we on an ice tile?
@@ -221,7 +210,7 @@ function player_end_move(_obj)
  g_puzz_on_convey = _dir != -1
 
  -- destroy floating object at this position
- if (_destroy_obj) add(g_obj_delete, (_x << 4) | _y)
+ if (_destroy_obj) add(g_obj_delete, _x << 4 | _y)
 
  -- are we on a floor portal?
  g_puzz_use_portal = false
@@ -269,8 +258,7 @@ function player_end_move(_obj)
   g_level_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
   local _dx, _dy = (_obj.x << 1) + 1, (_obj.y << 1) + 1
-  local _pstate = _obj.pstate << 1
-  put_x16_tile(_dx, _dy, 218 + _pstate)
+  put_x16_tile(_dx, _dy, 218 + (_obj.pstate << 1))
  end
 end
 
@@ -290,7 +278,7 @@ function player_draw(_obj)
  -- or if lesbians are not allowed
  if (_obj.isdead or g_puzz_use_portal or not setting_get(6)) return
 
- local _dir, _x, _y, _offset, _dir = _obj.dir, (_obj.x << 4), (_obj.y << 4)
+ local _dir, _x, _y, _offset, _dir = _obj.dir, _obj.x << 4, _obj.y << 4
  
  -- fire/ice states respectively
  if _obj.pstate == 1 then
@@ -318,8 +306,8 @@ function player_draw(_obj)
  end
  
  -- do jiggle and positional offset
- _x += ((-1 + rnd(3)) * _obj.jiggle) + 8
- _y += ((-1 + rnd(3)) * _obj.jiggle) + 8
+ _x += (-1 + rnd(3)) * _obj.jiggle + 8
+ _y += (-1 + rnd(3)) * _obj.jiggle + 8
  
  local _xflip, _yflip = cos(_obj.dir >> 2) < 0, sin(_obj.dir >> 2) < 0
  local _xpos, _ypos = _xflip and _x or _x - 8, _yflip and _y or _y - 8

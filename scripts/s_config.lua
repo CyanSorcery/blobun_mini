@@ -39,15 +39,15 @@ function init_config()
  end
 end
 function setting_get(_ind)
- return dget(63) & (1 << _ind) > 0
+ return dget(63) & 1 << _ind > 0
 end
 function setting_set(_ind, _on)
  local _bit, _data = 1 << _ind, dget(63)
  dset(63, _on and _data | _bit or _data & ~_bit)
 end
 function last_worldstage_get()
- return {stage = (dget(62) << 4) & 0xF, world = (dget(62) << 7) & 0x7}
+ return {stage = dget(62) << 4 & 0xF, world = dget(62) << 7 & 0x7}
 end
 function last_worldstage_set(_world, _stage)
- dset(62, (dget(62) & 0b1111111111111111.00000001111111111) | (_world >> 7) | (_stage >> 4))
+ dset(62, dget(62) & 0b1111111111111111.00000001111111111 | _world >> 7 | _stage >> 4)
 end
