@@ -90,7 +90,7 @@ function do_tile_mirror()
  camera(0, 0)
  local _dx, _dy
  for i=0,34 do
-  _dx, _dy = (i << 3) % 128, (flr(i / 16) << 4) + 8
+  _dx, _dy = (i << 3) % 128, ((i \ 16) << 4) + 8
   sspr(_dx, _dy, 8, 16, _dx, _dy, 8, 16, true)
  end
  camera(g_cam_x, g_cam_y)
@@ -286,7 +286,7 @@ end
 
 -- this creates keys we can grab
 function create_obj_key(_x, _y, _key, _spr)
- return {
+ local _obj = {
     type=_key,
     iskey=true,
     x=(_x << 4) + 8,
@@ -295,35 +295,36 @@ function create_obj_key(_x, _y, _key, _spr)
     spr=_spr, -- our key sprite
     anim=rnd(1), -- animation offset
     spin=rnd(1), -- for rotating
-    onstep = function(self)
-     self.anim += 0.02
-     self.anim %= 1
-     self.spin += 0.035
-     self.spin %= 1
-    end,
     ondraw = draw_floating_key
  }
+ function _obj:onstep()
+  self.anim += 0.02
+  self.anim %= 1
+  self.spin += 0.035
+  self.spin %= 1
+ end
+ return _obj
 end
 
 function create_obj_octogem(_x, _y, _key)
  local _obj = create_obj_key(_x, _y, _key, 87)
- _obj.ondraw = function(self)
+ function _obj:ondraw()
   -- only draw this octogem if it's the current one
-  if (self.type - 8 == g_puzz_octogems) draw_floating_key(self)
+  if (self.type - 8 == g_puzz_octogems) self:draw_floating_key()
  end
  return _obj
 end
 
 function create_obj_gen_key(_x, _y)
  local _obj = create_obj_key(_x, _y, 16, 159)
- _obj.ondraw = function(self)
+ function _obj:ondraw()
   spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
  end
  return _obj
 end
 
 function draw_floating_key(self)
- local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, flr(self.spr / 16) << 3, ceil(sin(self.spin * 0.5) * -8)
+ local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * 0.5) * -8)
  if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
  sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
  sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
