@@ -71,7 +71,9 @@ function draw_gameplay()
  if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
  pal()
  poke(0x5F54, 0x00)
- if (_show_timers) ?format_time(g_level_time), 2, 2, 7
+ local _col = g_level_time <= g_puzz_curr_fst.l_goaltime and 7 or 13
+ if (g_level_win and g_level_time <= g_puzz_curr_fst.l_devtime) _col = 10
+ if (_show_timers) ?format_time(g_level_time), 2, 2, _col
 
  -- draw slimebar
  --rectfill(95, 0, 127, 8, 0)

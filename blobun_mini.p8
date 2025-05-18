@@ -75,8 +75,8 @@ function _init()
  -- send us to the intro
  --unpack_intro()
  --unpack_title()
- --unpack_level(2, 1)
- unpack_stage_select()
+ unpack_level(1, 1)
+ --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 
@@ -498,13 +498,12 @@ function parse_levels()
     _fst[_strs[i]] = sub(_str, _offset + 1, _offset + _bytes)
     _offset += _bytes + 1
    end
-   -- get the stage goal time and dev time
-   -- tmp, just set these directly
-   _fst.l_mintime = 0
-   _fst.l_devtime = 0
    -- get the stage save slot
-   -- tmp, just set to 0
-   _fst.l_saveslot = 0
+   _fst.l_saveslot = tonum(sub(_str, _offset, _offset + 1))
+   -- get the stage goal time and dev time
+   _fst.l_goaltime = tonum(sub(_str, _offset + 2, _offset + 9))
+   _fst.l_devtime = tonum(sub(_str, _offset + 10, _offset + 17))
+   _offset += 18
    -- get the stage width
    _fst.l_width = tonum(sub(_str, _offset, _offset), 0x1)
    _offset += 1

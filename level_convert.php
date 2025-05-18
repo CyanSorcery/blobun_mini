@@ -7,6 +7,12 @@ $worldpak = json_decode(file_get_contents('C:/Users/spark/AppData/Local/Blobun/w
 
 $worlds 	= [];
 
+function pico_time_format($t) {
+	//to correct for precision issues, add a little bit of time
+	$t += 0.0011;
+	return str_pad(strval(floor($t)), 3, '0',STR_PAD_LEFT).'.'.str_pad(strval(floor(fmod($t,1) * 10000) % 10000),4,'0',STR_PAD_RIGHT);
+}
+
 //go through each of the stages in the worldpak and add them to our array
 foreach ($worldpak['pak_worlds'] as $world)
 {
@@ -19,7 +25,10 @@ foreach ($worldpak['pak_worlds'] as $world)
 			'n' => $stage['stage_name'],
 			'a' => $stage['stage_author'],
 			'r' => $stage['stage_replay_data'],
-			'h' => $stage['stage_hint_count']
+			'h' => $stage['stage_hint_count'],
+			't' => $stage['stage_target_time'],
+			'j' => $stage['stage_dev_time'],
+			's' => $stage['stage_id']
 		]);
 	}
 	array_push($worlds, $levels);
@@ -52,6 +61,12 @@ for ($world = 0; $world < $worldcount; $world++)
 		$s_author 		= $currstage['a'];
 		$output_str 	.= dechex(strlen($s_author));
 		$output_str 	.= strtolower($s_author);
+		//The stage save slot (60 max, but could be up to 99 (impossible to track though))
+		$output_str 	.= str_pad($currstage['s'], 2, '0',STR_PAD_LEFT);
+		//The target time
+		$output_str 	.= pico_time_format($currstage['t']);
+		//The dev time
+		$output_str 	.= pico_time_format($currstage['j']);
 		//The stage width (16 tiles max)
 		$output_str 	.= dechex($currstage['w']);
 		//The hint arrows

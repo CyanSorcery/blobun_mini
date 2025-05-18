@@ -154,7 +154,7 @@ function draw_stage_select()
    -- tmp, just put a dummy time
    _stagetime = 599.999
    if (_show_timers) then
-    if (_stagetime <= _st.l_mintime) ?format_time(_stagetime), 96, _syt, 7
+    if (_stagetime <= _st.l_goaltime) ?format_time(_stagetime), 96, _syt, 7
     if (_stagetime <= _st.l_devtime) ?"♥", 120, _syt, 7
    end
   end
