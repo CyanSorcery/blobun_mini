@@ -24,6 +24,7 @@ function draw_intro()
  map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
  local _anim2 = _anim * 0.5
  ?"presented by", 39, 60 - _anim2, 1
+ -- draw the cyansorcery text, but only if lesbians are enabled
  if (setting_get(6)) map(19, 7, 18, 60 + _anim2, 11, 1)
  palt()
  fillp(g_fillp_transition[flr(lerp(1, 4, _baseanim))])
@@ -83,14 +84,21 @@ end
 
 
 function update_stage_select()
+ g_sss_anim_factor = mid(0, g_sss_anim_factor + g_sss_anim_incr, 1)
  g_title_scroll += 0.02
  g_title_scroll %= 1
  -- roxy note: cap this to the count of unlocked worlds later
  local _worlds = count(g_levels)
  
  -- pick the world
- if (btnp(0)) g_sss_menu_world = max(g_sss_menu_world - 1, 1)
- if (btnp(1)) g_sss_menu_world = min(g_sss_menu_world + 1, _worlds)
+ if g_sss_anim_factor == 1 then
+  if (btnp(0) and g_sss_menu_world > 1) g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -0.125
+  -- roxy note: check for player worlds unlocked
+  if (btnp(1) and g_sss_menu_world < count(g_levels)) g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -0.125
+ end
+
+ -- show the next world panel?
+ if (g_sss_anim_factor == 0) g_sss_anim_incr = 0.125 g_sss_menu_world = g_sss_menu_world_tgt g_sss_menu_world_tgt = nil
 
  -- roxy note: cap this to the count of unlocked stages in the above world later
  local _stages = count(g_levels[g_sss_menu_world])
@@ -106,21 +114,25 @@ function update_stage_select()
 end
 
 function draw_stage_select()
- cls(1)
- -- draw slime borders
- -- roxy note: allow lookup of slime colors later
- pal(1, 3)
- map(0, 14, -24 + (24 * g_title_scroll), -2, 19, 3)
- map(0, 0, -24 * g_title_scroll, 115, 19, 2)
+ -- do lookups for what color the stage select should be
+ local _t = {{1, 3, 11, 2}, {2, 4, 12, 13}, {0, 2, 4, 1}, {5, 13, 6, 13}, {2, 4, 9, 4}}
+ local _y_offset = 20 + sin(g_sss_anim_factor >> 3) * 29
+ for i=1,4 do
+  pal(_t[1][i], _t[g_sss_menu_world][i])
+ end
+ -- draw the background
+ rectfill(0, 0, 127, 127, 1)
+ -- draw the slime borders
+ map(0, 14, -24 + (24 * g_title_scroll), -2 - _y_offset, 19, 3)
+ map(0, 17, -24 * g_title_scroll, 115 + _y_offset, 19, 2)
  -- draw the stage title
- pal()
- map(32, -2 + g_sss_menu_world * 2, 0, 1, 16, 2)
- pal()
+ map(32, -2 + g_sss_menu_world * 2, 0, 1 - _y_offset, 16, 2)
+ local _bott = 122 + _y_offset
  -- draw to go to previous world?
- if (g_sss_menu_world > 1) ?"⬅️previous area", 1, 122, 7
+ if (g_sss_menu_world > 1) ?"⬅️previous area", 1, _bott, 7
  -- draw to go to next world?
  -- roxy note: check for player worlds unlocked
- if (g_sss_menu_world < count(g_levels)) ?"next area➡️", 84, 122, 7
+ if (g_sss_menu_world < count(g_levels)) ?"next area➡️", 84, _bott, 7
 
  -- draw the stages
  local _stages = count(g_levels[g_sss_menu_world])
@@ -131,7 +143,7 @@ function draw_stage_select()
   if _y > _start and _y < _end then
    _syt = _sy1 + 3
    if (_is_hilite) rectfill(4, _sy1, 90, _sy2, 2)
-   pal(7, _is_hilite and 7 or 3)
+   pal(7, _is_hilite and 7 or _t[g_sss_menu_world][2])
    ?(_y > 9 and "" or " ").._y.." ".._st.l_name, 15, _syt, 7
    spr(_y % 2 == 1 and 101 or 96, 6, _sy1 + 1)
    if _is_hilite then
@@ -148,4 +160,14 @@ function draw_stage_select()
   end
   _sy1 = _sy2
  end
+
+ -- draw the checkerboard effect?
+ if g_sss_anim_factor < 1 then
+  palt()
+  if (g_sss_anim_incr < 0) pal(1, _t[g_sss_menu_world_tgt][1])
+  fillp(g_fillp_transition[flr(lerp(1, 4, g_sss_anim_factor))])
+  if (g_sss_anim_incr > 0) rectfill(0, 22, 127, 112, 1) else rectfill(0, 0, 127, 127, 1)
+  fillp()
+ end
+ pal()
 end
