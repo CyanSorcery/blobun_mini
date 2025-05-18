@@ -57,9 +57,9 @@ function draw_gameplay()
  
 
  -- cpu
-?flr((stat(1)) * 100).."%", 72, 122, 7
+ --?flr((stat(1)) * 100).."%", 72, 122, 7
  -- mem
- ?flr(stat(0)).."/2048kb", 88, 122, 7
+ --?flr(stat(0)).."/2048kb", 88, 122, 7
 
  local _show_timers = setting_get(2)
  local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 95
@@ -102,19 +102,12 @@ function do_tile_mirror()
 end
 
 function redraw_floor_zappers()
- -- color order is cmy, plate/highlight, off/wait/on. use center colors to recolor
- local _pal = {
-  1, 5, 5, 13, 13, 6,
-  1, 2, 2, 8, 8, 9,
-  1, 4, 2, 4, 4, 9
-  }
- local _o0, _o1, _o2
- for i=0,2 do
-  _o0 = (i * 6)
-  _o1, _o2 = _o0 + 3, _o0 + (((i + g_puzz_zapper_turn) % 3) << 1)
-  pal(_pal[_o1], _pal[_o2 + 1])
-  pal(_pal[_o1 + 1], _pal[_o2 + 2])
-  spr(156 + i, 104 + (i << 3), 8, 1, 2)
+ local _subt, _o1
+ for i=1,3 do
+  _o1, _subt = (((i + g_puzz_zapper_turn) % 3) << 1) + 1, g_pal_zappers[i]
+  pal(_subt[3], _subt[_o1])
+  pal(_subt[4], _subt[_o1 + 1])
+  spr(155 + i, 96 + (i << 3), 8, 1, 2)
  end
  pal()
 

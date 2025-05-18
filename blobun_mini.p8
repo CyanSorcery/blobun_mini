@@ -60,8 +60,9 @@ function _init()
  g_play_sfx, g_puzz_world_target, g_puzz_level_target, g_game_mode_target, g_func_update, g_func_draw = nil
  --[[
   g_pal_dark - used for darkening the screen
+  g_pal_zappers - color order is cmy, plate/highlight, off/wait/on. use center colors to recolor
  ]]
- g_pal_dark = str_to_table("0001115525511125",16)
+ g_pal_dark, g_pal_zappers = str_to_table("0001115525511125",16), str_to_table("155dd6122889142449",6)
 
  -- parse the level data
  parse_levels()
@@ -75,7 +76,7 @@ function _init()
  -- send us to the intro
  --unpack_intro()
  --unpack_title()
- unpack_level(1, 1)
+ unpack_level(2, 1)
  --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
