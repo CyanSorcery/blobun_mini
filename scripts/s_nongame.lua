@@ -116,6 +116,12 @@ function draw_stage_select()
  pal()
  map(32, -2 + g_sss_menu_world * 2, 0, 1, 16, 2)
  pal()
+ -- draw to go to previous world?
+ if (g_sss_menu_world > 1) ?"⬅️previous area", 1, 122, 7
+ -- draw to go to next world?
+ -- roxy note: check for player worlds unlocked
+ if (g_sss_menu_world < count(g_levels)) ?"next area➡️", 84, 122, 7
+
  -- draw the stages
  local _stages = count(g_levels[g_sss_menu_world])
  local _start = max(min(g_sss_menu_stage - flr(_stages >> 1), _stages - 9), 0)
