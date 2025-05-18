@@ -155,3 +155,16 @@ function format_time(_num)
  -- mika note: we add to the time to guarantee 0's in the padding
  return (_num >= 60 and flr(_num / 60)..":" or "")..sub(flr(_num % 60) + 100, 2, 3).."."..sub(flr((_num % 1) * 1000) + 1000, 2, 4)
 end
+
+function str_to_table(_str, _delimiter)
+ local _t, _at, _offset = {}, #_str \ _delimiter
+ for _aa=1,_at do
+  _t[_aa] = {}
+  _offset = (_aa - 1) * _delimiter
+  for i=1,_delimiter do
+   _offset += 1
+   add(_t[_aa], tonum("0x"..sub(_str,_offset,_offset)))
+  end
+ end
+ return _t
+end

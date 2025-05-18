@@ -150,7 +150,7 @@ function player_end_move(_obj)
  end
  
  -- states: 0 normal, 1 fire, 2 ice
- local _st = {{11, 3, 1}, {10, 9, 8}, {7, 6, 13}}
+ local _st = str_to_table("b31a9876d",3)
  for i=0,2 do
   if (_tile == 8 | i << 5) _obj.pstate, _collectcol, g_play_sfx = i, _st[i + 1], g_sfx_lut.p_state[i + 1]
  end
@@ -264,10 +264,11 @@ end
 
 function player_destroy(_obj, _kill)
  g_level_lose = true
+ -- colors for normal, fire, ice
+ local _t = str_to_table("13b49a5d6", 3)
  if _kill == true then 
   _obj.isdead = true
-  local _col = _obj.pstate == 1 and {4, 9,10} or {1, 3,11}
-  if (_obj.pstate == 2) _col = {5, 13,6}
+  local _col = _t[_obj.pstate + 1]
   part_create_slime_explode((_obj.x << 4) + 12, (_obj.y << 4) + 12, _col)
  end
 end

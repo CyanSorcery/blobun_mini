@@ -66,7 +66,7 @@ function draw_gameplay()
  
  -- darken areas of the screen
  poke(0x5F54, 0x60)
- pal{0,0,0,1,1,1,5,5,2,5,5,1,1,1,2,5}
+ pal(g_pal_dark[1])
  sspr(_left_top_bar, 0, 128, 9, _left_top_bar, 0)
  if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
  pal()

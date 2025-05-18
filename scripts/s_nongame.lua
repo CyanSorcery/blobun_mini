@@ -115,7 +115,7 @@ end
 
 function draw_stage_select()
  -- do lookups for what color the stage select should be
- local _t = {{1, 3, 11, 2}, {2, 4, 12, 13}, {0, 2, 4, 1}, {5, 13, 6, 13}, {2, 4, 9, 4}}
+ local _t = g_sss_colors
  local _y_offset = 20 + sin(g_sss_anim_factor >> 3) * 29
  for i=1,4 do
   pal(_t[1][i], _t[g_sss_menu_world][i])

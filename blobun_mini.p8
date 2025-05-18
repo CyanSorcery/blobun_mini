@@ -58,6 +58,10 @@ function _init()
    g_func_draw - the draw function for the current game mode
  ]]
  g_play_sfx, g_puzz_world_target, g_puzz_level_target, g_game_mode_target, g_func_update, g_func_draw = nil
+ --[[
+  g_pal_dark - used for darkening the screen
+ ]]
+ g_pal_dark = str_to_table("0001115525511125",16)
 
  -- parse the level data
  parse_levels()
@@ -71,8 +75,8 @@ function _init()
  -- send us to the intro
  --unpack_intro()
  --unpack_title()
- unpack_level(2, 1)
- --unpack_stage_select()
+ --unpack_level(2, 1)
+ unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 
@@ -207,6 +211,7 @@ function unpack_stage_select()
  g_sss_menu_world, g_sss_menu_world_tgt = mid(1, _ws.world, count(g_levels))
  g_sss_menu_stage = mid(1, _ws.stage, count(g_levels[g_sss_menu_world]))
  g_title_scroll, g_sss_anim_factor, g_sss_anim_incr   = 0, 0, 0.125
+ g_sss_colors = str_to_table("13b224cd02415d6d2494", 4)
 end
 
 -- this function opens up the game to a given level
@@ -280,7 +285,7 @@ function unpack_level(_world, _stage)
  if (_need_sprites_update) then
   -- get ready to recolor the puzzle
   poke(0x5f55,0x0)
-  local _t = {{2,8,5,4},{14,15,2,3},{4,9,2,4},{13,6,13,5},{4,9,2,4}}
+  local _t = str_to_table("2854ef234924d6d54924", 4)
   for i=1,4 do
     pal(_t[1][i], _t[_world][i])
   end
