@@ -110,23 +110,34 @@ function draw_stage_select()
  -- draw slime borders
  -- roxy note: allow lookup of slime colors later
  pal(1, 3)
- map(0, 14, -24 + (24 * g_title_scroll), -4, 19, 3)
- map(0, 0, -24 * g_title_scroll, 116, 19, 2)
+ map(0, 14, -24 + (24 * g_title_scroll), -2, 19, 3)
+ map(0, 0, -24 * g_title_scroll, 115, 19, 2)
+ -- draw the stage title
+ pal()
+ map(32, -2 + g_sss_menu_world * 2, 0, 1, 16, 2)
  pal()
  -- draw the stages
  local _stages = count(g_levels[g_sss_menu_world])
  local _start = max(min(g_sss_menu_stage - flr(_stages >> 1), _stages - 9), 0)
- local _sy1, _end, _is_hilite = 22 - (_start * 10), _start + 10
+ local _sy1, _end, _is_hilite, _show_timers, _stagetime, _syt = 23 - (_start * 10), _start + 10, setting_get(2)
  for _y,_st in ipairs(g_levels[g_sss_menu_world]) do
   _is_hilite, _sy2 = _y == g_sss_menu_stage, _sy1 + 10
   if _y > _start and _y < _end then
-   if (_is_hilite) rectfill(4, _sy1, 88, _sy2, 2)
+   _syt = _sy1 + 3
+   if (_is_hilite) rectfill(4, _sy1, 90, _sy2, 2)
    pal(7, _is_hilite and 7 or 3)
-   ?(_y > 9 and "" or " ").._y.." ".._st.l_name, 8, _sy1 + 3, 7
+   ?(_y > 9 and "" or " ").._y.." ".._st.l_name, 15, _syt, 7
+   spr(_y % 2 == 1 and 101 or 96, 6, _sy1 + 1)
    if _is_hilite then
     fillp(g_fillp_diag[ceil(g_fillp_anim)])
-    rect(4, _sy1, 88, _sy2, 154)
+    rect(4, _sy1, 90, _sy2, 154)
     fillp(0)
+   end
+   -- tmp, just put a dummy time
+   _stagetime = 599.999
+   if (_show_timers) then
+    if (_stagetime <= _st.l_mintime) ?format_time(_stagetime), 96, _syt, 7
+    if (_stagetime <= _st.l_devtime) ?"♥", 120, _syt, 7
    end
   end
   _sy1 = _sy2

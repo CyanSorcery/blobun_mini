@@ -27,7 +27,7 @@ function _init()
  compress_music("res/m_islander.p8")
  compress_music("res/m_forest.p8")
  compress_music("res/m_snowdrift.p8")
- compress_map("res/s_title.p8", 0, 0, 32, 19)
+ compress_map("res/s_title.p8", 0, 0, 48, 19)
  compress_sfx("res/sfx.p8")
 
  printh("Finished compression. "..g_offset.."/"..g_byte_max.." ("..((g_offset/g_byte_max)*100).."% used)")

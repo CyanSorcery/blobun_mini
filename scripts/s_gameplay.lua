@@ -59,7 +59,7 @@ function draw_gameplay()
  -- mem
  ?flr(stat(0)).."/2048kb", 88, 122, 7
 
- local _show_timers = dget(63) & 0x2 == 0x2
+ local _show_timers = setting_get(2)
  local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 95
  
  -- darken areas of the screen
@@ -202,7 +202,7 @@ function redraw_waterlava()
  end
  
  -- update animations
- g_shimmer_water = g_shimmer_water >>< 1
+ g_shimmer_water >><= 1
 end
 
 
