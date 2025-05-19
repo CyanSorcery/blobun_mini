@@ -62,8 +62,9 @@ function _init()
   g_pal_dark - used for darkening the screen
   g_pal_zappers - color order is cmy, plate/highlight, off/wait/on. use center colors to recolor
   g_pal_stage_bg - palette used for drawing stage backgrounds
+  g_pal_stage_trans - used for stage transitions
  ]]
- g_pal_dark, g_pal_zappers, g_pal_stage_bg = str_to_table("0001115525511125",16), str_to_table("155dd6122889142449",6), str_to_table("1c1d437369", 5)
+ g_pal_dark, g_pal_zappers, g_pal_stage_bg, g_pal_stage_trans = str_to_table("0001115525511125",16), str_to_table("155dd6122889142449",6), str_to_table("1c1d437369", 5), str_to_table("3c26915154", 5)
 
  -- parse the level data
  parse_levels()
@@ -161,8 +162,6 @@ function _draw()
  
  -- draw menus (if we have em)
  for i,_pane in pairs(g_menu) do _pane:m_draw(i) end
---tmp
-g_pal_stage_trans = {{3, 12, 2, 6, 9}, {1, 5, 1, 5, 4}}
  -- set up for stage transition animation
  local _isgame = g_game_mode_target == 2 or g_game_mode_target == nil and count(g_object_list) > 0
  local _world = _isgame and g_puzz_world_target != nil and g_puzz_world_target or g_puzz_world_index or 1
