@@ -109,6 +109,8 @@ function player_step(_obj)
   g_level_win = true
   -- get rid of menu options since we have our own
   for i=1,5 do menuitem(i) end
+  -- if the player time is lower than the record, store it
+  if (g_level_time < dget(g_puzz_curr_fst.l_saveslot)) dset(g_puzz_curr_fst.l_saveslot, g_level_time) g_new_time = true
  end
 
  -- if we've won, make stephanie face down

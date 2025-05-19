@@ -76,8 +76,8 @@ function draw_gameplay()
  -- mem
  --?flr(stat(0)).."/2048kb", 88, 122, 7
 
- local _show_timers = setting_get(2)
- local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 95
+ local _show_timers = setting_get(1)
+ local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 87
  
  -- darken areas of the screen
  poke(0x5F54, 0x60)
@@ -86,12 +86,24 @@ function draw_gameplay()
  if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
  pal()
  poke(0x5F54, 0x00)
+ -- time below goal time?
  local _col = g_level_time <= g_puzz_curr_fst.l_goaltime and 7 or 13
+ -- time below dev time?
  if (g_level_win and g_level_time <= g_puzz_curr_fst.l_devtime) _col = 10
- if (_show_timers) ?format_time(g_level_time), 2, 2, _col
+ -- if the player has beaten this stage or not
+ local _curr_time = dget(g_puzz_curr_fst.l_saveslot)
+ spr(_curr_time < 599.995 and 155 or 154, 88, 0)
+ --show timer and "new time?"
+ if _show_timers then
+  ?format_time(g_level_time), 2, 2, _col
+  if (g_new_time) draw_wavy_text("new time!", 32, 2, _col, 1.3)
+  -- player has minimum time?
+  if (_curr_time <= g_puzz_curr_fst.l_goaltime) ?"⧗", 81, 2, _col
+  -- player has dev time?
+  if (_curr_time <= g_puzz_curr_fst.l_devtime) ?"♥", 75, 2, _col
+ end
 
  -- draw slimebar
- --rectfill(95, 0, 127, 8, 0)
  rect(96, 1, 126, 7, 7)
  fillp(g_fillp_diag[ceil(g_fillp_anim)])
  rectfill(124 - max(1, (g_level_touched / g_level_tiles) * 26), 3, 124, 5, 59)
