@@ -25,13 +25,29 @@ function draw_gameplay()
  -- stop updating the sprite sheet
  poke(0x5f55,0x60)
 
+ -- clear the background
+ cls(g_pal_stage_bg[1][g_puzz_world_index])
+ pal(7, g_pal_stage_bg[2][g_puzz_world_index])
+ -- draw the background
+ for i=0,15 do
+  for _x=0,120,8 do
+   spr(146 + i \ 2, _x, i << 3)
+  end
+ end
+ pal()
+ -- apply funky animation to background
+ poke(0x5f54, 0x60)
+ local _yend
+ for _y=0,127 do
+  sspr(0, _y, 128, 1, sin(g_stage_bg_anim + (_y >> 4)) * 1.4, _y)
+ end
+ poke(0x5f54, 0x00)
+ 
  -- set our camera position
  camera(g_cam_x, g_cam_y)
+
  -- get ready to draw the map, using white as the transparent color
  palt(0b0000000100000000)
- -- clear the background
- _t = {3, 12, 1, 6, 4}
- cls(_t[g_puzz_world_index])
  -- draw the puzzle floor
  map(0, 0, 0, 0, 32, 32, 1)
  -- now draw the map again, with flipped tiles only
@@ -55,7 +71,6 @@ function draw_gameplay()
  -- get ready to draw the status bar at the top
  camera(0, 0)
  
-
  -- cpu
  --?flr((stat(1)) * 100).."%", 72, 122, 7
  -- mem
@@ -216,6 +231,9 @@ function update_gameplay()
 
  g_slime_trail_anim += 0.075
  g_slime_trail_anim %= 1
+
+ g_stage_bg_anim += 0.015
+ g_stage_bg_anim %= 1
 
  -- update blinking
  g_player_blink -= 1

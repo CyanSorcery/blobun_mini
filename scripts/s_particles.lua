@@ -7,21 +7,21 @@ function part_create_slime_explode(_x, _y, _col)
  local _xfin, _yfin, _deg
  for i=0,0.9,0.1 do
   _xfin, _yfin, _deg = _x + (cos(i) * 4), _y + (sin(i) * 4), i * 360
-  part_create(_xfin, _yfin, 0.9, _deg, 152, 155, rnd(_col), 12)
-  part_create(_xfin, _yfin, 1.8, _deg, 152, 155, rnd(_col), 8)
+  part_create(_xfin, _yfin, 0.9, _deg, 164, 167, rnd(_col), 12)
+  part_create(_xfin, _yfin, 1.8, _deg, 164, 167, rnd(_col), 8)
  end
 end
 
 function part_create_octogem(_x1, _y1, _x2, _y2)
  local _xfin, _yfin
  for i=0,0.8, 0.2 do
-  part_create(lerp(_x1, _x2, i), lerp(_y1, _y2, i), 0, 0, 152, 155, 14, lerp(5, 12, i))
+  part_create(lerp(_x1, _x2, i), lerp(_y1, _y2, i), 0, 0, 164, 167, 14, lerp(5, 12, i))
  end
  part_create_item_grab(_x2, _y2, {14, 7})
 end
 function part_create_item_grab(_x, _y, _col)
  for i=0,0.9,0.1 do
-  part_create(_x + (cos(i) * 4), _y + (sin(i) * 4), 0.8, i * 360, 152, 155, rnd(_col), 8)
+  part_create(_x + (cos(i) * 4), _y + (sin(i) * 4), 0.8, i * 360, 164, 167, rnd(_col), 8)
  end
 end
 
@@ -31,7 +31,7 @@ function part_create_sparkle_raise(_x, _y)
 end
 ]]
 
--- sphere 152, 155
+-- sphere 164, 167
 -- sparkle 168, 171
 
 function proc_particles()
