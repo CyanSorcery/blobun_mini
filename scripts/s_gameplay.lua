@@ -98,9 +98,9 @@ function draw_gameplay()
   ?format_time(g_level_time), 2, 2, _col
   if (g_new_time) draw_wavy_text("new time!", 32, 2, _col, 1.3)
   -- player has minimum time?
-  if (_curr_time <= g_puzz_curr_fst.l_goaltime) ?"⧗", 81, 2, _col
+  if (_curr_time <= g_puzz_curr_fst.l_goaltime) ?"⧗", 81, 2, 9
   -- player has dev time?
-  if (_curr_time <= g_puzz_curr_fst.l_devtime) ?"♥", 75, 2, _col
+  if (_curr_time <= g_puzz_curr_fst.l_devtime) ?"♥", 75, 2, 14
  end
 
  -- draw slimebar

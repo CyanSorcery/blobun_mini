@@ -77,8 +77,8 @@ function _init()
  -- send us to the intro
  --unpack_intro()
  --unpack_title()
- --unpack_level(1, 2)
- unpack_stage_select()
+ unpack_level(1, 2)
+ --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
 
@@ -94,10 +94,8 @@ end
  ]]
 
 -- the second parameter may be nil, that's fine
-function set_game_mode(_mode, _world_target, _level_target)
- g_game_mode_target = _mode
- g_puzz_world_target = _world_target
- g_puzz_level_target = _level_target
+function set_game_mode(_mode, _world_target, _level_target, _skip_l_intro)
+ g_game_mode_target, g_puzz_world_target, g_puzz_level_target, g_skip_l_intro, g_l_intro_countdown = _mode, _world_target, _level_target, _skip_l_intro, 0
  -- get rid of any menus
  for _pane in all(g_menu) do
   _pane.m_anim_incr = -0.25
@@ -106,9 +104,8 @@ function set_game_mode(_mode, _world_target, _level_target)
  -- stop music
  music(-1)
 end
-function finalize_game_mode(_mode, _func_update, _func_draw)
- g_func_update = _func_update
- g_func_draw = _func_draw
+function finalize_game_mode(_func_update, _func_draw)
+ g_func_update, g_func_draw, g_l_intro_countdown, g_object_list = _func_update, _func_draw, 0, {}
  pal()
 end
 
@@ -124,8 +121,8 @@ function _update()
 
  -- run the update function
  g_func_update()
-
- g_intro_anim = min(g_intro_anim + 0.1, 1)
+ g_l_intro_countdown = max(g_l_intro_countdown - 1)
+ if (g_l_intro_countdown <= 45) g_intro_anim = min(g_intro_anim + 0.1, 1)
  if g_game_mode_target != nil then
   g_outro_anim = max(g_outro_anim - 0.1)
   if g_outro_anim == 0 then
@@ -164,13 +161,33 @@ function _draw()
  
  -- draw menus (if we have em)
  for i,_pane in pairs(g_menu) do _pane:m_draw(i) end
+--tmp
+g_pal_stage_trans = {{3, 12, 2, 6, 9}, {1, 5, 1, 5, 4}}
+ -- set up for stage transition animation
+ local _isgame = g_game_mode_target == 2 or g_game_mode_target == nil and count(g_object_list) > 0
+ local _world = _isgame and g_puzz_world_target != nil and g_puzz_world_target or g_puzz_world_index or 1
+ local _colbg, _colshd = _isgame and g_pal_stage_trans[1][_world] or 1, g_pal_stage_trans[2][_world]
 
  -- draw transition?
  local _anim = g_intro_anim * g_outro_anim
  if _anim < 1 then
   local _w = 64 * cos(_anim >> 2)
-  rectfill(0, 0, _w, 127, 1)
-  rectfill(127 - _w, 0, 127, 127, 1)
+  rectfill(0, 0, _w, 127, _colbg)
+  rectfill(127 - _w, 0, 127, 127, _colbg)
+ end
+
+ -- draw the stage intro?
+ -- ashe note: kinda had to put it here for layering
+ if g_l_intro_countdown > 0 then
+  local _sname, _offset = "stage "..g_puzz_level_index, cos((max(abs(g_l_intro_countdown-45),35)-35)*sgn(g_l_intro_countdown-45)/40)*64-64
+  local _o1, _o2 = _offset + 8, _offset + 9
+  print(_sname, _offset + 13, 98, _colshd)
+  local _x = print(_sname, _offset + 12, 97, 7)
+  line(_o2, 105, _o2 + _x, 105, _colshd)
+  line(_o1, 104, _o1 + _x, 104, 7)
+  ?g_puzz_curr_fst.l_name, _o2, 108, _colshd
+  ?g_puzz_curr_fst.l_name, _o1, 107, 7
+  if (_anim == 0) ?g_puzz_curr_fst.l_author, _o1, 115, _colshd
  end
  
 --show sprite table
@@ -192,14 +209,14 @@ end
 -- this function puts us on the intro screen
 function unpack_intro()
  unpack_nongameplay(-1)
- finalize_game_mode(3, update_intro, draw_intro)
+ finalize_game_mode(update_intro, draw_intro)
  g_intro_countdown = 90
 end
 
  -- this function puts us on the title screen
 function unpack_title()
  unpack_nongameplay(-1)
- finalize_game_mode(0, update_title, draw_title)
+ finalize_game_mode(update_title, draw_title)
 
  -- animation for title screen background scrolling
  g_title_scroll   = 0
@@ -207,7 +224,7 @@ end
 
 function unpack_stage_select()
  unpack_nongameplay(-1)
- finalize_game_mode(1, update_stage_select, draw_stage_select)
+ finalize_game_mode(update_stage_select, draw_stage_select)
  -- set the world/stage select variables
  local _ws = last_worldstage_get()
  g_sss_menu_world, g_sss_menu_world_tgt = mid(1, _ws.world, count(g_levels))
@@ -218,7 +235,7 @@ end
 
 -- this function opens up the game to a given level
 function unpack_level(_world, _stage)
- finalize_game_mode(2, update_gameplay, draw_gameplay)
+ finalize_game_mode(update_gameplay, draw_gameplay)
 
  local _need_sprites_update = g_px9_ind_sprites != 2
 
@@ -257,8 +274,9 @@ function unpack_level(_world, _stage)
    g_puzz_on_convey - player is on a conveyer belt
    g_puzz_use_portal - player is in a floor portal
    g_new_time - player got a new time
+   g_l_intro_countdown - how long until the stage is playable, or 0 if intro is skipped
  ]]
- g_redraw_coin, g_btn4_held, g_level_win, g_level_lose, g_puzz_on_convey, g_puzz_use_portal, g_new_time = true, false, false, false, false, false, false
+ g_redraw_coin, g_btn4_held, g_level_win, g_level_lose, g_puzz_on_convey, g_puzz_use_portal, g_new_time, g_l_intro_countdown = true, false, false, false, false, false, false, g_skip_l_intro == true and 0 or 90
  --[[
    g_puzz_zapper_turn - which zapper is the active one, in this order: 012 = cmy
    g_redraw_zappers - when set, update the visuals on the floor zappers
