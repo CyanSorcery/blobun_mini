@@ -248,17 +248,17 @@ function update_gameplay()
   if ((g_btn4_press and g_level_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
  end
 
- g_slime_trail_anim += 0.075
+ g_slime_trail_anim += .075
  g_slime_trail_anim %= 1
 
- g_stage_bg_anim += 0.015
+ g_stage_bg_anim += .015
  g_stage_bg_anim %= 1
 
  -- update blinking
  g_p_blink -= 1
  if (g_p_blink <= 0) g_p_blink = 30 + flr(rnd(60))
 
- g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + 0.2 or g_bottom_msg_anim - 0.2, 1)
+ g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
  
  -- move camera while binding it to the stage edges/centering it
  local _obj, _lw, _lh = g_o_list[1], g_p_fst.l_width << 4, g_p_fst.l_height << 4
@@ -336,16 +336,16 @@ function create_obj_key(_x, _y, _key, _spr)
    spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
   -- if this is an octogem on the right sequence, or isn't an octogem at all
   elseif (self.type - 8 == g_p_octog or self.type < 8 or self.type > 15) then
-   local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * 0.5) * -8)
+   local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * .5) * -8)
    if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
    sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
    sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
   end
  end
  function _obj:onstep()
-  self.anim += 0.02
+  self.anim += .02
   self.anim %= 1
-  self.spin += 0.035
+  self.spin += .035
   self.spin %= 1
  end
  return _obj

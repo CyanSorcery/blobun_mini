@@ -6,7 +6,7 @@ function menu_create(_x, _y, _w, _items)
   m_h = (count(_items) * 10) + 6,
   m_items = _items,
   m_highlight = 1,
-  m_anim_incr = 0.25,
+  m_anim_incr = .25,
   m_anim_factor = 0,
   m_step = function(self, _index)
    local _m_count = count(g_menu)
@@ -17,13 +17,13 @@ function menu_create(_x, _y, _w, _items)
     -- confirm
     if (btnp(4)) self.m_items[self.m_highlight]:i_onclick()
     -- cancel
-    if (btnp(5)) self.m_anim_incr = -0.25
+    if (btnp(5)) self.m_anim_incr = -.25
    end
    
    -- only increment if a menu below is done with its animation
    local _do_anim = true
    if (_is_top_pane and _m_count > 1 and g_menu[_m_count - 1].m_anim_factor > 0) _do_anim = false
-   if (_do_anim) self.m_anim_factor = mid(0, self.m_anim_factor + (_is_top_pane and self.m_anim_incr or -0.25), 1)
+   if (_do_anim) self.m_anim_factor = mid(0, self.m_anim_factor + (_is_top_pane and self.m_anim_incr or -.25), 1)
 
    -- is this menu done?
    if (self.m_anim_factor == 0 and self.m_anim_incr < 0) deli(g_menu)
@@ -66,7 +66,7 @@ end
 function menus_remove()
  -- get rid of any menus
  for _pane in all(g_menu) do
-  _pane.m_anim_incr = -0.25
+  _pane.m_anim_incr = -.25
  end
 end
 function menu_item_base(_str, _func)
@@ -89,6 +89,7 @@ function menu_create_puzz()
  menu_create(16, 64, 96,{
   menu_item_base((g_level_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_ind_w, g_p_ind_s + 1) end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_ind_w, g_p_ind_s, true) end),
+  menu_item_base("show hints", unpack_hints),
   menu_item_base("stage select", function() set_game_mode(1) end),
   menu_item_base("options", menu_create_options),
   menu_item_base("go to title", function() set_game_mode(0) end)

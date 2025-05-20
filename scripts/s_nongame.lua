@@ -22,7 +22,7 @@ function draw_intro()
  rectfill(0, 56, 127, 72, 12)
  map(0, 12, -24 * g_title_scroll, 56 - _anim, 19, 1)
  map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
- local _anim2 = _anim * 0.5
+ local _anim2 = _anim * .5
  ?"presented by", 39, 60 - _anim2, 1
  -- draw the cyansorcery text, but only if lesbians are enabled
  if (setting_get(6)) map(19, 7, 18, 60 + _anim2, 11, 1)
@@ -33,7 +33,7 @@ function draw_intro()
 end
 
 function update_intro()
- g_title_scroll += 0.025
+ g_title_scroll += .025
  g_title_scroll %= 1
 
  if g_intro_countdown > 0 then
@@ -45,7 +45,7 @@ function update_intro()
 end
 
 function update_title()
- g_title_scroll += 0.01
+ g_title_scroll += .01
  g_title_scroll %= 1
  
  if count(g_menu) == 0 then
@@ -63,20 +63,20 @@ end
 
 function update_stage_select()
  g_sss_anim_factor = mid(0, g_sss_anim_factor + g_sss_anim_incr, 1)
- g_title_scroll += 0.02
+ g_title_scroll += .02
  g_title_scroll %= 1
  -- roxy note: cap this to the count of unlocked worlds later
  local _worlds = count(g_levels)
  
  -- pick the world
  if g_sss_anim_factor == 1 then
-  if (btnp(0) and g_sss_menu_world > 1) g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -0.125
+  if (btnp(0) and g_sss_menu_world > 1) g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -.125
   -- roxy note: check for player worlds unlocked
-  if (btnp(1) and g_sss_menu_world < count(g_levels)) g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -0.125
+  if (btnp(1) and g_sss_menu_world < count(g_levels)) g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
  end
 
  -- show the next world panel?
- if (g_sss_anim_factor == 0) g_sss_anim_incr = 0.125 g_sss_menu_world = g_sss_menu_world_tgt g_sss_menu_world_tgt = nil
+ if (g_sss_anim_factor == 0) g_sss_anim_incr = .125 g_sss_menu_world = g_sss_menu_world_tgt g_sss_menu_world_tgt = nil
 
  -- roxy note: cap this to the count of unlocked stages in the above world later
  local _stages = count(g_levels[g_sss_menu_world])
@@ -93,15 +93,14 @@ end
 
 function draw_stage_select()
  -- do lookups for what color the stage select should be
- local _t = g_sss_colors
- local _y_offset = 20 + sin(g_sss_anim_factor >> 3) * 29
+ local _t, _y_offset = g_sss_colors, 20 + sin(g_sss_anim_factor >> 3) * 29
  for i=1,4 do
   pal(_t[1][i], _t[g_sss_menu_world][i])
  end
  -- draw the background
  rectfill(0, 0, 127, 127, 1)
  -- draw the slime borders
- map(0, 14, -24 + (24 * g_title_scroll), -2 - _y_offset, 19, 3)
+ map(0, 14, -24 + 24 * g_title_scroll, -2 - _y_offset, 19, 3)
  map(0, 17, -24 * g_title_scroll, 115 + _y_offset, 19, 2)
  -- draw the stage title
  map(32, -2 + g_sss_menu_world * 2, 0, 1 - _y_offset, 16, 2)
@@ -114,7 +113,7 @@ function draw_stage_select()
 
  -- draw the stages
  local _stages = count(g_levels[g_sss_menu_world])
- local _start = max(min(g_sss_menu_stage - flr(_stages >> 1), _stages - 9), 0)
+ local _start = max(min(g_sss_menu_stage - 5, _stages - 9), 0)
  local _sy1, _end, _show_timers, _is_hilite, _stagetime, _syt = 23 - (_start * 10), _start + 10, setting_get(1)
  for _y,_st in ipairs(g_levels[g_sss_menu_world]) do
   _is_hilite, _sy2 = _y == g_sss_menu_stage, _sy1 + 10

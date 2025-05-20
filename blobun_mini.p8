@@ -11,7 +11,7 @@ function _init()
  flip()
 
  -- move compressed data to the general use space, then clear everything
- memcpy(0x8000, 0x0, 0x4300)
+ memcpy(0x8000, 0, 0x4300)
  memset(0x0, 0, 0x4300)
 
  -- figure out what kind of compressed data we have
@@ -108,14 +108,14 @@ end
 
 function _update()
  
- -- get rid of menus?
+ -- get rid of menus when pressing pause?
  if (count(g_menu) > 0 and btn(6)) poke(0x5f30,1) menus_remove()
  
  -- run fillp animation
- g_fillp_anim += 0.2
+ g_fillp_anim += .2
  g_fillp_anim %= 4
  -- update wavy factor
- g_wavy_anim += 0.035
+ g_wavy_anim += .035
  g_wavy_anim %= 1
 
  g_even_frame = g_even_frame == false
@@ -125,9 +125,12 @@ function _update()
  -- allow to skip stage intro
  if (btnp() & 0x30 > 0 and g_s_intro_cd > 45) g_s_intro_cd = 45
  g_s_intro_cd = max(g_s_intro_cd - 1)
- if (g_s_intro_cd <= 45) g_intro_anim = min(g_intro_anim + 0.1, 1)
+ -- do intro animation?
+ if (g_s_intro_cd <= 45) g_intro_anim = min(g_intro_anim + .1, 1)
+ 
+ -- are we going to a different screen?
  if g_game_mode_target != nil then
-  g_outro_anim = max(g_outro_anim - 0.1)
+  g_outro_anim = max(g_outro_anim - .1)
   if g_outro_anim == 0 then
    if g_game_mode_target == 0 then
     unpack_title()
@@ -147,7 +150,7 @@ function _update()
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
  -- play a sound effect this frame?
- if (g_play_sfx != nil) sfx((g_play_sfx >> 10) & 0x3f, 3, (g_play_sfx >> 5) & 0x1f, g_play_sfx & 0x1f) g_play_sfx = nil
+ if (g_play_sfx != nil) sfx(g_play_sfx >> 10 & 0x3f, 3, g_play_sfx >> 5 & 0x1f, g_play_sfx & 0x1f) g_play_sfx = nil
  
  g_time = time()
  -- if time rolls over, stop the game since timers will break
@@ -165,11 +168,7 @@ function _draw()
 
  -- draw transition?
  local _anim = g_intro_anim * g_outro_anim
- if _anim < 1 then
-  local _w = 64 * cos(_anim >> 2)
-  rectfill(0, 0, _w, 127, _colbg)
-  rectfill(127 - _w, 0, 127, 127, _colbg)
- end
+ if (_anim < 1) local _w = 64 * cos(_anim >> 2) rectfill(0, 0, _w, 127, _colbg) rectfill(127 - _w, 0, 127, 127, _colbg)
 
  -- draw the stage intro?
  -- ashe note: kinda had to put it here for layering
@@ -227,8 +226,7 @@ function unpack_stage_select()
  local _ws = last_worldstage_get()
  g_sss_menu_world, g_sss_menu_world_tgt = mid(1, _ws.world, count(g_levels))
  g_sss_menu_stage = mid(1, _ws.stage, count(g_levels[g_sss_menu_world]))
- g_title_scroll, g_sss_anim_factor, g_sss_anim_incr   = 0, 0, 0.125
- g_sss_colors = str2tbl("13b224cd02415d6d2494", 4)
+ g_title_scroll, g_sss_anim_factor, g_sss_anim_incr, g_sss_colors = 0, 0, .125, str2tbl("13b224cd02415d6d2494", 4)
 end
 
 -- this function opens up the game to a given level
@@ -319,8 +317,7 @@ function unpack_level(_world, _stage)
  end
 
  -- get ready to parse the level data
- local _level_data = {}
- local _data_len, _data, _offset, _level_width = #g_p_fst.l_data, g_p_fst.l_data, 1, g_p_fst.l_width
+ local _level_data, _data_len, _data, _offset, _level_width = {}, #g_p_fst.l_data, g_p_fst.l_data, 1, g_p_fst.l_width
  -- read the data
  -- coco note: since we have to add 2 to the offset to get past the
  -- data length bytes, go ahead and save a call here by chaining it into the loop
@@ -331,17 +328,12 @@ function unpack_level(_world, _stage)
   _offset += 2
   _dstile = tonum(sub(_data, _offset, _offset + 1), 0x1)
   _level_data[i] = _dstile
-  _mod = ((_dsx + _dsy) % 4 == 2) and 1 or 0
+  _mod = (_dsx + _dsy) % 4 == 2 and 1 or 0
   -- now, read this out onto the playfield
-  if _dstile > 0 then
-   put_mirrored_tile(_dsx, _dsy, 16 + _mod)
-  end
+  if (_dstile > 0) put_mirrored_tile(_dsx, _dsy, 16 + _mod)
   -- move ahead in the tileset, moving to the next row as needed
   _dsx += 2
-  if _dsx >= _level_width then
-   _dsx = 1
-   _dsy += 2
-  end
+  if (_dsx >= _level_width) _dsx = 1 _dsy += 2
 
  end
  
@@ -357,18 +349,13 @@ function unpack_level(_world, _stage)
   end
  end
  -- now, unpack the level data into the top left screen of the work area so we can read it easily
- -- get the level width data that we stored earlier
- _dsx, _dsy, _level_width = 0, 0, g_p_fst.l_width
+ _dsx, _dsy = 0, 0
  for _tile in all(_level_data) do
   mset(_dsx + 32, _dsy, _tile)
   -- place a floor tile + allow collision here?
   -- note: 0 off means cant pass, 1 means can pass, 2 means slimed
-  if _tile != 0 then
-   -- place free tile, may be overwritten below though
-   mset(_dsx + 48, _dsy, 1)
-   place_puzz_tile(_dsx, _dsy, _tile)
-   g_s_tiles += 1
-  end
+  -- place free tile here, may be overwritten below
+  if (_tile != 0) mset(_dsx + 48, _dsy, 1) place_puzz_tile(_dsx, _dsy, _tile) g_s_tiles += 1
 
   -- do we need to add objects to the object list?
   if (_tile == 33) player_create(_dsx, _dsy)
@@ -396,10 +383,7 @@ function unpack_level(_world, _stage)
   if (_tile == 44) add(g_o_list, create_obj_key(_dsx, _dsy, 16, 159))
 
   _dsx += 1
-  if _dsx >= _level_width then
-   _dsy += 1
-   _dsx = 0
-  end
+  if (_dsx >= g_p_fst.l_width) _dsy += 1 _dsx = 0
  end
 
  -- perform water/lava autotile
@@ -464,9 +448,7 @@ function proc_autotile(_initial, _id, _work_x, _place_func)
   for _yc=0,_h do
    -- get the bottom row, without going into the work area
    _yb = min(_yc + 1, _h)
-   _mbl, _mbc, _mbr = mget(_xl, _yb) == _id and 0 or 1,
-      mget(_xc, _yb) == _id and 0 or 1,
-      mget(_xr, _yb) == _id and 0 or 1
+   _mbl, _mbc, _mbr = mget(_xl, _yb) == _id and 0 or 1, mget(_xc, _yb) == _id and 0 or 1, mget(_xr, _yb) == _id and 0 or 1
 
    -- don't do this unless the center tile is 0 since
    -- we can know in advance we wont put a tile
@@ -545,13 +527,15 @@ function unpack_hints()
  -- now, add our hint arrows
  for i=0,_hintcount do
   _offset = 1 + i\2
-  _dir = (tonum("0x"..sub(_hintstr, _offset, _offset)) >> _bo) & 0x3
+  _dir = tonum("0x"..sub(_hintstr, _offset, _offset)) >> _bo & 0x3
   add_hint_arrow(_x, _y, _dir)
   _x += cos(_dir >> 2)
   _y += sin(_dir >> 2)
   _bo += 2
   _bo %= 4
  end
+ -- close the menu
+ menus_remove()
 end
 
 -->8

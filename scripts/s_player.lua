@@ -35,17 +35,17 @@ function player_step(_obj)
  g_btn4_held = btn(4)
 
  -- jiggle animation countdown
- _obj.jiggle = max(_obj.jiggle - 0.2, 0)
+ _obj.jiggle = max(_obj.jiggle - .2, 0)
 
  -- do undo?
  if (btnp(5) and not g_level_win) perform_undo()
 
  
  -- do the move animation
- _obj.anim = min(_obj.anim + ((_obj.sprint or g_p_use_conv or g_p_use_port) and 0.2 or 0.1111), 1)
+ _obj.anim = min(_obj.anim + ((_obj.sprint or g_p_use_conv or g_p_use_port) and .2 or .1111), 1)
  
  -- allow input buffer?
- if _obj.anim >= 0.65 then
+ if _obj.anim >= .65 then
   local _t = {2, 0, 1, 3}
   for i=0,3 do
    if (btn(i)) g_new_dir = _t[i + 1]
@@ -53,7 +53,7 @@ function player_step(_obj)
  end
  
  -- fix fractional precision errors
- if _obj.anim + 0.001 >= 1 and not g_level_win and not g_level_lose then
+ if _obj.anim + .001 >= 1 and not g_level_win and not g_level_lose then
   -- did she just stop moving?
   if (_obj.ismove == true) player_end_move(_obj)
 
@@ -276,7 +276,7 @@ function player_draw(_obj)
  if _anim < 1 then
   -- if on conveyer, use linear animation
   -- if not, use curved animation
-  _offset = g_p_use_conv and _anim or 0.5 + cos(_anim * 0.5 * sgn(_anim - 0.5)) * -0.5
+  _offset = g_p_use_conv and _anim or .5 + cos(_anim * .5 * sgn(_anim - .5)) * -.5
   
   _x, _y = lerp(_obj.oldx << 4, _obj.x << 4, _offset), lerp(_obj.oldy << 4, _obj.y << 4, _offset)
   
