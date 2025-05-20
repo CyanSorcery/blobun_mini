@@ -77,12 +77,17 @@ for ($world = 0; $world < $worldcount; $world++)
 			$decode_bin		= base64_decode($currstage['r']);
 			$uncompressed	= zlib_decode($decode_bin);
 			$strhex 		= bin2hex($uncompressed);
-			//How many moves are in this?
 
 			//For whatever reason, Gamemaker stores 16bit values with bits flipped
 			//so we have to flip them back
 			$move_count 	= hexdec(substr($strhex, 2, 2).substr($strhex, 0, 2));
-			$hint_count 	= min($move_count, $currstage['h'], 16);
+			$hint_count 	= min($move_count, $currstage['h'], 15);
+			
+			//flip this so that the replay moves can be in the right order
+			//ashe note: this code is scuffed but it's not my job to figure this out fancy like. it works
+			$flipprep = unpack('C*', pack('h*', $strhex));
+			$strhex		= '';
+			foreach ($flipprep as $int) $strhex .= str_pad(dechex($int), 2, "0", STR_PAD_LEFT);
 
 			//parse the hint arrows. This way we can put *exactly* the hint arrows we need
 			$hintstr 	= substr($strhex, 4, strlen($strhex) - 4);
@@ -93,6 +98,7 @@ for ($world = 0; $world < $worldcount; $world++)
 				array_push($hint_arrows, $sub);
 			}
 		}
+
 		//Create a string for the hints
 		$hintstr 		= "";
 		for ($i = 0; $i < $hint_count; $i += 2)
@@ -101,7 +107,7 @@ for ($world = 0; $world < $worldcount; $world++)
 			if ($i + 1 < $hint_count) $int |= $hint_arrows[$i + 1];
 			$hintstr .= dechex($int);
 		}
-		//How many hints there are (limit 16)
+		//How many hints there are (limit 15)
 		$output_str 	.= dechex($hint_count);
 		//the hint string
 		$output_str		.= $hintstr;

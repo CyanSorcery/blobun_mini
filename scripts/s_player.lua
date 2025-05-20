@@ -6,6 +6,8 @@ function player_create(_x, _y)
   -- note: unlike other entities, this is in grid space
   x=_x,
   y=_y,
+  startx=_x,
+  starty=_y,
   pos=-1, -- bogus key
   dir=3, -- direction
   anim=1, -- move factor

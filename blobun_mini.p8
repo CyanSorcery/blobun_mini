@@ -122,6 +122,8 @@ function _update()
 
  -- run the update function
  g_func_update()
+ -- allow to skip stage intro
+ if (btnp() & 0x30 > 0 and g_l_intro_countdown > 45) g_l_intro_countdown = 45
  g_l_intro_countdown = max(g_l_intro_countdown - 1)
  if (g_l_intro_countdown <= 45) g_intro_anim = min(g_intro_anim + 0.1, 1)
  if g_game_mode_target != nil then
@@ -320,9 +322,10 @@ function unpack_level(_world, _stage)
 
  -- add menuitems for this
  menuitem(1, "restart puzzle", menuitem_puzz_restart)
- menuitem(2, "skip puzzle", menuitem_puzz_skip)
- menuitem(3, "stage select", menuitem_puzz_stage_select)
- menuitem(4, "go to title", menuitem_puzz_goto_title)
+ menuitem(2, "show hint", unpack_hints)
+ menuitem(3, "skip puzzle", menuitem_puzz_skip)
+ menuitem(4, "stage select", menuitem_puzz_stage_select)
+ menuitem(5, "go to title", menuitem_puzz_goto_title)
 
  -- get ready to parse the level data
  local _level_data = {}
@@ -504,7 +507,7 @@ end
 
 -- this converts the level table from a bunch of strings to worlds/stages
 function parse_levels()
- local _lv, _bytes, _offset = {}
+ local _lv, _bytes, _offset, _hints = {}
  local _strs = {"l_name", "l_author"}
 
  for _w, _wt in ipairs(g_levels) do
@@ -529,8 +532,9 @@ function parse_levels()
    _fst.l_width = tonum(sub(_str, _offset, _offset), 0x1)
    _offset += 1
    -- get the stage hints
-   _bytes = ceil(tonum(sub(_str, _offset, _offset), 0x1) / 2)
-   _fst.l_hintcount, _fst.l_hintstr = _bytes, _bytes == 0 and "" or sub(_str, _offset + 1, _offset + _bytes)
+   _hints = tonum(sub(_str, _offset, _offset), 0x1)
+   _bytes = ceil(_hints / 2)
+   _fst.l_hintcount, _fst.l_hintstr = _hints, _bytes == 0 and "" or sub(_str, _offset + 1, _offset + _bytes)
    -- get the level data itself
    _fst.l_data = sub(_str, _offset + _bytes - 1)
    -- figure out the height
@@ -543,6 +547,21 @@ function parse_levels()
  g_levels = _lv
 end
 
+function unpack_hints()
+ local _hintcount, _hintstr, _x, _y, _bo, _dir, _offset = g_puzz_curr_fst.l_hintcount - 1, g_puzz_curr_fst.l_hintstr, g_object_list[1].startx, g_object_list[1].starty, 0
+ -- clear the arrow list
+ g_arrow_list = {}
+ -- now, add our hint arrows
+ for i=0,_hintcount do
+  _offset = 1 + i\2
+  _dir = (tonum("0x"..sub(_hintstr, _offset, _offset)) >> _bo) & 0x3
+  add_hint_arrow(_x, _y, _dir)
+  _x += cos(_dir >> 2)
+  _y += sin(_dir >> 2)
+  _bo += 2
+  _bo %= 4
+ end
+end
 
 -->8
 #include scripts/s_nongame.lua
