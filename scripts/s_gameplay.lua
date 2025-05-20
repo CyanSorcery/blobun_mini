@@ -244,9 +244,8 @@ function update_gameplay()
 
  -- show pause menu?
  if g_s_intro_cd <= 45 and _is_go then
-  local _pb = btn(6)
-  if (_pb) poke(0x5f30,1)
-  if ((g_btn4_press and g_level_win or _pb) and count(g_menu) == 0) menu_create_puzz()
+  if (btn(6)) poke(0x5f30,1)
+  if ((g_btn4_press and g_level_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
  end
 
  g_slime_trail_anim += 0.075

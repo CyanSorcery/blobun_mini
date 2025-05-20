@@ -77,8 +77,8 @@ function _init()
  
  -- send us to the intro
  --unpack_intro()
- --unpack_title()
- unpack_level(1, 2)
+ unpack_title()
+ --unpack_level(1, 2)
  --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
@@ -147,10 +147,7 @@ function _update()
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
  -- play a sound effect this frame?
- if g_play_sfx != nil then
-  if (setting_get(5)) sfx((g_play_sfx >> 10) & 0x3f, 3, (g_play_sfx >> 5) & 0x1f, g_play_sfx & 0x1f)
-  g_play_sfx = nil
- end
+ if (g_play_sfx != nil) sfx((g_play_sfx >> 10) & 0x3f, 3, (g_play_sfx >> 5) & 0x1f, g_play_sfx & 0x1f) g_play_sfx = nil
  
  g_time = time()
  -- if time rolls over, stop the game since timers will break

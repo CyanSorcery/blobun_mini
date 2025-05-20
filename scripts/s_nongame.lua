@@ -121,15 +121,10 @@ function draw_stage_select()
   if _y > _start and _y < _end then
    _syt = _sy1 + 3
    local _stagetime = dget(_st.l_saveslot)
-   if (_is_hilite) rectfill(4, _sy1, 90, _sy2, 2)
+   if (_is_hilite) menu_draw_select(4, _sy1, 90, _sy2)
    pal(7, _is_hilite and 7 or _t[g_sss_menu_world][2])
    ?(_y > 9 and "" or " ").._y.." ".._st.l_name, 15, _syt, 7
-   spr(_stagetime <= 599.995 and 101 or 96, 6, _sy1 + 1)
-   if _is_hilite then
-    fillp(g_fillp_diag[ceil(g_fillp_anim)])
-    rect(4, _sy1, 90, _sy2, 154)
-    fillp(0)
-   end
+   spr(_stagetime <= 599.995 and 241 or 240, 6, _sy1 + 1)
    if (_show_timers) then
     if (_stagetime <= _st.l_goaltime) ?format_time(_stagetime), 96, _syt, 7
     if (_stagetime <= _st.l_devtime) ?"♥", 120, _syt, 7

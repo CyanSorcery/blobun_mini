@@ -50,14 +50,9 @@ function menu_create(_x, _y, _w, _items)
      if _base_y < _y2 - 9 then 
       _sx1, _sy1, _sx2, _sy2 = _x1 + 3, _base_y - 3, _x2 - 3, _base_y + 7
       _is_hilite = _ind == self.m_highlight
-	    if (_is_hilite) rectfill(_sx1, _sy1, _sx2, _sy2, 2)
+      if (_is_hilite) menu_draw_select(_sx1, _sy1, _sx2, _sy2)
       pal(7, _is_hilite and 7 or 13)
       ?_item.i_label, _base_x, _base_y, 7
-      if _is_hilite then
-       fillp(g_fillp_diag[ceil(g_fillp_anim)])
-	     rect(_sx1, _sy1, _sx2, _sy2, 154)
-	     fillp(0)
-	    end
       if _item.i_setting != nil then
        spr(_sprchk - (setting_get(_item.i_setting) and 0 or 1), _x2 - 11, _base_y - 2)
       end
@@ -96,8 +91,7 @@ function menu_create_puzz()
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_ind_w, g_p_ind_s, true) end),
   menu_item_base("stage select", function() set_game_mode(1) end),
   menu_item_base("options", menu_create_options),
-  menu_item_base("go to title", function() set_game_mode(0) end),
-  menu_item_base("pico8 menu", menu_create_pico8)
+  menu_item_base("go to title", function() set_game_mode(0) end)
  })
  g_btn4_press, g_btn4_held = false, false
 end
@@ -114,8 +108,7 @@ function menu_create_title()
   menu_item_base("options", menu_create_options),
   menu_item_base("credits", function()
    printh("clicked credits")
-  end),
-  menu_item_base("pico8 menu", menu_create_pico8)
+  end)
  })
 end
 function menu_create_options()
@@ -123,11 +116,16 @@ function menu_create_options()
   menu_item_setting("show timers", 1),
   menu_item_setting("slime overlap", 2),
   menu_item_setting("sprint by default", 3),
-  menu_item_setting("music", 4),
-  menu_item_setting("sound effects", 5),
-  menu_item_setting("lesbians allowed", 6)
+  menu_item_setting("lesbians allowed", 6),
+  menu_item_base("pico8 menu", menu_create_pico8)
  })
 end
 function menu_create_pico8()
  extcmd("pause")
+end
+function menu_draw_select(_x1, _y1, _x2, _y2)
+ rectfill(_x1, _y1, _x2, _y2, 2)
+ fillp(g_fillp_diag[ceil(g_fillp_anim)])
+ rect(_x1, _y1, _x2, _y2, 154)
+ fillp(0)
 end
