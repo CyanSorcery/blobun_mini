@@ -146,7 +146,7 @@ end
 function draw_wavy_text(_str, _x, _y, _col, _px)
  local _len = #_str
  for i=1,_len do
-  _x = print(subl(_str, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
+  _x = print(sub(_str, i, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
  end
 end
 

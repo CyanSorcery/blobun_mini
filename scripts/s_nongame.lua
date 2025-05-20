@@ -2,11 +2,11 @@ function draw_title()
  cls(0)
  -- background graphics
  map(0, 0, -24 * g_title_scroll, 32, 19, 2)
- map(0, 2, -24 * ((g_title_scroll * 2) % 1), 48, 19, 3)
- map(0, 5, -24 * ((g_title_scroll * 3) % 1), 72, 19, 7)
+ map(0, 2, g_title_scroll * 2 % 1 * -24, 48, 19, 3)
+ map(0, 5, g_title_scroll * 3 % 1 * -24, 72, 19, 7)
  -- title logo
  palt(0b0000010000000000)
- local _y_mod = (sin(g_title_scroll) * 4)
+ local _y_mod = sin(g_title_scroll) * 4
  map(19, 0, 12, 8 + _y_mod, 13, 7)
  if (not setting_get(6)) map(19, 8, 28, 8 + _y_mod, 4, 5)
 
