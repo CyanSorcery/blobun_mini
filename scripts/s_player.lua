@@ -67,12 +67,9 @@ function player_step(_obj)
    -- do a check if this is solid or not. if we're on portal, we can move
    local _can_move, _check, _chx, _chy = g_p_use_port, 1, _obj.x + cos(_new_dir >> 2), _obj.y + sin(_new_dir >> 2)
    if (g_p_use_conv or setting_get(2)) _check = 3 -- allow for move on slime
-   _can_move = mget(_chx + 48, _chy) & _check > 0
-   -- if the future block is an ice block, and the player is in the fire state, let em through
+   -- next block is ice block and they're in fire state OR next block is lock and they have a key OR check if next tile is slimed already
    local _nextblock = mget(_chx + 32, _chy)
-   if (_nextblock == 10 and _obj.pstate == 1) _can_move = true
-   -- if the future block is a lock and they have a key, let em through
-   if (_nextblock == 138 and _obj.haskey) _can_move = true
+   if (_nextblock == 10 and _obj.pstate == 1 or _nextblock == 138 and _obj.haskey or mget(_chx + 48, _chy) & _check > 0) _can_move = true
 
    -- reset the buffered input and face us in this direction
    g_new_dir, _obj.dir = -1, _new_dir
@@ -232,28 +229,24 @@ function player_end_move(_obj)
  --if not g_p_use_port and not g_p_use_conv then
  --end
  
- -- coco note: this *could* be optimized, but let's keep the code readable unless we need those tokens
  -- did we overlap our own trail?
  if (mget(_obj.x + 48, _obj.y) & 2 == 2) player_destroy(_obj)
  -- process stuff that destroys stephanie
  if  
  -- did we step on a lava tile and aren't in the right state
-  (_tile == 41 and _obj.pstate == 0) or
+  _tile == 41 and _obj.pstate == 0 or
  -- did we step on an ice tile and aren't in the right state
-  (_tile == 73 and _obj.pstate != 2) or
+  _tile == 73 and _obj.pstate != 2 or
  -- did we step on a cracked floor that just broke?
-  (_tile == 0) or
+  _tile == 0 or
  -- did we step on a floor zapper on the wrong turn?
-  (_tile == 39 and g_p_zap_turn == 2) or -- cyan
-  (_tile == 7 and g_p_zap_turn == 1) or -- magenta
-  (_tile == 71 and g_p_zap_turn == 0) -- yellow
+  _tile == 39 and g_p_zap_turn == 2 or -- cyan
+  _tile == 7 and g_p_zap_turn == 1 or -- magenta
+  _tile == 71 and g_p_zap_turn == 0 -- yellow
   then
   player_destroy(_obj, true)
-  _doslime = false
- end
-
  -- put slime on the playfield here?
- if _doslime then
+ elseif _doslime then
   g_s_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
   put_x16_tile((_obj.x << 1) + 1, (_obj.y << 1) + 1, 218 + (_obj.pstate << 1))
@@ -283,13 +276,7 @@ function player_draw(_obj)
  if _anim < 1 then
   -- if on conveyer, use linear animation
   -- if not, use curved animation
-  if g_p_use_conv then
-   _offset = _anim
-  elseif _anim < 0.5 then
-   _offset = 0.5 + (cos(_anim * 0.5) * -0.5)
-  else
-   _offset = 0.5 - (cos(_anim * 0.5) * 0.5)
-  end
+  _offset = g_p_use_conv and _anim or 0.5 + cos(_anim * 0.5 * sgn(_anim - 0.5)) * -0.5
   
   _x, _y = lerp(_obj.oldx << 4, _obj.x << 4, _offset), lerp(_obj.oldy << 4, _obj.y << 4, _offset)
   
@@ -339,10 +326,7 @@ function redraw_slimetrail()
  palt()
 
  -- does she have the key? if so, draw the extra circle
- if _obj.haskey then
-  spr(144, 32, 104)
-  spr(144, 39, 104, 1, 1, true)
- end
+ if (_obj.haskey) spr(144, 32, 104) spr(144, 39, 104, 1, 1, true)
  
  -- add wavy effect to her
  local _fx, _fy
@@ -355,27 +339,21 @@ function redraw_slimetrail()
  end
  clip()
  -- draw the second circle?
- if _obj.haskey then
-  spr(145, 32, 104)
-  spr(145, 39, 104, 1, 1, true)
- end
+ if (_obj.haskey) spr(145, 32, 104) spr(145, 39, 104, 1, 1, true)
 
  -- get ready to draw her expression on
- local _eye_determined = (btn(4) or _obj.sprint) and g_p_use_conv == false -- >:3
- local _eye_blink = g_p_blink < 3 or g_level_win
- local _mouse_grin = _eye_determined -- sprinting
- local _is_win, _no_win, _spr = g_level_win, g_level_win == false
+ local _eye_determined, _eye_blink, _spr = (btn(4) or _obj.sprint) and g_p_use_conv == false, g_p_blink < 3 or g_level_win
 
  -- eyes
   _spr = 215
  if (_eye_determined) _spr = 214
  if (_eye_blink or g_level_lose) _spr = 216
- spr(_spr, _is_win and 37 or 36, 104, 1, 1, _is_win)
+ spr(_spr, g_level_win and 37 or 36, 104, 1, 1, g_level_win)
  -- mouth
  _spr = 251
- if (_mouse_grin) _spr = 252
+ if (_eye_determined) _spr = 252
  if (g_level_lose) _spr = 160
- if (_is_win) _spr = 250
+ if (g_level_win) _spr = 250
  spr(_spr, 40, 104)
 
  -- copy this sprite to the side angle

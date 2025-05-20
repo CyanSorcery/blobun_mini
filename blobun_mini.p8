@@ -77,8 +77,8 @@ function _init()
  
  -- send us to the intro
  --unpack_intro()
- unpack_title()
- --unpack_level(1, 2)
+ --unpack_title()
+ unpack_level(2, 1)
  --unpack_stage_select()
  
  --cstore(0x0, 0x0, 0x4300, "dummy.p8")
