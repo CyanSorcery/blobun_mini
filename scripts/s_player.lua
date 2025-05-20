@@ -44,13 +44,12 @@ function player_step(_obj)
  -- do the move animation
  _obj.anim = min(_obj.anim + ((_obj.sprint or g_p_use_conv or g_p_use_port) and 0.2 or 0.1111), 1)
  
-
  -- allow input buffer?
  if _obj.anim >= 0.65 then
-  if (btn(0)) g_new_dir = 2
-  if (btn(1)) g_new_dir = 0
-  if (btn(2)) g_new_dir = 1
-  if (btn(3)) g_new_dir = 3
+  local _t = {2, 0, 1, 3}
+  for i=0,3 do
+   if (btn(i)) g_new_dir = _t[i + 1]
+  end
  end
  
  -- fix fractional precision errors
@@ -257,8 +256,7 @@ function player_end_move(_obj)
  if _doslime then
   g_s_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
-  local _dx, _dy = (_obj.x << 1) + 1, (_obj.y << 1) + 1
-  put_x16_tile(_dx, _dy, 218 + (_obj.pstate << 1))
+  put_x16_tile((_obj.x << 1) + 1, (_obj.y << 1) + 1, 218 + (_obj.pstate << 1))
  end
 end
 
@@ -266,11 +264,7 @@ function player_destroy(_obj, _kill)
  g_level_lose = true
  -- colors for normal, fire, ice
  local _t = str2tbl("13b49a5d6", 3)
- if _kill == true then 
-  _obj.isdead = true
-  local _col = _t[_obj.pstate + 1]
-  part_create_slime_explode((_obj.x << 4) + 12, (_obj.y << 4) + 12, _col)
- end
+ if (_kill == true) _obj.isdead = true part_create_slime_explode((_obj.x << 4) + 12, (_obj.y << 4) + 12, _t[_obj.pstate + 1])
 end
 
 function player_draw(_obj)
@@ -279,27 +273,22 @@ function player_draw(_obj)
  -- or if lesbians are not allowed
  if (_obj.isdead or g_p_use_port or not setting_get(6)) return
 
- local _dir, _x, _y, _offset, _dir = _obj.dir, _obj.x << 4, _obj.y << 4
+ local _dir, _x, _y, _anim, _offset, _dir = _obj.dir, _obj.x << 4, _obj.y << 4, _obj.anim
  
  -- fire/ice states respectively
- if _obj.pstate == 1 then
-  pal(3,8)
-  pal(11,9)
- elseif _obj.pstate == 2 then
-  pal(3,13)
-  pal(11,6)
- end
+ if (_obj.pstate == 1) pal(3,8) pal(11,9)
+ if (_obj.pstate == 2) pal(3,13) pal(11,6)
 
  -- do animation?
- if _obj.anim < 1 then
+ if _anim < 1 then
   -- if on conveyer, use linear animation
   -- if not, use curved animation
   if g_p_use_conv then
-   _offset = _obj.anim
-  elseif _obj.anim < 0.5 then
-   _offset = 0.5 + (cos(_obj.anim * 0.5) * -0.5)
+   _offset = _anim
+  elseif _anim < 0.5 then
+   _offset = 0.5 + (cos(_anim * 0.5) * -0.5)
   else
-   _offset = 0.5 - (cos(_obj.anim * 0.5) * 0.5)
+   _offset = 0.5 - (cos(_anim * 0.5) * 0.5)
   end
   
   _x, _y = lerp(_obj.oldx << 4, _obj.x << 4, _offset), lerp(_obj.oldy << 4, _obj.y << 4, _offset)

@@ -210,16 +210,16 @@ function redraw_waterlava()
  for i=0,7 do
   -- reuse variables from earlier to save tokens
   _x,_tst1, _tst2 = 103-i,95-i,88+i
-  _col = _sw & (1 << i) > 0 and 7 or 12
+  _col = _sw & 1 << i > 0 and 7 or 12
   sset(_x, 101, _col)
   sset(50, 103 - i, _col)
   sset(78, 96 + i, _col)
 
-  _col = _sw & (1 << i) > 0 and 9 or 4
+  _col = _sw & 1 << i > 0 and 9 or 4
   sset(_x, 91, _col)
   sset(52, _tst1, _col)
   sset(76, _tst2, _col)
-  _col = _sw & (4 << i) > 0 and 9 or 10
+  _col = _sw & 4 << i > 0 and 9 or 10
   sset(_x, 93, _col)
   sset(50, _tst1, _col)
   sset(78, _tst2, _col)
