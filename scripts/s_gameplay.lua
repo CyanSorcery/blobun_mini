@@ -240,6 +240,14 @@ function draw_arrows()
 end
 
 function update_gameplay()
+ local _is_go = g_intro_anim * g_outro_anim == 1
+
+ -- show pause menu?
+ if g_s_intro_cd <= 45 and _is_go then
+  local _pb = btn(6)
+  if (_pb) poke(0x5f30,1)
+  if ((g_btn4_press and g_level_win or _pb) and count(g_menu) == 0) menu_create_puzz()
+ end
 
  g_slime_trail_anim += 0.075
  g_slime_trail_anim %= 1
@@ -264,7 +272,7 @@ function update_gameplay()
     or (_lh >> 1) - 60
  
  -- process objects, but only if the stage animation is done
- if g_intro_anim * g_outro_anim == 1 then
+ if _is_go then
   proc_objects()
   proc_particles()
  end

@@ -34,8 +34,8 @@ function menu_create(_x, _y, _w, _items)
    local _is_top_pane = _index == _m_count
    -- should we show this?
    if (_is_top_pane and _m_count > 1 and g_menu[_m_count - 1].m_anim_factor > 0) return false
-
-   local _count = count(self.m_items)
+   -- brute force detection of in puzzle or not
+   local _count, _sprchk = count(self.m_items), count(g_o_list) > 0 and 155 or 241
    -- draw background
    local _b_h = lerp(5, self.m_h, self.m_anim_factor)
    local _x1, _y1, _is_hilite = self.m_x, self.m_y - (_b_h >> 1)
@@ -59,7 +59,7 @@ function menu_create(_x, _y, _w, _items)
 	     fillp(0)
 	    end
       if _item.i_setting != nil then
-       spr(setting_get(_item.i_setting) and 101 or 96, _x2 - 11, _base_y - 2)
+       spr(_sprchk - (setting_get(_item.i_setting) and 0 or 1), _x2 - 11, _base_y - 2)
       end
 	   end
      _base_y += 10
@@ -67,6 +67,12 @@ function menu_create(_x, _y, _w, _items)
     pal()
    end
  })
+end
+function menus_remove()
+ -- get rid of any menus
+ for _pane in all(g_menu) do
+  _pane.m_anim_incr = -0.25
+ end
 end
 function menu_item_base(_str, _func)
  return {
@@ -84,24 +90,44 @@ function menu_item_setting(_str, _setting)
  return _item
 end
 
-function menu_create_puzz_win()
+function menu_create_puzz()
  menu_create(16, 64, 96,{
-  menu_item_base("next puzzle", menuitem_puzz_skip),
-  menu_item_base("restart puzzle", menuitem_puzz_restart),
-  menu_item_base("stage select", menuitem_puzz_stage_select),
-  menu_item_base("go to title", menuitem_puzz_goto_title)
+  menu_item_base((g_level_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_ind_w, g_p_ind_s + 1) end),
+  menu_item_base("restart puzzle", function() set_game_mode(2, g_p_ind_w, g_p_ind_s, true) end),
+  menu_item_base("stage select", function() set_game_mode(1) end),
+  menu_item_base("options", menu_create_options),
+  menu_item_base("go to title", function() set_game_mode(0) end),
+  menu_item_base("pico8 menu", menu_create_pico8)
+ })
+ g_btn4_press, g_btn4_held = false, false
+end
+function menu_create_title()
+ menu_create(24, 96, 80, {
+  menu_item_base("start game", function() 
+   set_game_mode(1)
+  end),
+  menu_item_base("continue", function()
+   local _ws = last_worldstage_get()
+   set_game_mode(2, _ws.world, _ws.stage)
+  end
+  ),
+  menu_item_base("options", menu_create_options),
+  menu_item_base("credits", function()
+   printh("clicked credits")
+  end),
+  menu_item_base("pico8 menu", menu_create_pico8)
  })
 end
-
-function menuitem_puzz_restart()
- set_game_mode(2, g_p_ind_w, g_p_ind_s, true)
+function menu_create_options()
+ menu_create(16, count(g_o_list) > 0 and 64 or 92, 96, {
+  menu_item_setting("show timers", 1),
+  menu_item_setting("slime overlap", 2),
+  menu_item_setting("sprint by default", 3),
+  menu_item_setting("music", 4),
+  menu_item_setting("sound effects", 5),
+  menu_item_setting("lesbians allowed", 6)
+ })
 end
-function menuitem_puzz_skip()
- set_game_mode(2, g_p_ind_w, g_p_ind_s + 1)
-end
-function menuitem_puzz_stage_select()
- set_game_mode(1)
-end
-function menuitem_puzz_goto_title()
- set_game_mode(0)
+function menu_create_pico8()
+ extcmd("pause")
 end

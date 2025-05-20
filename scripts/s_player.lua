@@ -28,9 +28,10 @@ function player_create(_x, _y)
 end
 function player_step(_obj)
  -- if lesbians aren't allowed, don't do this
- if (not setting_get(6)) return
+ -- also don't if a menu is open right now
+ if (not setting_get(6) or count(g_menu) > 0) return
 
- local _btn4_press = btn(4) and g_btn4_held == false
+ g_btn4_press = btn(4) and g_btn4_held == false
  g_btn4_held = btn(4)
 
  -- jiggle animation countdown
@@ -38,9 +39,6 @@ function player_step(_obj)
 
  -- do undo?
  if (btnp(5) and not g_level_win) perform_undo()
-
- -- show pause menu on victory?
- if (_btn4_press and g_level_win and g_bottom_msg_anim == 1 and count(g_menu) == 0) menu_create_puzz_win()
 
  
  -- do the move animation
@@ -61,7 +59,7 @@ function player_step(_obj)
   if (_obj.ismove == true) player_end_move(_obj)
 
   -- sprint jiggle?
-  if (_btn4_press) _obj.jiggle = 1
+  if (g_btn4_press) _obj.jiggle = 1
 
   -- move her around the playfield?
   _obj.sprint = false
@@ -109,8 +107,6 @@ function player_step(_obj)
  -- have we won?
  if g_level_win == false and g_s_touched >= g_s_tiles then
   g_level_win = true
-  -- get rid of menu options since we have our own
-  for i=1,5 do menuitem(i) end
   -- if the player time is lower than the record, store it
   if (g_p_time < dget(g_p_fst.l_saveslot)) dset(g_p_fst.l_saveslot, g_p_time) g_new_time = true
  end

@@ -49,35 +49,13 @@ function update_title()
  g_title_scroll %= 1
  
  if count(g_menu) == 0 then
+  local _pb = btn(6)
+  if (_pb) poke(0x5f30,1)
+
   -- create title menu?
-  if btnp(4) then 
-   menu_create(24, 96, 80, {
-   menu_item_base("start game", function() 
-    set_game_mode(1)
-   end),
-   menu_item_base("continue", function()
-    local _ws = last_worldstage_get()
-    set_game_mode(2, _ws.world, _ws.stage)
-   end
-   ),
-   menu_item_base("options", function()
-    menu_create(16, 92, 96, {
-      menu_item_setting("show timers", 1),
-      menu_item_setting("slime overlap", 2),
-      menu_item_setting("sprint by default", 3),
-      menu_item_setting("music", 4),
-      menu_item_setting("sound effects", 5),
-      menu_item_setting("lesbians allowed", 6)
-    })
-   end),
-   menu_item_base("credits", function()
-    printh("clicked credits")
-   end)
-  })
+  if (btnp(4) or _pb) menu_create_title()
   -- back button to go back to title screen?
-  elseif btnp(5) then
-   set_game_mode(3)
-  end
+  if (btnp(5)) set_game_mode(3)
  end
  
 end
