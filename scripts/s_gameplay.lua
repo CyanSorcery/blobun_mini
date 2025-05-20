@@ -262,19 +262,16 @@ function update_gameplay()
  
  -- move camera while binding it to the stage edges/centering it
  local _obj, _lw, _lh = g_o_list[1], g_p_fst.l_width << 4, g_p_fst.l_height << 4
- g_cam_x = (g_p_fst.l_width > 8)
+ g_cam_x = g_p_fst.l_width > 8
     and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
     or (_lw >> 1) - 56
 
- g_cam_y = (g_p_fst.l_height > 7)
+ g_cam_y = g_p_fst.l_height > 7
     and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
     or (_lh >> 1) - 60
  
  -- process objects, but only if the stage animation is done
- if _is_go then
-  proc_objects()
-  proc_particles()
- end
+ if (_is_go) proc_objects() proc_particles()
 end
 
 
@@ -298,10 +295,7 @@ function proc_objects()
 
  for _del in all(g_o_del) do
   for _obj in all(g_o_list) do
-   if _obj.pos == _del then
-    del(g_o_list, _obj)
-    break
-   end
+   if (_obj.pos == _del) del(g_o_list, _obj) break
   end
   del(g_o_del, _del)
  end

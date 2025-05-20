@@ -5,8 +5,7 @@ function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
 
  for _x = 32,48 do
   for _y = 0,16 do
-   _tgt_tile = nil
-   _tile = mget(_x, _y)
+   _tgt_tile, _tile = nil, mget(_x, _y)
    
    -- only do this if this tile hasn't been slimed
    if mget(_x + 16, _y) & 2 == 0 then

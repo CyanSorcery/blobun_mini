@@ -11,7 +11,7 @@ function menu_create(_x, _y, _w, _items)
   m_step = function(self, _index)
    local _m_count = count(g_menu)
    local _is_top_pane = _index == _m_count
-   if self.m_anim_incr > 0 and self.m_anim_factor == 1 then
+   if self.m_anim_factor == 1 then
     if (btnp(2)) self.m_highlight = max(self.m_highlight - 1, 1)
     if (btnp(3)) self.m_highlight = min(self.m_highlight + 1, count(self.m_items))
     -- confirm
