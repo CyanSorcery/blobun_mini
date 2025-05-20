@@ -167,8 +167,8 @@ function _draw()
  local _colbg, _colshd = _isgame and g_pal_stage_trans[1][_world] or 1, g_pal_stage_trans[2][_world]
 
  -- draw transition?
- local _anim = g_intro_anim * g_outro_anim
- if (_anim < 1) local _w = 64 * cos(_anim >> 2) rectfill(0, 0, _w, 127, _colbg) rectfill(127 - _w, 0, 127, 127, _colbg)
+ local _w = 64 * cos((g_intro_anim * g_outro_anim) >> 2)
+ if (_w > 0) rectfill(0, 0, _w, 127, _colbg) rectfill(127 - _w, 0, 127, 127, _colbg)
 
  -- draw the stage intro?
  -- ashe note: kinda had to put it here for layering
@@ -181,7 +181,7 @@ function _draw()
   line(_o1, 104, _o1 + _x, 104, 7)
   ?g_p_fst.l_name, _o2, 108, _colshd
   ?g_p_fst.l_name, _o1, 107, 7
-  if (_anim == 0) ?g_p_fst.l_author, _o1, 115, _colshd
+  if (_w > 0) ?g_p_fst.l_author, _o1, 115, _colshd
  end
  
  -- draw menus (if we have em)
