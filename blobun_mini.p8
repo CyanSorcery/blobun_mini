@@ -4,17 +4,13 @@ __lua__
 -- blobun mini
 -- by cyansorcery
 function _init()
- -- debug functions (remove later)
- --#include scripts/s_debug.lua
-
  -- ashe note: this just looks nicer
  cls(1)
  ?"loading...", 1, 122, 13
  flip()
 
- -- move compressed data to the general use space, then clear everything
+ -- move compressed data to the general use space
  memcpy(0x8000, 0, 0x4300)
- memset(0x0, 0, 0x4300)
 
  -- figure out what kind of compressed data we have
  -- note: this has to match the data group offsets

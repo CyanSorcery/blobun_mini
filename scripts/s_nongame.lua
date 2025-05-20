@@ -21,7 +21,7 @@ function draw_intro()
  cls(1)
  rectfill(0, 56, 127, 72, 12)
  map(0, 12, -24 * g_title_scroll, 56 - _anim, 19, 1)
- map(0, 13, -24 + (24 * g_title_scroll), 64 + _anim, 19, 1)
+ map(0, 13, -24 + 24 * g_title_scroll, 64 + _anim, 19, 1)
  local _anim2 = _anim * .5
  ?"presented by", 39, 60 - _anim2, 1
  -- draw the cyansorcery text, but only if lesbians are enabled

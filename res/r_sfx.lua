@@ -15,3 +15,7 @@ g_sfx_lut = {
  t_coin = -2042,
  p_state = {-1396, -1850, -1656}
 }
+
+--[[function compress_sfx(_pattern, _offset, _len)
+ print((_pattern << 10) | (_offset << 5) | _len, 7)
+end]]
