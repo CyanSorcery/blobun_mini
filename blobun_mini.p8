@@ -317,20 +317,17 @@ function unpack_level(_world, _stage)
  end
 
  -- get ready to parse the level data
- local _level_data, _data_len, _data, _offset, _level_width = {}, #g_p_fst.l_data, g_p_fst.l_data, 1, g_p_fst.l_width
+ local _level_data, _data_len, _data, _offset, _level_width = {}, #g_p_fst.l_data, g_p_fst.l_data, 1, (g_p_fst.l_width << 1) + 1
  -- read the data
  -- coco note: since we have to add 2 to the offset to get past the
  -- data length bytes, go ahead and save a call here by chaining it into the loop
- local _dstile, _dsx, _dsy, _mod = 0, 1, 1, 0
- -- convert the level width to grid tile space, offset by one
- _level_width = (_level_width << 1) + 1
+ local _dstile, _dsx, _dsy = 0, 1, 1
  for i=1,_data_len do
   _offset += 2
   _dstile = tonum(sub(_data, _offset, _offset + 1), 0x1)
   _level_data[i] = _dstile
-  _mod = (_dsx + _dsy) % 4 == 2 and 1 or 0
   -- now, read this out onto the playfield
-  if (_dstile > 0) put_mirrored_tile(_dsx, _dsy, 16 + _mod)
+  if (_dstile > 0) put_mirrored_tile(_dsx, _dsy, (_dsx + _dsy) % 4 == 2 and 17 or 16)
   -- move ahead in the tileset, moving to the next row as needed
   _dsx += 2
   if (_dsx >= _level_width) _dsx = 1 _dsy += 2
