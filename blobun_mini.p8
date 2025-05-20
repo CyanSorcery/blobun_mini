@@ -64,7 +64,7 @@ function _init()
   g_pal_stage_bg - palette used for drawing stage backgrounds
   g_pal_stage_trans - used for stage transitions
  ]]
- g_pal_dark, g_pal_zappers, g_pal_stage_bg, g_pal_stage_trans = str_to_table("0001115525511125",16), str_to_table("155dd6122889142449",6), str_to_table("1c1d437369", 5), str_to_table("3c26915154", 5)
+ g_pal_dark, g_pal_zappers, g_pal_stage_bg, g_pal_stage_trans = str2tbl("0001115525511125",16), str2tbl("155dd6122889142449",6), str2tbl("1c1d437369", 5), str2tbl("3c26915154", 5)
 
  -- parse the level data
  parse_levels()
@@ -96,7 +96,7 @@ end
 
 -- the second parameter may be nil, that's fine
 function set_game_mode(_mode, _world_target, _level_target, _skip_l_intro)
- g_game_mode_target, g_puzz_world_target, g_puzz_level_target, g_skip_l_intro, g_l_intro_countdown = _mode, _world_target, _level_target, _skip_l_intro, 0
+ g_game_mode_target, g_puzz_world_target, g_puzz_level_target, g_skip_l_intro, g_s_intro_cd = _mode, _world_target, _level_target, _skip_l_intro, 0
  -- get rid of any menus
  for _pane in all(g_menu) do
   _pane.m_anim_incr = -0.25
@@ -106,7 +106,7 @@ function set_game_mode(_mode, _world_target, _level_target, _skip_l_intro)
  music(-1)
 end
 function finalize_game_mode(_func_update, _func_draw)
- g_func_update, g_func_draw, g_l_intro_countdown, g_object_list = _func_update, _func_draw, 0, {}
+ g_func_update, g_func_draw, g_s_intro_cd, g_o_list = _func_update, _func_draw, 0, {}
  pal()
 end
 
@@ -123,9 +123,9 @@ function _update()
  -- run the update function
  g_func_update()
  -- allow to skip stage intro
- if (btnp() & 0x30 > 0 and g_l_intro_countdown > 45) g_l_intro_countdown = 45
- g_l_intro_countdown = max(g_l_intro_countdown - 1)
- if (g_l_intro_countdown <= 45) g_intro_anim = min(g_intro_anim + 0.1, 1)
+ if (btnp() & 0x30 > 0 and g_s_intro_cd > 45) g_s_intro_cd = 45
+ g_s_intro_cd = max(g_s_intro_cd - 1)
+ if (g_s_intro_cd <= 45) g_intro_anim = min(g_intro_anim + 0.1, 1)
  if g_game_mode_target != nil then
   g_outro_anim = max(g_outro_anim - 0.1)
   if g_outro_anim == 0 then
@@ -165,8 +165,8 @@ function _draw()
  -- draw menus (if we have em)
  for i,_pane in pairs(g_menu) do _pane:m_draw(i) end
  -- set up for stage transition animation
- local _isgame = g_game_mode_target == 2 or g_game_mode_target == nil and count(g_object_list) > 0
- local _world = _isgame and g_puzz_world_target != nil and g_puzz_world_target or g_puzz_world_index or 1
+ local _isgame = g_game_mode_target == 2 or g_game_mode_target == nil and count(g_o_list) > 0
+ local _world = _isgame and g_puzz_world_target != nil and g_puzz_world_target or g_p_ind_w or 1
  local _colbg, _colshd = _isgame and g_pal_stage_trans[1][_world] or 1, g_pal_stage_trans[2][_world]
 
  -- draw transition?
@@ -179,16 +179,16 @@ function _draw()
 
  -- draw the stage intro?
  -- ashe note: kinda had to put it here for layering
- if g_l_intro_countdown > 0 then
-  local _sname, _offset = "stage "..g_puzz_level_index, cos((max(abs(g_l_intro_countdown-45),35)-35)*sgn(g_l_intro_countdown-45)/40)*64-64
+ if g_s_intro_cd > 0 then
+  local _sname, _offset = "stage "..g_p_ind_s, cos((max(abs(g_s_intro_cd-45),35)-35)*sgn(g_s_intro_cd-45)/40)*64-64
   local _o1, _o2 = _offset + 8, _offset + 9
   print(_sname, _offset + 13, 98, _colshd)
   local _x = print(_sname, _offset + 12, 97, 7)
   line(_o2, 105, _o2 + _x, 105, _colshd)
   line(_o1, 104, _o1 + _x, 104, 7)
-  ?g_puzz_curr_fst.l_name, _o2, 108, _colshd
-  ?g_puzz_curr_fst.l_name, _o1, 107, 7
-  if (_anim == 0) ?g_puzz_curr_fst.l_author, _o1, 115, _colshd
+  ?g_p_fst.l_name, _o2, 108, _colshd
+  ?g_p_fst.l_name, _o1, 107, 7
+  if (_anim == 0) ?g_p_fst.l_author, _o1, 115, _colshd
  end
  
 --show sprite table
@@ -231,7 +231,7 @@ function unpack_stage_select()
  g_sss_menu_world, g_sss_menu_world_tgt = mid(1, _ws.world, count(g_levels))
  g_sss_menu_stage = mid(1, _ws.stage, count(g_levels[g_sss_menu_world]))
  g_title_scroll, g_sss_anim_factor, g_sss_anim_incr   = 0, 0, 0.125
- g_sss_colors = str_to_table("13b224cd02415d6d2494", 4)
+ g_sss_colors = str2tbl("13b224cd02415d6d2494", 4)
 end
 
 -- this function opens up the game to a given level
@@ -249,46 +249,46 @@ function unpack_level(_world, _stage)
  memset(0x2000, 0, 0x1000)
  -- (re)set all the variables involved with levels
  --[[
-   g_object_list - all objects in the stage (player is index 1)
-   g_arrow_list - arrows that are shown on the playfield
-   g_undo_queue - queue of undo steps for this puzzle
-   g_particles - all particles currently in use
-   g_obj_delete - objects to delete this frame
+   g_o_list - all objects in the stage (player is index 1)
+   g_a_list - arrows that are shown on the playfield
+   g_u_list - queue of undo steps for this puzzle
+   g_p_list - all particles currently in use
+   g_o_del - objects to delete this frame
    g_shimmer_water - for animating water/lava
  ]]
- g_object_list, g_arrow_list, g_undo_queue, g_particles, g_obj_delete, g_shimmer_water = {}, {}, {}, {}, {}, 0b1111000111110000.1110000111111000
+ g_o_list, g_a_list, g_u_list, g_p_list, g_o_del, g_shimmer_water = {}, {}, {}, {}, {}, 0b1111000111110000.1110000111111000
  
  --[[
-   g_level_tiles - how many tiles in the stage
-   g_level_touched - how many tiles the player touched
+   g_s_tiles - how many tiles in the stage
+   g_s_touched - how many tiles the player touched
    g_bottom_msg_anim - incremented to show a message at the bottom of the screen
-   g_puzz_coins - how many coins the player has collected
-   g_puzz_octogems - how many octogems the player has
+   g_p_coins - how many coins the player has collected
+   g_p_octog - how many octogems the player has
    g_cam_x/y - initial position of the camera (updated before player can see)
  ]]
- g_level_tiles, g_level_touched, g_bottom_msg_anim, g_puzz_coins, g_puzz_octogems, g_cam_x, g_cam_y = 0, 0, 0, 0, 0, 0, -8
+ g_s_tiles, g_s_touched, g_bottom_msg_anim, g_p_coins, g_p_octog, g_cam_x, g_cam_y = 0, 0, 0, 0, 0, 0, -8
  --[[
-   g_redraw_coin - when set, update the visuals on coin blocks
+   g_updt_coin - when set, update the visuals on coin blocks
    g_btn4_held - used to detect when the button has *just* been pressed
    g_level_win - set when the player has won
    g_level_lose - set when the player has lost. can undo from this state
-   g_puzz_on_convey - player is on a conveyer belt
-   g_puzz_use_portal - player is in a floor portal
+   g_p_use_conv - player is on a conveyer belt
+   g_p_use_port - player is in a floor portal
    g_new_time - player got a new time
-   g_l_intro_countdown - how long until the stage is playable, or 0 if intro is skipped
+   g_s_intro_cd - how long until the stage is playable, or 0 if intro is skipped
  ]]
- g_redraw_coin, g_btn4_held, g_level_win, g_level_lose, g_puzz_on_convey, g_puzz_use_portal, g_new_time, g_l_intro_countdown = true, false, false, false, false, false, false, g_skip_l_intro == true and 0 or 90
+ g_updt_coin, g_btn4_held, g_level_win, g_level_lose, g_p_use_conv, g_p_use_port, g_new_time, g_s_intro_cd = true, false, false, false, false, false, false, g_skip_l_intro == true and 0 or 90
  --[[
-   g_puzz_zapper_turn - which zapper is the active one, in this order: 012 = cmy
-   g_redraw_zappers - when set, update the visuals on the floor zappers
-   g_level_time - how much time the player has spent on this stage
-   g_level_started - the player has started the puzzle
+   g_p_zap_turn - which zapper is the active one, in this order: 012 = cmy
+   g_updt_zap - when set, update the visuals on the floor zappers
+   g_p_time - how much time the player has spent on this stage
+   g_p_started - the player has started the puzzle
    g_new_dir - used for input buffering, stores upcoming direction
-   g_player_blink - how many frames until the player blinks
+   g_p_blink - how many frames until the player blinks
    g_slime_trail_anim - animation factor for the player slime trail
    g_stage_bg_anim - animation factor for stage bg
  ]]
- g_puzz_zapper_turn, g_redraw_zappers, g_level_time, g_level_started, g_new_dir, g_player_blink, g_slime_trail_anim, g_stage_bg_anim = 0, true, 0, false, -1, 5, 0, 0
+ g_p_zap_turn, g_updt_zap, g_p_time, g_p_started, g_new_dir, g_p_blink, g_slime_trail_anim, g_stage_bg_anim = 0, true, 0, false, -1, 5, 0, 0
 
  -- clamp the world index
  _world = mid(1, _world, count(g_levels))
@@ -297,18 +297,18 @@ function unpack_level(_world, _stage)
  -- store this for later
  last_worldstage_set(_world, _stage)
  --[[
-   g_puzz_world_index - the current world in play
-   g_puzz_level_index - the current stage in play
-   g_puzz_curr_fst - the puzzle data object in play
+   g_p_ind_w - the current world in play
+   g_p_ind_s - the current stage in play
+   g_p_fst - the puzzle data object in play
  ]]
- g_puzz_world_index, g_puzz_level_index, g_puzz_curr_fst = _world, _stage, g_levels[_world][_stage]
+ g_p_ind_w, g_p_ind_s, g_p_fst = _world, _stage, g_levels[_world][_stage]
 
  
  
  if (_need_sprites_update) then
   -- get ready to recolor the puzzle
   poke(0x5f55,0x0)
-  local _t = str_to_table("2854ef234924d6d54924", 4)
+  local _t = str2tbl("2854ef234924d6d54924", 4)
   for i=1,4 do
     pal(_t[1][i], _t[_world][i])
   end
@@ -329,7 +329,7 @@ function unpack_level(_world, _stage)
 
  -- get ready to parse the level data
  local _level_data = {}
- local _data_len, _data, _offset, _level_width = #g_puzz_curr_fst.l_data, g_puzz_curr_fst.l_data, 1, g_puzz_curr_fst.l_width
+ local _data_len, _data, _offset, _level_width = #g_p_fst.l_data, g_p_fst.l_data, 1, g_p_fst.l_width
  -- read the data
  -- coco note: since we have to add 2 to the offset to get past the
  -- data length bytes, go ahead and save a call here by chaining it into the loop
@@ -367,7 +367,7 @@ function unpack_level(_world, _stage)
  end
  -- now, unpack the level data into the top left screen of the work area so we can read it easily
  -- get the level width data that we stored earlier
- _dsx, _dsy, _level_width = 0, 0, g_puzz_curr_fst.l_width
+ _dsx, _dsy, _level_width = 0, 0, g_p_fst.l_width
  for _tile in all(_level_data) do
   mset(_dsx + 32, _dsy, _tile)
   -- place a floor tile + allow collision here?
@@ -376,19 +376,19 @@ function unpack_level(_world, _stage)
    -- place free tile, may be overwritten below though
    mset(_dsx + 48, _dsy, 1)
    place_puzz_tile(_dsx, _dsy, _tile)
-   g_level_tiles += 1
+   g_s_tiles += 1
   end
 
   -- do we need to add objects to the object list?
   if (_tile == 33) player_create(_dsx, _dsy)
   -- puzzle keys
   for j=0,4 do
-   if (_tile == 2 | (j << 5)) add(g_object_list, create_obj_key(_dsx, _dsy, j + 1, 83 + j))
+   if (_tile == 2 | (j << 5)) add(g_o_list, create_obj_key(_dsx, _dsy, j + 1, 83 + j))
   end
   
   -- state keys
   for j=0,2 do
-   if (_tile == 8 | (j << 5)) add(g_object_list, create_obj_key(_dsx, _dsy, 5 + j, 230 + j))
+   if (_tile == 8 | (j << 5)) add(g_o_list, create_obj_key(_dsx, _dsy, 5 + j, 230 + j))
   end
 
   -- arrows
@@ -398,11 +398,11 @@ function unpack_level(_world, _stage)
 
   -- octogem
   for j=0,7 do
-   if (_tile == 15 | (j << 5)) add(g_object_list, create_obj_key(_dsx, _dsy, 8 + j, 87))
+   if (_tile == 15 | (j << 5)) add(g_o_list, create_obj_key(_dsx, _dsy, 8 + j, 87))
   end
 
   -- generic key
-  if (_tile == 44) add(g_object_list, create_obj_key(_dsx, _dsy, 16, 159))
+  if (_tile == 44) add(g_o_list, create_obj_key(_dsx, _dsy, 16, 159))
 
   _dsx += 1
   if _dsx >= _level_width then
@@ -416,7 +416,7 @@ function unpack_level(_world, _stage)
 
  -- slime where stephanie is at and record the first undo step
  -- but only if lesbians are allowed
- if (setting_get(6)) player_end_move(g_object_list[1])
+ if (setting_get(6)) player_end_move(g_o_list[1])
 end
 
 -- this places the graphical representation of the given tile
@@ -463,7 +463,7 @@ end
 ]]
 function proc_autotile(_initial, _id, _work_x, _place_func)
  local _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb, _tile = 0
- local _w, _h = (g_puzz_curr_fst.l_width << 1) + 1, (g_puzz_curr_fst.l_height << 1) + 1
+ local _w, _h = (g_p_fst.l_width << 1) + 1, (g_p_fst.l_height << 1) + 1
 
  for _xc=0,_w do
   -- set our left and right x, without going into the work area
@@ -548,9 +548,9 @@ function parse_levels()
 end
 
 function unpack_hints()
- local _hintcount, _hintstr, _x, _y, _bo, _dir, _offset = g_puzz_curr_fst.l_hintcount - 1, g_puzz_curr_fst.l_hintstr, g_object_list[1].startx, g_object_list[1].starty, 0
+ local _hintcount, _hintstr, _x, _y, _bo, _dir, _offset = g_p_fst.l_hintcount - 1, g_p_fst.l_hintstr, g_o_list[1].startx, g_o_list[1].starty, 0
  -- clear the arrow list
- g_arrow_list = {}
+ g_a_list = {}
  -- now, add our hint arrows
  for i=0,_hintcount do
   _offset = 1 + i\2

@@ -94,10 +94,10 @@ function menu_create_puzz_win()
 end
 
 function menuitem_puzz_restart()
- set_game_mode(2, g_puzz_world_index, g_puzz_level_index, true)
+ set_game_mode(2, g_p_ind_w, g_p_ind_s, true)
 end
 function menuitem_puzz_skip()
- set_game_mode(2, g_puzz_world_index, g_puzz_level_index + 1)
+ set_game_mode(2, g_p_ind_w, g_p_ind_s + 1)
 end
 function menuitem_puzz_stage_select()
  set_game_mode(1)

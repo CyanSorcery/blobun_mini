@@ -39,33 +39,33 @@ function add_undo()
  local _undo = {}
  -- copy all object references
  _undo.obj_list = {}
- for _k,_v in pairs(g_object_list) do
- _undo.obj_list[_k] = g_object_list[_k]
+ for _k,_v in pairs(g_o_list) do
+ _undo.obj_list[_k] = g_o_list[_k]
  end
 
  -- store player parameters
- local _player = g_object_list[1]
- _undo.player_x, _undo.player_y, _undo.player_dir, _undo.player_pstate, _undo.player_coins, _undo.tiles_touched, _undo.player_octogems, _undo.player_haskey, _undo.zapper_turn = _player.startturnx, _player.startturny, _player.dir, _player.pstate, g_puzz_coins, g_level_touched, g_puzz_octogems, _player.haskey, g_puzz_zapper_turn
- add(g_undo_queue, _undo)
+ local _player = g_o_list[1]
+ _undo.player_x, _undo.player_y, _undo.player_dir, _undo.player_pstate, _undo.player_coins, _undo.tiles_touched, _undo.player_octogems, _undo.player_haskey, _undo.zapper_turn = _player.startturnx, _player.startturny, _player.dir, _player.pstate, g_p_coins, g_s_touched, g_p_octog, _player.haskey, g_p_zap_turn
+ add(g_u_list, _undo)
  -- store playfield
  _undo.playfield_walls, _undo.playfield_slime, _undo.playfiend_main= pack_undo_tiles(32, 16), pack_undo_tiles(48, 16), pack_undo_tiles(0, 32)
  -- if undo list has too many entries, delete the first one
- if (count(g_undo_queue) > 20) deli(g_undo_queue, 1)
+ if (count(g_u_list) > 20) deli(g_u_list, 1)
 end
 
 function perform_undo()
  -- find out the top undo and, if it's not the last one, delete it
- local _count = count(g_undo_queue)
+ local _count = count(g_u_list)
  if (_count == 0) return -- unlikely scenario, but prevents crash
- local _undo = g_undo_queue[_count]
- if (_count > 1) deli(g_undo_queue)
+ local _undo = g_u_list[_count]
+ if (_count > 1) deli(g_u_list)
  -- replace object list
- g_object_list = _undo.obj_list
+ g_o_list = _undo.obj_list
  -- reset player
- local _player = g_object_list[1]
- _player.x, _player.y, _player.oldx, _player.oldy, _player.anim, _player.dir, _player.pstate, g_puzz_coins, g_level_touched, g_puzz_octogems, _player.haskey, g_puzz_zapper_turn = _undo.player_x, _undo.player_y, _undo.player_x, _undo.player_y, 1, _undo.player_dir, _undo.player_pstate, _undo.player_coins, _undo.tiles_touched, _undo.player_octogems, _undo.player_haskey, _undo.zapper_turn
+ local _player = g_o_list[1]
+ _player.x, _player.y, _player.oldx, _player.oldy, _player.anim, _player.dir, _player.pstate, g_p_coins, g_s_touched, g_p_octog, _player.haskey, g_p_zap_turn = _undo.player_x, _undo.player_y, _undo.player_x, _undo.player_y, 1, _undo.player_dir, _undo.player_pstate, _undo.player_coins, _undo.tiles_touched, _undo.player_octogems, _undo.player_haskey, _undo.zapper_turn
  -- reset the buffered direction and lose state, and redraw the coins
- g_new_dir, g_level_lose, _player.isdead, g_redraw_coin, g_redraw_zappers, _player.ismove = -1, false, false, true, true, false
+ g_new_dir, g_level_lose, _player.isdead, g_updt_coin, g_updt_zap, _player.ismove = -1, false, false, true, true, false
  -- restore the playfield
  unpack_undo_tiles(_undo.playfield_walls, 32, 16)
  unpack_undo_tiles(_undo.playfield_slime, 48, 16)
@@ -114,7 +114,7 @@ end
 
 -- roxy note: this only finds the first tile
 function find_tile_loc(_tile)
- local _w, _h = g_puzz_curr_fst.l_width + 32, g_puzz_curr_fst.l_height
+ local _w, _h = g_p_fst.l_width + 32, g_p_fst.l_height
  for _dx=32,_w do
   for _dy=0,_h do
    if (mget(_dx, _dy) == _tile) return {x=_dx-32, y=_dy}
@@ -156,7 +156,7 @@ function format_time(_num)
  return (_num >= 60 and flr(_num / 60)..":" or "")..sub(flr(_num % 60) + 100, 2, 3).."."..sub(flr((_num % 1) * 1000) + 1000, 2, 4)
 end
 
-function str_to_table(_str, _delimiter)
+function str2tbl(_str, _delimiter)
  local _t, _at, _offset = {}, #_str \ _delimiter
  for _aa=1,_at do
   _t[_aa] = {}

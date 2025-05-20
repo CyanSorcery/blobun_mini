@@ -1,7 +1,7 @@
 -- stephanie
 function player_create(_x, _y)
  -- make sure stephanie is below everything
- add(g_object_list, {
+ add(g_o_list, {
   type=0,
   -- note: unlike other entities, this is in grid space
   x=_x,
@@ -44,7 +44,7 @@ function player_step(_obj)
 
  
  -- do the move animation
- _obj.anim = min(_obj.anim + ((_obj.sprint or g_puzz_on_convey or g_puzz_use_portal) and 0.2 or 0.1111), 1)
+ _obj.anim = min(_obj.anim + ((_obj.sprint or g_p_use_conv or g_p_use_port) and 0.2 or 0.1111), 1)
  
 
  -- allow input buffer?
@@ -66,10 +66,10 @@ function player_step(_obj)
   -- move her around the playfield?
   _obj.sprint = false
   local _new_dir = g_new_dir
-  if _new_dir != -1 or g_puzz_use_portal then
+  if _new_dir != -1 or g_p_use_port then
    -- do a check if this is solid or not. if we're on portal, we can move
-   local _can_move, _check, _chx, _chy = g_puzz_use_portal, 1, _obj.x + cos(_new_dir >> 2), _obj.y + sin(_new_dir >> 2)
-   if (g_puzz_on_convey or setting_get(2)) _check = 3 -- allow for move on slime
+   local _can_move, _check, _chx, _chy = g_p_use_port, 1, _obj.x + cos(_new_dir >> 2), _obj.y + sin(_new_dir >> 2)
+   if (g_p_use_conv or setting_get(2)) _check = 3 -- allow for move on slime
    _can_move = mget(_chx + 48, _chy) & _check > 0
    -- if the future block is an ice block, and the player is in the fire state, let em through
    local _nextblock = mget(_chx + 32, _chy)
@@ -82,24 +82,24 @@ function player_step(_obj)
    -- can we actually move here?
    if _can_move and not g_level_lose then
 
-    g_level_started = true
+    g_p_started = true
    
     -- record the playfield before making a move?
-    if not g_puzz_use_portal and not g_puzz_on_convey then
+    if not g_p_use_port and not g_p_use_conv then
      -- update the end turn position for the next undo
      _obj.startturnx, _obj.startturny = _obj.x, _obj.y
      add_undo()
      
      -- increment the floor zappers
-     g_puzz_zapper_turn += 1
-     g_puzz_zapper_turn %= 3
-     g_redraw_zappers = true
+     g_p_zap_turn += 1
+     g_p_zap_turn %= 3
+     g_updt_zap = true
     end
 
     -- reset move factor, set if move is sprint, set she's moving
     _obj.anim, _obj.sprint, _obj.ismove = 0, tonum(setting_get(3)) ^^ tonum(btn(4)) == 1, true
     -- set where she's moving from
-    if (g_puzz_use_portal == false) _obj.oldx, _obj.oldy = _obj.x, _obj.y
+    if (g_p_use_port == false) _obj.oldx, _obj.oldy = _obj.x, _obj.y
     if (_new_dir >= 0) _obj.x, _obj.y = _chx, _chy
 
    end
@@ -107,19 +107,19 @@ function player_step(_obj)
  end
 
  -- have we won?
- if g_level_win == false and g_level_touched >= g_level_tiles then
+ if g_level_win == false and g_s_touched >= g_s_tiles then
   g_level_win = true
   -- get rid of menu options since we have our own
   for i=1,5 do menuitem(i) end
   -- if the player time is lower than the record, store it
-  if (g_level_time < dget(g_puzz_curr_fst.l_saveslot)) dset(g_puzz_curr_fst.l_saveslot, g_level_time) g_new_time = true
+  if (g_p_time < dget(g_p_fst.l_saveslot)) dset(g_p_fst.l_saveslot, g_p_time) g_new_time = true
  end
 
  -- if we've won, make stephanie face down
  if (g_level_win) _obj.dir = 3
  
  -- timer
- if (g_level_started and not g_level_win) g_level_time = min(g_level_time + (time() - g_time), 599.999)
+ if (g_p_started and not g_level_win) g_p_time = min(g_p_time + (time() - g_time), 599.999)
 
 end
 
@@ -143,36 +143,36 @@ function player_end_move(_obj)
  if (_tile == 66) do_key_swap(67, 68, 23, 24) _collectcol, g_play_sfx = {12, 7}, g_sfx_lut.t_switch
 
  if _tile == 98 then
-  g_puzz_coins += 1
+  g_p_coins += 1
   _collectcol, g_play_sfx = {10, 9, 7}, g_sfx_lut.t_coin
-  if g_puzz_coins == 3 then
-   g_puzz_coins = 0
+  if g_p_coins == 3 then
+   g_p_coins = 0
    do_key_swap(99, 100, 25, 26)
    g_play_sfx = g_sfx_lut.t_switch
   end
-  g_redraw_coin    = true;
+  g_updt_coin    = true;
  end
  
  -- states: 0 normal, 1 fire, 2 ice
- local _st = str_to_table("b31a9876d",3)
+ local _st = str2tbl("b31a9876d",3)
  for i=0,2 do
   if (_tile == 8 | i << 5) _obj.pstate, _collectcol, g_play_sfx = i, _st[i + 1], g_sfx_lut.p_state[i + 1]
  end
 
  -- is this an octogem?
  for i=0,7 do
-  if _tile == 15 | i << 5 and g_puzz_octogems == i then
-   g_puzz_octogems += 1
+  if _tile == 15 | i << 5 and g_p_octog == i then
+   g_p_octog += 1
    -- find the destination octogem
-   if (g_puzz_octogems < 8) then
-    local _dest = find_tile_loc(15 | (g_puzz_octogems << 5))
+   if (g_p_octog < 8) then
+    local _dest = find_tile_loc(15 | (g_p_octog << 5))
     if (_dest != nil) part_create_octogem(_xcenter, _ycenter, (_dest.x << 4) + 12, (_dest.y << 4) + 12)
    end
    _collectcol, g_play_sfx = {14, 7}, g_sfx_lut.octo[i + 1]
   end
  end
  -- did we just get the last octogem? if so, process it and reset
- if (g_puzz_octogems == 8) do_key_swap(74,106,27, 28) g_puzz_octogems = 0
+ if (g_p_octog == 8) do_key_swap(74,106,27, 28) g_p_octog = 0
 
  -- is this a key? if we don't have one, go ahead and pick it up
  if _tile == 44 then
@@ -211,13 +211,13 @@ function player_end_move(_obj)
  if (_tile == 105) _dir = _obj.dir
  -- did we get a new direction?
  if (_dir != -1) g_new_dir = _dir
- g_puzz_on_convey = _dir != -1
+ g_p_use_conv = _dir != -1
 
  -- destroy floating object at this position
- if (_destroy_obj) add(g_obj_delete, _x << 4 | _y)
+ if (_destroy_obj) add(g_o_del, _x << 4 | _y)
 
  -- are we on a floor portal?
- g_puzz_use_portal = false
+ g_p_use_port = false
  if _tile == 5 or _tile == 37 or _tile == 69 or _tile == 101 then
   -- delete portal, then find pair
   mset(_x + 32, _y, 1)
@@ -226,7 +226,7 @@ function player_end_move(_obj)
    -- set our new position to where we're going
    _obj.oldx, _obj.oldy = _obj.x, _obj.y
    _obj.x, _obj.y = _pair_loc.x - 32, _pair_loc.y
-   g_puzz_use_portal = true
+   g_p_use_port = true
   end
  end
 
@@ -234,7 +234,7 @@ function player_end_move(_obj)
  if (_collectcol != nil) part_create_item_grab(_xcenter, _ycenter, _collectcol)
 
  -- is this the end of this turn?
- --if not g_puzz_use_portal and not g_puzz_on_convey then
+ --if not g_p_use_port and not g_p_use_conv then
  --end
  
  -- coco note: this *could* be optimized, but let's keep the code readable unless we need those tokens
@@ -249,9 +249,9 @@ function player_end_move(_obj)
  -- did we step on a cracked floor that just broke?
   (_tile == 0) or
  -- did we step on a floor zapper on the wrong turn?
-  (_tile == 39 and g_puzz_zapper_turn == 2) or -- cyan
-  (_tile == 7 and g_puzz_zapper_turn == 1) or -- magenta
-  (_tile == 71 and g_puzz_zapper_turn == 0) -- yellow
+  (_tile == 39 and g_p_zap_turn == 2) or -- cyan
+  (_tile == 7 and g_p_zap_turn == 1) or -- magenta
+  (_tile == 71 and g_p_zap_turn == 0) -- yellow
   then
   player_destroy(_obj, true)
   _doslime = false
@@ -259,7 +259,7 @@ function player_end_move(_obj)
 
  -- put slime on the playfield here?
  if _doslime then
-  g_level_touched += 1
+  g_s_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
   local _dx, _dy = (_obj.x << 1) + 1, (_obj.y << 1) + 1
   put_x16_tile(_dx, _dy, 218 + (_obj.pstate << 1))
@@ -269,7 +269,7 @@ end
 function player_destroy(_obj, _kill)
  g_level_lose = true
  -- colors for normal, fire, ice
- local _t = str_to_table("13b49a5d6", 3)
+ local _t = str2tbl("13b49a5d6", 3)
  if _kill == true then 
   _obj.isdead = true
   local _col = _t[_obj.pstate + 1]
@@ -281,7 +281,7 @@ function player_draw(_obj)
  -- if the player was destroyed by something, don't draw
  -- also don't draw if the player is in a floor portal
  -- or if lesbians are not allowed
- if (_obj.isdead or g_puzz_use_portal or not setting_get(6)) return
+ if (_obj.isdead or g_p_use_port or not setting_get(6)) return
 
  local _dir, _x, _y, _offset, _dir = _obj.dir, _obj.x << 4, _obj.y << 4
  
@@ -298,7 +298,7 @@ function player_draw(_obj)
  if _obj.anim < 1 then
   -- if on conveyer, use linear animation
   -- if not, use curved animation
-  if g_puzz_on_convey then
+  if g_p_use_conv then
    _offset = _obj.anim
   elseif _obj.anim < 0.5 then
    _offset = 0.5 + (cos(_obj.anim * 0.5) * -0.5)
@@ -347,7 +347,7 @@ function redraw_slimetrail()
  end
 
  -- initial copy of stephanie to work area
- local _obj = g_object_list[1]
+ local _obj = g_o_list[1]
  clip()
  palt(0, false)
  spr(208, 24, 104, 3, 1)
@@ -376,8 +376,8 @@ function redraw_slimetrail()
  end
 
  -- get ready to draw her expression on
- local _eye_determined = (btn(4) or _obj.sprint) and g_puzz_on_convey == false -- >:3
- local _eye_blink = g_player_blink < 3 or g_level_win
+ local _eye_determined = (btn(4) or _obj.sprint) and g_p_use_conv == false -- >:3
+ local _eye_blink = g_p_blink < 3 or g_level_win
  local _mouse_grin = _eye_determined -- sprinting
  local _is_win, _no_win, _spr = g_level_win, g_level_win == false
 
