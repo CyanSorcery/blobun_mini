@@ -147,7 +147,7 @@ end
 function draw_wavy_text(_str, _x, _y, _col, _px)
  local _len = #_str
  for i=1,_len do
-  _x = print(sub(_str, i, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
+  _x = print(subl(_str, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
  end
 end
 
@@ -163,8 +163,12 @@ function str2tbl(_str, _delimiter)
   _offset = (_aa - 1) * _delimiter
   for i=1,_delimiter do
    _offset += 1
-   add(_t[_aa], tonum("0x"..sub(_str,_offset,_offset)))
+   add(_t[_aa], tonum(subl(_str,_offset), 0x1))
   end
  end
  return _t
+end
+
+function subl(_str, _offset, _len)
+ return sub(_str, _offset, _offset + (_len and _len or 0))
 end

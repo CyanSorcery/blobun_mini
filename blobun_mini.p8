@@ -324,7 +324,7 @@ function unpack_level(_world, _stage)
  local _dstile, _dsx, _dsy = 0, 1, 1
  for i=1,_data_len do
   _offset += 2
-  _dstile = tonum(sub(_data, _offset, _offset + 1), 0x1)
+  _dstile = tonum(subl(_data, _offset, 1), 0x1)
   _level_data[i] = _dstile
   -- now, read this out onto the playfield
   if (_dstile > 0) put_mirrored_tile(_dsx, _dsy, (_dsx + _dsy) % 4 == 2 and 17 or 16)
@@ -395,7 +395,7 @@ end
 function place_puzz_tile(_x, _y, _tile_id)
  -- find the top left corner of the tile to place. if 0, do nothing
  local _offset = (_tile_id << 1) - 1
- local _tile_tl = tonum("0x"..sub(g_tile_lut, _offset, _offset+1))
+ local _tile_tl = tonum(subl(g_tile_lut, _offset, 1), 0x1)
 
  -- do we place a tile?
  if _tile_tl != 0 then
@@ -488,23 +488,23 @@ function parse_levels()
    _offset = 1
    -- get the name and author
    for i=1,2 do
-    _bytes = tonum(sub(_str, _offset, _offset), 0x1)
-    _fst[_strs[i]] = sub(_str, _offset + 1, _offset + _bytes)
+    _bytes = tonum(subl(_str, _offset), 0x1)
+    _fst[_strs[i]] = subl(_str, _offset + 1, _bytes - 1)
     _offset += _bytes + 1
    end
    -- get the stage save slot
-   _fst.l_saveslot = tonum(sub(_str, _offset, _offset + 1))
+   _fst.l_saveslot = tonum(subl(_str, _offset, 1))
    -- get the stage goal time and dev time
-   _fst.l_goaltime = tonum(sub(_str, _offset + 2, _offset + 9))
-   _fst.l_devtime = tonum(sub(_str, _offset + 10, _offset + 17))
+   _fst.l_goaltime = tonum(subl(_str, _offset + 2, 7))
+   _fst.l_devtime = tonum(subl(_str, _offset + 10, 7))
    _offset += 18
    -- get the stage width
-   _fst.l_width = tonum(sub(_str, _offset, _offset), 0x1)
+   _fst.l_width = tonum(subl(_str, _offset), 0x1)
    _offset += 1
    -- get the stage hints
-   _hints = tonum(sub(_str, _offset, _offset), 0x1)
+   _hints = tonum(subl(_str, _offset), 0x1)
    _bytes = ceil(_hints / 2)
-   _fst.l_hintcount, _fst.l_hintstr = _hints, _bytes == 0 and "" or sub(_str, _offset + 1, _offset + _bytes)
+   _fst.l_hintcount, _fst.l_hintstr = _hints, _bytes == 0 and "" or subl(_str, _offset, _bytes - 1)
    -- get the level data itself
    _fst.l_data = sub(_str, _offset + _bytes - 1)
    -- figure out the height
@@ -524,7 +524,7 @@ function unpack_hints()
  -- now, add our hint arrows
  for i=0,_hintcount do
   _offset = 1 + i\2
-  _dir = tonum("0x"..sub(_hintstr, _offset, _offset)) >> _bo & 0x3
+  _dir = tonum("0x"..subl(_hintstr, _offset)) >> _bo & 0x3
   add_hint_arrow(_x, _y, _dir)
   _x += cos(_dir >> 2)
   _y += sin(_dir >> 2)
