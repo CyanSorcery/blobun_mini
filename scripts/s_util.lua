@@ -149,6 +149,10 @@ function draw_wavy_text(_str, _x, _y, _col, _px)
   _x = print(sub(_str, i, i), _x, _y + (sin(g_wavy_anim + (i / 10)) * _px), _col)
  end
 end
+function print_shd(_str, _x, _y, _col, _bg)
+ ?_str, _x + 1, _y + 1, _bg
+ return print(_str, _x, _y, _col)
+end
 
 function format_time(_num)
  -- mika note: we add to the time to guarantee 0's in the padding

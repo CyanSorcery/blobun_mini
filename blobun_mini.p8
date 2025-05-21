@@ -172,12 +172,10 @@ function _draw()
  if g_s_intro_cd > 0 then
   local _sname, _offset = "stage "..g_p_ind_s, cos(abs(max(abs(g_s_intro_cd-45),35)-35)/40)*64-64
   local _o1, _o2 = _offset + 8, _offset + 9
-  print(_sname, _offset + 13, 98, _colshd)
-  local _x = print(_sname, _offset + 12, 97, 7)
+  local _x = print_shd(_sname, _offset + 12, 97, 7, _colshd)
   line(_o2, 105, _o2 + _x, 105, _colshd)
   line(_o1, 104, _o1 + _x, 104, 7)
-  ?g_p_fst.l_name, _o2, 108, _colshd
-  ?g_p_fst.l_name, _o1, 107, 7
+  print_shd(g_p_fst.l_name, _o1, 107, 7, _colshd)
   if (_w > 0) ?g_p_fst.l_author, _o1, 115, _colshd
  end
  

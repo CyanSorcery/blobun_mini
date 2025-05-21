@@ -57,13 +57,13 @@ function draw_credits()
  local _t = {{"programming", "bug fixes", "general"}, {"art, music", "art, music", "music"}}
  for _x=1,2 do
   for _y=1,3 do
-   ?_t[_x][_y], _x*64-46, _y*24+42, 7
+   print_shd(_t[_x][_y], _x*64-46, _y*24+42, 7, 1)
   end
  end
- ?"director", 58, 42, 7
- ?"created by", 44, 1, 7
- ?"a plural system", 34, 26, 7
- ?"seven spirits, one body", 18, 32, 7
+ print_shd("director", 58, 42, 7, 1)
+ print_shd("created by", 44, 1, 7, 1)
+ print_shd("a plural system", 34, 26, 7, 1)
+ print_shd("seven spirits, one body", 18, 32, 7, 1)
 end
 
 function update_intro()
