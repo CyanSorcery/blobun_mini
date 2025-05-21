@@ -528,21 +528,21 @@ function unpack_hints()
 end
 
 -->8
-#include min/s_nongame.lua
+#include scripts/s_nongame.lua
 -->8
-#include min/s_gameplay.lua
+#include scripts/s_gameplay.lua
 -->8
-#include min/s_util.lua
+#include scripts/s_util.lua
 -->8
-#include min/s_player.lua
+#include scripts/s_player.lua
 -->8
-#include min/s_particles.lua
+#include scripts/s_particles.lua
 -->8
-#include min/s_px9.lua
+#include scripts/s_px9.lua
 -->8
-#include min/s_menu.lua
+#include scripts/s_menu.lua
 -->8
-#include min/s_config.lua
+#include scripts/s_config.lua
 
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b

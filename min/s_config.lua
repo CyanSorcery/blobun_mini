@@ -1,2 +1,0 @@
-function init_config()cartdata(g_cart_name)if(dget(63)==0)dset(63,69)for i=0,59do dset(i,599.999)end dset(62,0x1.12)dset(61,0)dset(60,0)
-end function setting_get(_ind)return dget(63)&1<<_ind>0end function setting_set(_ind,_on)local _bit,_data=1<<_ind,dget(63)dset(63,_on and _data|_bit or _data&~_bit)end function last_worldstage_get()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function last_worldstage_set(_world,_stage)dset(62,dget(62)&~.9922|_world>>7|_stage>>4)end
