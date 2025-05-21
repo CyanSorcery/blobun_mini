@@ -107,9 +107,7 @@ function menu_create_title()
   end
   ),
   menu_item_base("options", menu_create_options),
-  menu_item_base("credits", function()
-   printh("clicked credits")
-  end)
+  menu_item_base("credits", function() set_game_mode(4) end)
  })
 end
 function menu_create_options()
