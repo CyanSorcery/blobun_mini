@@ -434,8 +434,7 @@ end
    place_func: function to run when we put a tile
 ]]
 function proc_autotile(_initial, _id, _work_x, _place_func)
- local _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb, _tile = 0
- local _w, _h = (g_p_fst.l_width << 1) + 1, (g_p_fst.l_height << 1) + 1
+ local _w, _h, _mtl, _mtc, _mtr, _mcl, _mcc, _mcr, _mbl, _mbc, _mbr, _xl, _xr, _yb, _tile = (g_p_fst.l_width << 1) + 1, (g_p_fst.l_height << 1) + 1
 
  for _xc=0,_w do
   -- set our left and right x, without going into the work area
@@ -449,13 +448,7 @@ function proc_autotile(_initial, _id, _work_x, _place_func)
 
    -- don't do this unless the center tile is 0 since
    -- we can know in advance we wont put a tile
-   if _mcc == 0 then
-   -- figure out what each tile is gonna be, then run the function on it
-    _place_func((_mbl + _mbc + _mcl + _mcc == 0 and 1 or 0)
-     | (_mbr + _mbc + _mcr + _mcc == 0 and 2 or 0)
-     | (_mtr + _mtc + _mcr + _mcc == 0 and 4 or 0)
-     | (_mtl + _mtc + _mcl + _mcc == 0 and 8 or 0), _xc, _yc, _id)
-   end
+   if (_mcc == 0) _place_func((_mbl + _mbc + _mcl + _mcc == 0 and 1 or 0) | (_mbr + _mbc + _mcr + _mcc == 0 and 2 or 0) | (_mtr + _mtc + _mcr + _mcc == 0 and 4 or 0) | (_mtl + _mtc + _mcl + _mcc == 0 and 8 or 0), _xc, _yc, _id)
 
    -- store these for the next row
    _mtl, _mtc, _mtr = _mcl, _mcc, _mcr
@@ -477,8 +470,7 @@ end
 
 -- this converts the level table from a bunch of strings to worlds/stages
 function parse_levels()
- local _lv, _bytes, _offset, _hints = {}
- local _strs = {"l_name", "l_author"}
+ local _lv, _strs, _bytes, _offset, _hints = {}, {"l_name", "l_author"}
 
  for _w, _wt in ipairs(g_levels) do
   _lv[_w]   = {}
@@ -508,7 +500,7 @@ function parse_levels()
    -- get the level data itself
    _fst.l_data = sub(_str, _offset + _bytes - 1)
    -- figure out the height
-   _fst.l_height = (#_fst.l_data / _fst.l_width) >> 1
+   _fst.l_height = #_fst.l_data / _fst.l_width >> 1
    -- store this level data
    _lv[_w][_s] = _fst
   end
@@ -536,21 +528,21 @@ function unpack_hints()
 end
 
 -->8
-#include scripts/s_nongame.lua
+#include min/s_nongame.lua
 -->8
-#include scripts/s_gameplay.lua
+#include min/s_gameplay.lua
 -->8
-#include scripts/s_util.lua
+#include min/s_util.lua
 -->8
-#include scripts/s_player.lua
+#include min/s_player.lua
 -->8
-#include scripts/s_particles.lua
+#include min/s_particles.lua
 -->8
-#include scripts/s_px9.lua
+#include min/s_px9.lua
 -->8
-#include scripts/s_menu.lua
+#include min/s_menu.lua
 -->8
-#include scripts/s_config.lua
+#include min/s_config.lua
 
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
