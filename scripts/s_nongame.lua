@@ -34,13 +34,11 @@ end
 
 function update_credits()
  if (g_intro_anim * g_outro_anim == 1 and btnp() & 0x30 > 0) set_game_mode(0)
- g_cred_scl += .15
- g_cred_scl %= 32
 end
 
 function draw_credits()
- for _x=-32+g_cred_scl,128,32 do
-  for _y=-g_cred_scl,128,32 do
+ for _x=-32+g_bg_scl,128,32 do
+  for _y=-g_bg_scl,128,32 do
    spr(204, _x, _y, 4, 4)
   end
  end

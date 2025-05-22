@@ -28,19 +28,26 @@ function draw_gameplay()
  -- clear the background
  cls(g_pal_stage_bg[1][g_p_ind_w])
  pal(7, g_pal_stage_bg[2][g_p_ind_w])
+ local _startx, _starty = -32+g_bg_scl, -g_bg_scl
+ -- disable autoscrolling for worlds 3 and 5
+ if (g_p_ind_w == 3 or g_p_ind_w == 5) _startx, _starty = -g_cam_x/2,-g_cam_y/2
  -- draw the background
- for i=0,15 do
-  for _x=0,120,8 do
-   spr(146 + i \ 2, _x, i << 3)
+ for _x=_startx,128,32 do
+  for _y=_starty,128,32 do
+   spr(148, _x, _y, 4, 2)
+   spr(152, _x, _y + 16, 4, 2)
   end
  end
- pal()
- -- apply funky animation to background
+ 
  poke(0x5f54, 0x60)
- local _yend
- for _y=0,127 do
-  sspr(0, _y, 128, 1, sin(g_stage_bg_anim + (_y >> 4)) * 1.4, _y)
- end
+ -- apply gradient
+ -- tmp
+ --g_pal_grad = {{0,0,1,1,1,5,5,2,5,5,1,1,1,2,5}, {1,2,1,2,1,13,13,2,4,13,3,3,5,4,13}, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},{5,4,12,14,13,7,7,8,15,10,11,12,13,14,7},{13,14,11,6,6,7,7,14,10,7,11,6,15,15,7}}
+ --for _y=0,127,8 do pal(g_pal_grad[_y\26+1]) sspr(0, _y, 128, 8, 0, _y) end
+ pal()
+ -- apply funky animation to background to worlds 1 and 2
+ if (g_p_ind_w <= 2) for _y=0,127 do sspr(0, _y, 128, 1, sin(g_stage_bg_anim + (_y >> 4)) * 1.4, _y) end
+
  poke(0x5f54, 0x00)
  
  -- set our camera position
@@ -92,7 +99,7 @@ function draw_gameplay()
  if (g_level_win and g_p_time <= g_p_fst.l_devtime) _col = 10
  -- if the player has beaten this stage or not
  local _curr_time = dget(g_p_fst.l_saveslot)
- spr(_curr_time < 599.995 and 155 or 154, 88, 0)
+ spr(_curr_time < 599.995 and 147 or 146, 88, 0)
  --show timer and "new time?"
  if _show_timers then
   ?format_time(g_p_time), 2, 2, _col
@@ -113,6 +120,7 @@ function draw_gameplay()
  if g_level_win or g_level_lose then
   draw_wavy_text(g_level_win and "stage clear!" or "❎ undo", g_level_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
+
 end
 
 function do_tile_mirror()

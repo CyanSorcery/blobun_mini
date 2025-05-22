@@ -42,6 +42,11 @@ function decompress_sfx(_index)
  memcpy(0x3A80, 0x6000, 0x880)
 end
 
+function decompress_stagebg(_index)
+ holdframe()
+ px9_decomp(32, 72, g_px9_data[6][_index], sget, sset)
+end
+
 function
 px9_decomp(x0,y0,src,vget,vset)
 local function vlist_val(l,val)

@@ -35,7 +35,7 @@ function menu_create(_x, _y, _w, _items)
    -- should we show this?
    if (_is_top_pane and _m_count > 1 and g_menu[_m_count - 1].m_anim_factor > 0) return false
    -- brute force detection of in puzzle or not
-   local _count, _sprchk = count(self.m_items), count(g_o_list) > 0 and 155 or 241
+   local _count, _sprchk = count(self.m_items), count(g_o_list) > 0 and 147 or 241
    -- draw background
    local _b_h = lerp(5, self.m_h, self.m_anim_factor)
    local _x1, _y1, _is_hilite = self.m_x, self.m_y - (_b_h >> 1)

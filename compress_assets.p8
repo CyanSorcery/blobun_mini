@@ -11,18 +11,24 @@ function _init()
 	3: music + sfx patterns
 	4: map
 	5: game sfx
+	6: stage bg
  ]]
 
  g_offset = 0
  g_byte_max = 17151
  g_dest_cart = "blobun_mini.p8"
 
- g_bytes_total = {0, 0, 0, 0, 0}
+ g_bytes_total = {0, 0, 0, 0, 0, 0}
 
  printh("Starting compression...")
  -- compress all the assets
  compress_spritesheet("res/s_title.png", "res/s_title.p8")
  compress_spritesheet("res/s_game.png", "res/s_game.p8")
+ compress_stagebg("res/s_stage_bg.png", 0, 0)
+ compress_stagebg("res/s_stage_bg.png", 64, 0)
+ compress_stagebg("res/s_stage_bg.png", 0, 16)
+ compress_stagebg("res/s_stage_bg.png", 64, 16)
+ compress_stagebg("res/s_stage_bg.png", 0, 32)
  compress_music("res/m_pipeworks.p8")
  compress_music("res/m_islander.p8")
  compress_music("res/m_forest.p8")
@@ -31,7 +37,7 @@ function _init()
  compress_sfx("res/sfx.p8")
 
  printh("Finished compression. "..g_offset.."/"..g_byte_max.." ("..((g_offset/g_byte_max)*100).."% used)")
- local _spr_bytes = g_bytes_total[1] + g_bytes_total[2]
+ local _spr_bytes = g_bytes_total[1] + g_bytes_total[2] + g_bytes_total[6]
  printh("Sprite Data: ".._spr_bytes.." bytes ("..((_spr_bytes / g_byte_max) * 100).."%)")
  printh("Music Data: "..g_bytes_total[3].." bytes ("..((g_bytes_total[3] / g_byte_max) * 100).."%)")
  local _spr_bytes = g_bytes_total[4] + g_bytes_total[5]
@@ -74,6 +80,16 @@ function compress_spritesheet(_filename, _cartname)
  memcpy(0x0, 0x3000, 0xff)
  _bytes = px9_comp(0, 0, 128, 4, 0x8000 + g_offset, sget)
  write_type_len_bytes(2, _bytes)
+end
+
+function compress_stagebg(_filename, _x, _y)
+ -- import the image into this cart, and then store it in the given cart
+ import(_filename)
+ --cstore(0x0, 0x0, 0x2000, _cartname)
+ -- compress it
+ local _bytes = px9_comp(_x, _y, 64, 16, 0x8000 + g_offset, sget)
+ write_type_len_bytes(6, _bytes)
+ printh("Compressed stage background ".._filename.." ("..tostr(_bytes).." bytes, ratio "..tostr((_bytes / 0x2000) * 100).."%)")
 end
 
 function compress_music(_filename)
