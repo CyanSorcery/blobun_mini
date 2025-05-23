@@ -3,111 +3,274 @@
 //NOTE: each of these is in the order of top left, top right, bottom left, bottom right
 
 //Start by creating an array of 256 entries with blank tiles
-//any unrecognized puzzle elements will be replaced with the trans tile
-$tile_lut	= array_fill(0, 256, puzz_get_single_tile(15));
+//any unrecognized puzzle elements will be replaced with the trans tile later
+$lut_tile	= array_fill(0, 256, null);
 
 //void/empty tile
-$tile_lut[0]	= [0, 0, 0, 0];
+$lut_tile[0]	= [0, 0, 0, 0];
 
 //blank tile
-$tile_lut[puzz_ele_to_bitmask(1, 0)] = puzz_get_mirrored_tile(16);
+$lut_tile[puzz_ele_to_bitmask(1, 0)] = puzz_get_mirrored_tile(16);
 
 //Heart (on)
-$tile_lut[puzz_ele_to_bitmask(3, 0)] = puzz_get_mirrored_tile(19);
+$lut_tile[puzz_ele_to_bitmask(3, 0)] = puzz_get_mirrored_tile(19);
 //Heart (off)
-$tile_lut[puzz_ele_to_bitmask(4, 0)] = puzz_get_mirrored_tile(20);
+$lut_tile[puzz_ele_to_bitmask(4, 0)] = puzz_get_mirrored_tile(20);
 
 //Diamond (on)
-$tile_lut[puzz_ele_to_bitmask(3, 1)] = puzz_get_mirrored_tile(21);
+$lut_tile[puzz_ele_to_bitmask(3, 1)] = puzz_get_mirrored_tile(21);
 //Diamond (off)
-$tile_lut[puzz_ele_to_bitmask(4, 1)] = puzz_get_mirrored_tile(22);
+$lut_tile[puzz_ele_to_bitmask(4, 1)] = puzz_get_mirrored_tile(22);
 
 //Triangle (on)
-$tile_lut[puzz_ele_to_bitmask(3, 2)] = puzz_get_mirrored_tile(23);
+$lut_tile[puzz_ele_to_bitmask(3, 2)] = puzz_get_mirrored_tile(23);
 //Triangle (off)
-$tile_lut[puzz_ele_to_bitmask(4, 2)] = puzz_get_mirrored_tile(24);
+$lut_tile[puzz_ele_to_bitmask(4, 2)] = puzz_get_mirrored_tile(24);
 
 //Coin (on)
-$tile_lut[puzz_ele_to_bitmask(3, 3)] = puzz_get_mirrored_tile(25);
+$lut_tile[puzz_ele_to_bitmask(3, 3)] = puzz_get_mirrored_tile(25);
 //Coin (off)
-$tile_lut[puzz_ele_to_bitmask(4, 3)] = puzz_get_mirrored_tile(26);
+$lut_tile[puzz_ele_to_bitmask(4, 3)] = puzz_get_mirrored_tile(26);
 
 //Octoblock (on)
-$tile_lut[puzz_ele_to_bitmask(10, 2)] = puzz_get_mirrored_tile(27);
+$lut_tile[puzz_ele_to_bitmask(10, 2)] = puzz_get_mirrored_tile(27);
 //Octoblock (off)
-$tile_lut[puzz_ele_to_bitmask(10, 3)] = puzz_get_mirrored_tile(28);
+$lut_tile[puzz_ele_to_bitmask(10, 3)] = puzz_get_mirrored_tile(28);
 
 //Zapper (cyan)
-$tile_lut[puzz_ele_to_bitmask(7, 1)] = puzz_get_mirrored_tile(29);
+$lut_tile[puzz_ele_to_bitmask(7, 1)] = puzz_get_mirrored_tile(29);
 //Zapper (magenta)
-$tile_lut[puzz_ele_to_bitmask(7, 0)] = puzz_get_mirrored_tile(30);
+$lut_tile[puzz_ele_to_bitmask(7, 0)] = puzz_get_mirrored_tile(30);
 //Zapper (yellow)
-$tile_lut[puzz_ele_to_bitmask(7, 2)] = puzz_get_mirrored_tile(31);
+$lut_tile[puzz_ele_to_bitmask(7, 2)] = puzz_get_mirrored_tile(31);
 
 //Slime trap
-$tile_lut[puzz_ele_to_bitmask(9, 4)] = puzz_get_mirrored_tile(48);
+$lut_tile[puzz_ele_to_bitmask(9, 4)] = puzz_get_mirrored_tile(48);
 
 //Generic lock block
-$tile_lut[puzz_ele_to_bitmask(10, 4)] = puzz_get_mirrored_tile(51);
+$lut_tile[puzz_ele_to_bitmask(10, 4)] = puzz_get_mirrored_tile(51);
 //Generic key
-$tile_lut[puzz_ele_to_bitmask(12, 1)] = puzz_get_mirrored_tile(18);
+$lut_tile[puzz_ele_to_bitmask(12, 1)] = puzz_get_mirrored_tile(18);
 
 //Heart key
-$tile_lut[puzz_ele_to_bitmask(2, 0)] = puzz_get_mirrored_tile(52);
+$lut_tile[puzz_ele_to_bitmask(2, 0)] = puzz_get_mirrored_tile(52);
 //Diamond key
-$tile_lut[puzz_ele_to_bitmask(2, 1)] = puzz_get_mirrored_tile(53);
+$lut_tile[puzz_ele_to_bitmask(2, 1)] = puzz_get_mirrored_tile(53);
 //Triangle key
-$tile_lut[puzz_ele_to_bitmask(2, 2)] = puzz_get_mirrored_tile(54);
+$lut_tile[puzz_ele_to_bitmask(2, 2)] = puzz_get_mirrored_tile(54);
 //Coin key
-$tile_lut[puzz_ele_to_bitmask(2, 3)] = puzz_get_mirrored_tile(55);
+$lut_tile[puzz_ele_to_bitmask(2, 3)] = puzz_get_mirrored_tile(55);
 
 //Octogems
-$tile_lut[puzz_ele_to_bitmask(15, 0)] = puzz_get_mirrored_tile(56);
-$tile_lut[puzz_ele_to_bitmask(15, 1)] = puzz_get_mirrored_tile(57);
-$tile_lut[puzz_ele_to_bitmask(15, 2)] = puzz_get_mirrored_tile(58);
-$tile_lut[puzz_ele_to_bitmask(15, 3)] = puzz_get_mirrored_tile(59);
-$tile_lut[puzz_ele_to_bitmask(15, 4)] = puzz_get_mirrored_tile(60);
-$tile_lut[puzz_ele_to_bitmask(15, 5)] = puzz_get_mirrored_tile(61);
-$tile_lut[puzz_ele_to_bitmask(15, 6)] = puzz_get_mirrored_tile(62);
-$tile_lut[puzz_ele_to_bitmask(15, 7)] = puzz_get_mirrored_tile(63);
+$lut_tile[puzz_ele_to_bitmask(15, 0)] = puzz_get_mirrored_tile(56);
+$lut_tile[puzz_ele_to_bitmask(15, 1)] = puzz_get_mirrored_tile(57);
+$lut_tile[puzz_ele_to_bitmask(15, 2)] = puzz_get_mirrored_tile(58);
+$lut_tile[puzz_ele_to_bitmask(15, 3)] = puzz_get_mirrored_tile(59);
+$lut_tile[puzz_ele_to_bitmask(15, 4)] = puzz_get_mirrored_tile(60);
+$lut_tile[puzz_ele_to_bitmask(15, 5)] = puzz_get_mirrored_tile(61);
+$lut_tile[puzz_ele_to_bitmask(15, 6)] = puzz_get_mirrored_tile(62);
+$lut_tile[puzz_ele_to_bitmask(15, 7)] = puzz_get_mirrored_tile(63);
 
 //Normal state
-$tile_lut[puzz_ele_to_bitmask(8, 0)] = puzz_get_mirrored_tile(80);
+$lut_tile[puzz_ele_to_bitmask(8, 0)] = puzz_get_mirrored_tile(80);
 //Fire state
-$tile_lut[puzz_ele_to_bitmask(8, 1)] = puzz_get_mirrored_tile(82);
+$lut_tile[puzz_ele_to_bitmask(8, 1)] = puzz_get_mirrored_tile(82);
 //Ice state
-$tile_lut[puzz_ele_to_bitmask(8, 2)] = puzz_get_mirrored_tile(81);
+$lut_tile[puzz_ele_to_bitmask(8, 2)] = puzz_get_mirrored_tile(81);
 
 //Red portal
-$tile_lut[puzz_ele_to_bitmask(5, 0)] = puzz_get_full_tile(88);
+$lut_tile[puzz_ele_to_bitmask(5, 0)] = puzz_get_full_tile(88);
 //Green portal
-$tile_lut[puzz_ele_to_bitmask(5, 1)] = puzz_get_full_tile(90);
+$lut_tile[puzz_ele_to_bitmask(5, 1)] = puzz_get_full_tile(90);
 //Blue portal
-$tile_lut[puzz_ele_to_bitmask(5, 2)] = puzz_get_full_tile(92);
+$lut_tile[puzz_ele_to_bitmask(5, 2)] = puzz_get_full_tile(92);
 //Yellow portal
-$tile_lut[puzz_ele_to_bitmask(5, 3)] = puzz_get_full_tile(94);
+$lut_tile[puzz_ele_to_bitmask(5, 3)] = puzz_get_full_tile(94);
 
 //Conveyer east
-$tile_lut[puzz_ele_to_bitmask(6, 0)] = puzz_get_full_tile(112);
+$lut_tile[puzz_ele_to_bitmask(6, 0)] = puzz_get_full_tile(112);
 //Conveyer north
-$tile_lut[puzz_ele_to_bitmask(6, 1)] = puzz_get_full_tile(114);
+$lut_tile[puzz_ele_to_bitmask(6, 1)] = puzz_get_full_tile(114);
 //Conveyer west
-$tile_lut[puzz_ele_to_bitmask(6, 2)] = puzz_get_full_tile(116);
+$lut_tile[puzz_ele_to_bitmask(6, 2)] = puzz_get_full_tile(116);
 //Conveyer south
-$tile_lut[puzz_ele_to_bitmask(6, 3)] = puzz_get_full_tile(118);
+$lut_tile[puzz_ele_to_bitmask(6, 3)] = puzz_get_full_tile(118);
 
 //Ice block
-$tile_lut[puzz_ele_to_bitmask(10, 0)] = puzz_get_full_tile(120);
+$lut_tile[puzz_ele_to_bitmask(10, 0)] = puzz_get_full_tile(120);
 
 //Ice floor
-$tile_lut[puzz_ele_to_bitmask(9, 3)] = puzz_get_full_tile(122);
+$lut_tile[puzz_ele_to_bitmask(9, 3)] = puzz_get_full_tile(122);
 
 //Cracked floor
-$tile_lut[puzz_ele_to_bitmask(9, 0)] = puzz_get_full_tile(124);
+$lut_tile[puzz_ele_to_bitmask(9, 0)] = puzz_get_full_tile(124);
 
 //Lava floor
-$tile_lut[puzz_ele_to_bitmask(9, 1)] = puzz_get_single_tile(176);
+$lut_tile[puzz_ele_to_bitmask(9, 1)] = puzz_get_single_tile(176);
 //Water tile
-$tile_lut[puzz_ele_to_bitmask(9, 2)] = puzz_get_single_tile(192);
+$lut_tile[puzz_ele_to_bitmask(9, 2)] = puzz_get_single_tile(192);
+
+/*
+//Metatile lookup from Blobun
+$lut_metatile = [
+	18450, 18450, 18582, 18582, 18450, 18450, 18582, 18582,
+	51219, 51219, 51351, 51359, 51219, 51219, 51351, 51359,
+	19506, 19506, 19638, 19638, 19506, 19506, 19702, 19702,
+	52275, 52275, 52407, 52415, 52275, 52275, 52471, 52479,
+	18450, 18450, 18582, 18582, 18450, 18450, 18582, 18582,
+	51219, 51219, 51351, 51359, 51219, 51219, 51351, 51359,
+	19506, 19506, 19638, 19638, 19506, 19506, 19702, 19702,
+	52275, 52275, 52407, 52415, 52275, 52275, 52471, 52479,
+	26898, 26898, 27030, 27030, 26898, 26898, 27030, 27030,
+	59667, 59667, 59799, 59807, 59667, 59667, 59799, 59807,
+	27954, 27954, 28086, 28086, 27954, 27954, 28150, 28150,
+	60723, 60723, 60855, 60863, 60723, 60723, 60919, 60927,
+	26898, 26898, 27030, 27030, 26898, 26898, 27030, 27030,
+	63763, 63763, 63895, 63903, 63763, 63763, 63895, 63903,
+	27954, 27954, 28086, 28086, 27954, 27954, 28150, 28150,
+	64819, 64819, 64951, 64959, 64819, 64819, 65015, 65023,
+	18450, 18450, 18582, 18582, 18450, 18450, 18582, 18582,
+	51219, 51219, 51351, 51359, 51219, 51219, 51351, 51359,
+	19506, 19506, 19638, 19638, 19506, 19506, 19702, 19702,
+	52275, 52275, 52407, 52415, 52275, 52275, 52471, 52479,
+	18450, 18450, 18582, 18582, 18450, 18450, 18582, 18582,
+	51219, 51219, 51351, 51359, 51219, 51219, 51351, 51359,
+	19506, 19506, 19638, 19638, 19506, 19506, 19702, 19702,
+	52275, 52275, 52407, 52415, 52275, 52275, 52471, 52479,
+	26898, 26898, 27030, 27030, 26898, 26898, 27030, 27030,
+	59667, 59667, 59799, 59807, 59667, 59667, 59799, 59807,
+	28466, 28466, 28598, 28598, 28466, 28466, 28662, 28662,
+	61235, 61235, 61367, 61375, 61235, 61235, 61431, 61439,
+	26898, 26898, 27030, 27030, 26898, 26898, 27030, 27030,
+	63763, 63763, 63895, 63903, 63763, 63763, 63895, 63903,
+	28466, 28466, 28598, 28598, 28466, 28466, 28662, 28662,
+	65331, 65331, 65463, 65471, 65331, 65331, 65527, 65535
+];
+
+//conversion format for the above table to this game's format
+$tmp_indices = [];
+$tmp_tile_arr = [];
+foreach ($lut_metatile as $metatile)
+{
+	//If the above doesn't have the index yet, create it, then unpack
+	//it into the tile format for this game
+	if (array_search($metatile, $tmp_indices) === false)
+	{
+		array_push($tmp_indices, $metatile);
+		$tmp_tile_arr[count($tmp_indices) - 1] = [
+			$metatile & 0xF,
+			($metatile >> 4) & 0xF,
+			($metatile >> 8) & 0xF,
+			($metatile >> 12) & 0xF
+		];
+	}
+}
+//Now that we have the indices, replace them in the above table
+$arrlen	= count($lut_metatile);
+for ($i = 0; $i < $arrlen; $i++)
+	$lut_metatile[$i]	= array_search($lut_metatile[$i], $tmp_indices);
+
+//Now, we should have a table for all the possible blob wang lookup values
+//and the corresponding tile values we can retrieve to put on the map
+echo '[';
+for ($i = 0; $i < 256; $i++)
+	echo "$i,".($i % 8 == 7 ? "\r\n" : '');
+echo "]\r\n[";
+$arrlen = count($tmp_tile_arr);
+for ($i = 0; $i < $arrlen; $i++)
+	echo "[{$tmp_tile_arr[$i][0]}, {$tmp_tile_arr[$i][1]}, {$tmp_tile_arr[$i][3]}, {$tmp_tile_arr[$i][2]}],".($i % 8 == 7 ? "\r\n" : '');
+echo "]\r\n";
+*/
+
+//Indices for the tile lookup table below
+$lut_blob_wang_indices	= [
+	0,1,2,3,4,5,6,7,
+	8,9,10,11,12,13,14,15,
+	16,17,18,19,20,21,22,23,
+	24,25,26,27,28,29,30,31,
+	32,33,34,35,36,37,38,39,
+	40,41,42,43,44,45,46,47,
+	48,49,50,51,52,53,54,55,
+	56,57,58,59,60,61,62,63,
+	64,65,66,67,68,69,70,71,
+	72,73,74,75,76,77,78,79,
+	80,81,82,83,84,85,86,87,
+	88,89,90,91,92,93,94,95,
+	96,97,98,99,100,101,102,103,
+	104,105,106,107,108,109,110,111,
+	112,113,114,115,116,117,118,119,
+	120,121,122,123,124,125,126,127,
+	128,129,130,131,132,133,134,135,
+	136,137,138,139,140,141,142,143,
+	144,145,146,147,148,149,150,151,
+	152,153,154,155,156,157,158,159,
+	160,161,162,163,164,165,166,167,
+	168,169,170,171,172,173,174,175,
+	176,177,178,179,180,181,182,183,
+	184,185,186,187,188,189,190,191,
+	192,193,194,195,196,197,198,199,
+	200,201,202,203,204,205,206,207,
+	208,209,210,211,212,213,214,215,
+	216,217,218,219,220,221,222,223,
+	224,225,226,227,228,229,230,231,
+	232,233,234,235,236,237,238,239,
+	240,241,242,243,244,245,246,247,
+	248,249,250,251,252,253,254,255,
+];
+//Tile lookups for the table above
+$lut_blob_wang_tiles = [[2, 1, 4, 8],[6, 9, 4, 8],[3, 1, 12, 8],[7, 9, 12, 8],[15, 9, 12, 8],[2, 3, 4, 12],[6, 11, 4, 12],[6, 15, 4, 12],
+[3, 3, 12, 12],[7, 11, 12, 12],[15, 11, 12, 12],[7, 15, 12, 12],[15, 15, 12, 12],[2, 1, 6, 9],[6, 9, 6, 9],[3, 1, 14, 9],
+[7, 9, 14, 9],[15, 9, 14, 9],[2, 3, 6, 13],[6, 11, 6, 13],[6, 15, 6, 13],[3, 3, 14, 13],[7, 11, 14, 13],[15, 11, 14, 13],
+[7, 15, 14, 13],[15, 15, 14, 13],[3, 1, 15, 9],[7, 9, 15, 9],[15, 9, 15, 9],[3, 3, 15, 13],[7, 11, 15, 13],[15, 11, 15, 13],
+[7, 15, 15, 13],[15, 15, 15, 13],[2, 3, 6, 15],[6, 11, 6, 15],[6, 15, 6, 15],[3, 3, 14, 15],[7, 11, 14, 15],[15, 11, 14, 15],
+[7, 15, 14, 15],[15, 15, 14, 15],[3, 3, 15, 15],[7, 11, 15, 15],[15, 11, 15, 15],[7, 15, 15, 15],[15, 15, 15, 15]];
+
+//This takes all the metatiles and maps them into the tile LUT using the given table
+//if $clear_15th is set, the 15th tile is replaced with 0
+function add_metaremaps_to_tile_lut(&$lut_tile, $metaremap, $lut_bw, $clear_15th)
+{
+	if ($clear_15th) {
+		$arrlen 	= count($lut_bw);
+		for ($i = 0; $i < $arrlen; $i++)
+			for ($j = 0; $j < 4; $j++)
+				if ($lut_bw[$i][$j] == 15)
+					$lut_bw[$i][$j] == 0;
+	}
+
+	$arrlen	= count($metaremap);
+
+	for ($i = 0; $i < $arrlen; $i++)
+		$lut_tile[$metaremap[$i]] = $lut_bw[$i];
+}
+
+//this remaps the tiles above to generate walls
+$lut_metaremap_walls 	=
+[11,12,13,14,16,17,18,19,
+20,21,22,23,24,25,26,27,
+28,29,30,31,32,33,42,43,
+45,46,48,49,50,51,52,53,
+54,55,56,57,58,59,60,61,
+62,63,64,65,75,76,77];
+
+//Add the walls into the lookup table
+add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_walls, $lut_blob_wang_tiles, true);
+
+//Output the first 47 blank tile indices
+/*$blank_tiles 	= [];
+for ($i = 0; $i < 256; $i++)
+	if ($lut_tile[$i] === null)
+		if (count($blank_tiles) < 47)
+			array_push($blank_tiles, $i);
+$arrlen 	= count($blank_tiles);
+echo '[';
+for ($i = 0; $i < $arrlen; $i++)
+	echo "{$blank_tiles[$i]},".($i % 8 == 7 ? "\r\n" : '');
+echo "]\r\n";*/
+
+//Fill out any of the remaining tiles with a blank tile set
+$dummy_arr 	= puzz_get_single_tile(15);
+for ($i = 0; $i < 256; $i++)
+	if ($lut_tile[$i] === null)
+		$lut_tile[$i] = $dummy_arr;
 
 ?>

@@ -29,7 +29,7 @@ function pico_hint_arrows($replay_data)
 
 function pico_puzzle_data($stage)
 {
-	global $tile_lut;
+	global $lut_tile;
 
 	//First, unpack the stage data
 	$stage_data 	= bin2hex(zlib_decode(base64_decode($stage->stage_data)));
@@ -53,7 +53,7 @@ function pico_puzzle_data($stage)
 	//For each tile space, get the element tile array and place it into the puzzle tile grid
 	for ($x = 0; $x < $puzz_w; $x++)
 		for ($y = 0; $y < $puzz_h; $y++)
-			puzz_copy_to_stage($x, $y, $tile_lut[$ele_grid[$x][$y]], $puzz_grid);
+			puzz_copy_to_stage($x, $y, $lut_tile[$ele_grid[$x][$y]], $puzz_grid);
 	
 	//Create a grid that'll represent the entirety of this puzzle's playfield
 	//TMP: Make it as big as pico 8 (should be 48 when done)
@@ -66,7 +66,7 @@ function pico_puzzle_data($stage)
 	$metatile_grid 	= grid_create(32, 32, 0);
 	for ($x = 0; $x < 16; $x++)
 		for ($y = 0; $y < 16; $y++)
-			puzz_copy_to_stage($x, $y, $tile_lut[($x * 16) + $y], $metatile_grid);
+			puzz_copy_to_stage($x, $y, $lut_tile[($x * 16) + $y], $metatile_grid);
 	
 	//Copy this into the final grid
 	grid_copy_to_grid($metatile_grid, 0, 0, 32, 32, $fin_grid, 96, 0);
