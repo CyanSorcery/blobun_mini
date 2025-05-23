@@ -106,9 +106,9 @@ $lut_tile[puzz_ele_to_bitmask(9, 3)] = puzz_get_full_tile(122);
 $lut_tile[puzz_ele_to_bitmask(9, 0)] = puzz_get_full_tile(124);
 
 //Lava floor
-$lut_tile[puzz_ele_to_bitmask(9, 1)] = puzz_get_single_tile(176);
+$lut_tile[puzz_ele_to_bitmask(9, 1)] = puzz_get_single_tile(191);
 //Water tile
-$lut_tile[puzz_ele_to_bitmask(9, 2)] = puzz_get_single_tile(192);
+$lut_tile[puzz_ele_to_bitmask(9, 2)] = puzz_get_single_tile(207);
 
 /*
 //Metatile lookup from Blobun
@@ -234,7 +234,7 @@ function add_metaremaps_to_tile_lut(&$lut_tile, $metaremap, $lut_bw, $clear_15th
 		for ($i = 0; $i < $arrlen; $i++)
 			for ($j = 0; $j < 4; $j++)
 				if ($lut_bw[$i][$j] == 15)
-					$lut_bw[$i][$j] == 0;
+					$lut_bw[$i][$j] = 0;
 	}
 
 	$arrlen	= count($metaremap);
