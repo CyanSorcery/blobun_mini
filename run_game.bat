@@ -1,0 +1,1 @@
+php level_convert.php "C:\Users\spark\AppData\Local\Blobun\worldpak\usermade\pak_cyansorcery_pico8wp.json"
