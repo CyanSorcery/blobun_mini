@@ -29,7 +29,7 @@ function pico_hint_arrows($replay_data)
 
 function pico_puzzle_data($stage)
 {
-	global $lut_tile;
+	global $lut_tile, $lut_metaremap_walls, $lut_blob_wang_indices;
 
 	//First, unpack the stage data
 	$stage_data 	= bin2hex(zlib_decode(base64_decode($stage->stage_data)));
@@ -56,11 +56,55 @@ function pico_puzzle_data($stage)
 			puzz_copy_to_stage($x, $y, $lut_tile[$ele_grid[$x][$y]], $puzz_grid);
 	
 	//Create a grid that'll represent the entirety of this puzzle's playfield
-	//TMP: Make it as big as pico 8 (should be 48 when done)
-	$fin_grid 	= grid_create(128, 32, 1);
+	//TMP: Make it as big as pico 8 (should be 36 when done)
+	$fin_grid 	= grid_create(128, 32, 0);
 
-	//Copy the puzzle grid into it
-	grid_copy_to_grid($puzz_grid, 0, 0, $puzz_w * 2, $puzz_h * 2, $fin_grid, 0, 0);
+	//Copy the puzzle grid into the final grid
+	grid_copy_to_grid($puzz_grid, 0, 0, $puzz_w * 2, $puzz_h * 2, $fin_grid, 2, 2);
+
+	//Copy the element grid into a bigger grid so we can do wall autotiles
+	$fin_w	= $puzz_w + 2;
+	$fin_h 	= $puzz_h + 2;
+	$wall_ele_grid 	= grid_create($fin_w, $fin_h, 0);
+	grid_copy_to_grid($ele_grid, 0, 0, $puzz_w, $puzz_h, $wall_ele_grid, 1, 1);
+	//For each element of the grid, prep it for autotiling
+	for ($x = 0; $x < $fin_w; $x++)
+		for ($y = 0; $y < $fin_h; $y++)
+			$wall_ele_grid[$x][$y] = $wall_ele_grid[$x][$y] >= 1 ? 0 : 1;
+	
+	//Now, perform the blob wang autotile on this
+	//Ashe and Roxy note: this is a fair bit slower than what's in the game,
+	//but since this isn't meant to run in real time, we don't have to be as efficient
+	for ($x = 0; $x < $fin_w; $x++)
+	{
+		$xl 	= max($x - 1, 0);
+		$xr 	= min($x + 1, $fin_w  - 1);
+
+		for ($y = 0; $y < $fin_h; $y++)
+		{
+			$yt 	= max($y - 1, 0);
+			$yb 	= min($y + 1, $fin_h - 1);
+
+			//If the center tile is 0, skip
+			if ($wall_ele_grid[$x][$y] != 0)
+			{
+				$tile_id 	= $lut_blob_wang_indices[
+					$wall_ele_grid[$xl][$yt] |
+					($wall_ele_grid[$x][$yt] << 1) |
+					($wall_ele_grid[$xr][$yt] << 2) |
+					($wall_ele_grid[$xl][$y] << 3) |
+					($wall_ele_grid[$xr][$y] << 4) |
+					($wall_ele_grid[$xl][$yb] << 5) |
+					($wall_ele_grid[$x][$yb] << 6) |
+					($wall_ele_grid[$xr][$yb] << 7)
+				];
+
+				//if it's an autotile set, go anead and put it in
+				if ($tile_id > 0)
+					puzz_copy_to_stage($x, $y, $lut_tile[$lut_metaremap_walls[$tile_id]], $fin_grid);
+			}
+		}
+	}
 
 	//Create a metatile grid for all 256 possible puzzle tiles
 	$metatile_grid 	= grid_create(32, 32, 0);

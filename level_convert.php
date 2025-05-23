@@ -25,7 +25,7 @@ foreach ($worldpak->pak_worlds as $world)
 	foreach ($world->world_stages as $stage)
 	{
 		if ($stage_count >= 60) die('Too many stages in the given worldpak! The limit is 60.');
-		if ($stage->stage_width > 15 || $stage->stage_height > 15) die("Stage {$stage->stage_name} is too large! Must be 15x15 or less.");
+		if ($stage->stage_width > 16 || $stage->stage_height > 14) die("Stage {$stage->stage_name} is too large! Must be 16x14 or less.");
 
 		//Figure out the save ID and if this save is already in use or not
 		$save_id 	= clamp($stage->stage_id, 0, 59);
