@@ -27,17 +27,28 @@ function _init()
   _data = %_offset
  end
 
+ -- convert all the stage data
+ convert_stages()
+ -- tmp
+ unpack_stage(1, 1)
 
 -- tmp
 g_cam_x, g_cam_y = 0,0
 end
 
-function _update()
+function _update60()
  -- tmp
- if (btnp(0)) g_cam_x -= 4
- if (btnp(1)) g_cam_x += 4
- if (btnp(2)) g_cam_y -= 4
- if (btnp(3)) g_cam_y += 4
+ if (btn(4)) then
+  if (btnp(0)) unpack_stage(g_p_i_world, g_p_i_stage - 1)
+  if (btnp(1)) unpack_stage(g_p_i_world, g_p_i_stage + 1)
+  if (btnp(2)) unpack_stage(g_p_i_world - 1, g_p_i_stage)
+  if (btnp(3)) unpack_stage(g_p_i_world + 1, g_p_i_stage)
+ else
+  if (btn(0)) g_cam_x -= 4
+  if (btn(1)) g_cam_x += 4
+  if (btn(2)) g_cam_y -= 4
+  if (btn(3)) g_cam_y += 4
+ end
 end
 
 function _draw()
@@ -45,20 +56,21 @@ function _draw()
 -- all of this is temp code
  cls(3)
  camera(g_cam_x, g_cam_y)
+ local _s_w, _s_h = g_p_sst.s_width * 2 + 2, g_p_sst.s_height * 2 + 2
 -- get ready to draw the map, using white as the transparent color
  palt(0b0000000100000000)
  -- draw the puzzle floor
- map(0, 0, 0, 0, 32, 32, 1)
+ map(0, 0, 0, 0, _s_w, _s_h, 1)
  -- now draw the map again, with flipped tiles only
  do_tile_mirror()
- map(0, 0, -7, 0, 32, 32, 128)
+ map(0, 0, -7, 0, _s_w, _s_h, 128)
  do_tile_mirror()
  -- draw lava/water/ice
  palt(0b0100000000000000)
- map(0, 0, 0, 0, 32, 32, 12)
+ map(0, 0, 0, 0, _s_w, _s_h, 12)
  palt()
  -- draw the slime trail
- map(0, 0, 0, 0, 32, 32, 2)
+ map(0, 0, 0, 0, _s_w, _s_h, 2)
 
 end
 
@@ -75,8 +87,77 @@ function do_tile_mirror()
  poke(0x5f55,0x60)
 end
 
+function unpack_stage(_world, _stage)
+ -- cap the world and stage to what we actually have
+ _world = mid(1, _world, count(g_levels))
+ _stage = mid(1, _stage, count(g_levels[_world]))
+ g_p_i_world, g_p_i_stage, g_p_sst = _world, _stage, g_levels[_world][_stage]
+
+ -- decompress sprites (if needed)
+ decompress_sprites(2)
+ -- if the tile at this position isn't right, decompress map
+ if (mget(97, 2) != 16) decompress_map(2, 96, 0)
+ -- start loading the stage into the map
+ local _stage, _width, _tile = g_p_sst.s_data, g_p_sst.s_width + 2
+ for i=1,#_stage,2 do
+  _tile = subl(_stage, i, 0x1, 1)
+  tile_copy(96 + (_tile \ 16) * 2, (_tile % 16) * 2, ((i - 1) \ 2 % _width) * 2 - 1, ((i - 1) \ 2 \ _width) * 2 - 1)
+ end
+end
+
+function tile_copy(_srcx, _srcy, _dstx, _dsty)
+ for _x=0,1 do
+  for _y=0,1 do
+   mset(_dstx + _x, _dsty + _y, mget(_srcx + _x, _srcy + _y))
+  end
+ end
+end
+
+function convert_stages()
+ local _lvl_strs, _wst, _sst, _offset, _bytes = g_levels
+ g_levels = {}
+ for _world in all(_lvl_strs) do
+  _wst = {}
+  for _stage in all(_world) do
+   _sst = {}
+   _offset = 2
+   -- stage title
+   _bytes = subl(_stage, 1, 0x1)
+   _sst.s_name = sub(_stage, _offset, _offset + _bytes)
+   _offset += _bytes + 2
+   -- stage author
+   _bytes = subl(_stage, _offset - 1, 0x1)
+   _sst.s_author = sub(_stage, _offset, _offset + _bytes)
+   _offset += _bytes + 1
+   -- stage width
+   _sst.s_width = subl(_stage, _offset, 0x1) + 1
+   -- stage save slot
+   _sst.s_saveslot = subl(_stage, _offset + 1, 0, 1)
+   -- stage target time
+   _sst.s_goaltime = subl(_stage, _offset + 3, 0, 7)
+   -- stage dev time
+   _sst.s_devtime = subl(_stage, _offset + 11, 0, 7)
+   _offset += 19
+   -- hint count (coco note: for now, it's 0)
+   _bytes = subl(_stage, _offset, 0x1)
+   _sst.s_hints = {}
+   for i=1,_bytes,2 do
+    printh("put hint code here")
+   end
+   _offset += _bytes + 1
+   -- the rest is just the stage data itself
+   _sst.s_data = sub(_stage, _offset)
+   -- figure out the height
+   _sst.s_height = (#_sst.s_data \ 2) \ (_sst.s_width + 2) - 2
+   add(_wst, _sst)
+  end
+  add(g_levels, _wst)
+ end
+end
+
 #include res/r_levels.lua
 #include scripts/s_px9.lua
+#include scripts/s_util.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4

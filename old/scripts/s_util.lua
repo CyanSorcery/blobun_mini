@@ -172,6 +172,3 @@ function str2tbl(_str, _delimiter)
  return _t
 end
 
-function subl(_str, _offset, _len, _flag)
- return tonum(sub(_str, _offset, _offset + (_len and _len or 0)), _flag)
-end

@@ -49,8 +49,8 @@ function pico_puzzle_data($stage)
 		$ele_grid[($fin_i % $puzz_w) + 1][floor($fin_i / $puzz_w) + 1] = hexdec(substr($stage_data, $i, 2));
 	}
 
-	$puzz_w += 1;
-	$puzz_h += 1;
+	$puzz_w += 2;
+	$puzz_h += 2;
 	
 	//Prepare an autotile reference grid to look up for wall generation
 	$wall_ele_grid 	= grid_create($puzz_w, $puzz_h, 0);
