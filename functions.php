@@ -30,6 +30,7 @@ function pico_hint_arrows($replay_data)
 function pico_puzzle_data($stage)
 {
 	global $lut_tile, $lut_metaremap_walls, $lut_blob_wang_indices;
+	global $lut_metaremap_lava, $lut_metaremap_water;
 
 	//First, unpack the stage data
 	$stage_data 	= bin2hex(zlib_decode(base64_decode($stage->stage_data)));
@@ -100,6 +101,50 @@ function pico_puzzle_data($stage)
 				//if it's an autotile set, go anead and put it in
 				if ($tile_id > 0)
 					puzz_copy_to_stage($x, $y, $lut_tile[$lut_metaremap_walls[$tile_id]], $puzz_grid);
+			}
+		}
+	}
+
+	//now do the autotiling for lava and water tiles
+	$metaremap 	= [41 => $lut_metaremap_lava, 73 => $lut_metaremap_water];
+	foreach ($metaremap as $tile_id => $remap)
+	{
+		
+		$wall_ele_grid 	= grid_create($fin_w, $fin_h, 0);
+		grid_copy_to_grid($ele_grid, 0, 0, $puzz_w, $puzz_h, $wall_ele_grid, 1, 1);
+		//For each element of the grid, prep it for autotiling
+		for ($x = 0; $x < $fin_w; $x++)
+			for ($y = 0; $y < $fin_h; $y++)
+				$wall_ele_grid[$x][$y] = $wall_ele_grid[$x][$y] == $tile_id ? 1 : 0;
+
+		for ($x = 0; $x < $fin_w; $x++)
+		{
+			$xl 	= max($x - 1, 0);
+			$xr 	= min($x + 1, $fin_w  - 1);
+
+			for ($y = 0; $y < $fin_h; $y++)
+			{
+				$yt 	= max($y - 1, 0);
+				$yb 	= min($y + 1, $fin_h - 1);
+
+				//If the center tile is 0, skip
+				if ($wall_ele_grid[$x][$y] != 0)
+				{
+					$tile_id 	= $lut_blob_wang_indices[
+						$wall_ele_grid[$xl][$yt] |
+						($wall_ele_grid[$x][$yt] << 1) |
+						($wall_ele_grid[$xr][$yt] << 2) |
+						($wall_ele_grid[$xl][$y] << 3) |
+						($wall_ele_grid[$xr][$y] << 4) |
+						($wall_ele_grid[$xl][$yb] << 5) |
+						($wall_ele_grid[$x][$yb] << 6) |
+						($wall_ele_grid[$xr][$yb] << 7)
+					];
+
+					//if it's an autotile set, go anead and put it in
+					if ($tile_id > 0)
+						puzz_copy_to_stage($x, $y, $lut_tile[$remap[$tile_id]], $puzz_grid);
+				}
 			}
 		}
 	}

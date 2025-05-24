@@ -230,15 +230,19 @@ $lut_blob_wang_tiles = [[2, 1, 4, 8],[6, 9, 4, 8],[3, 1, 12, 8],[7, 9, 12, 8],[1
 
 //This takes all the metatiles and maps them into the tile LUT using the given table
 //if $clear_15th is set, the 15th tile is replaced with 0
-function add_metaremaps_to_tile_lut(&$lut_tile, $metaremap, $lut_bw, $clear_15th)
+function add_metaremaps_to_tile_lut(&$lut_tile, $metaremap, $lut_bw, $clear_15th, $add_val = 0)
 {
-	if ($clear_15th) {
-		$arrlen 	= count($lut_bw);
-		for ($i = 0; $i < $arrlen; $i++)
-			for ($j = 0; $j < 4; $j++)
+	//first, do any necessary modification to the given values
+	$arrlen 	= count($lut_bw);
+	for ($i = 0; $i < $arrlen; $i++)
+		for ($j = 0; $j < 4; $j++)
+		{
+			if ($clear_15th)
 				if ($lut_bw[$i][$j] == 15)
 					$lut_bw[$i][$j] = 0;
-	}
+			
+			$lut_bw[$i][$j]	+= $add_val;
+		}
 
 	$arrlen	= count($metaremap);
 
@@ -255,12 +259,31 @@ $lut_metaremap_walls 	=
 55,56,57,58,59,60,61,62,
 63,64,65,75,76,77,78];
 
+//this remaps to generate lava tiles
+$lut_metaremap_lava 	= 
+[80,81,82,83,84,85,86,87,
+88,89,90,91,92,93,94,95,
+96,97,103,104,107,108,109,110,
+112,113,114,115,116,117,118,119,
+120,121,122,123,124,125,126,127,
+128,129,130,131,132,133,134];
+
+//this remaps to generate water tiles
+$lut_metaremap_water 	= [135,136,139,140,141,142,144,145,
+146,147,148,149,150,151,152,153,
+154,155,156,157,158,159,160,161,
+162,163,164,165,166,167,168,169,
+170,171,172,173,174,176,177,178,
+179,180,181,182,183,184,185];
+
 //Add the walls into the lookup table
 add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_walls, $lut_blob_wang_tiles, true);
+add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_lava, $lut_blob_wang_tiles, false, 176);
+add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_water, $lut_blob_wang_tiles, false, 192);
 
-/*
+
 //Output the first 47 blank tile indices
-$blank_tiles 	= [];
+/*$blank_tiles 	= [];
 for ($i = 0; $i < 256; $i++)
 	if ($lut_tile[$i] === null)
 		if (count($blank_tiles) < 47)
