@@ -26,19 +26,56 @@ function _init()
   _offset += 2 + (_data&0x1fff)
   _data = %_offset
  end
+ --[[
+  g_wavy_anim animation for wavy text and whatnot
+  g_slime_trail_anim animation for player slime
+  g_bg_scl animation for scrolling backgrounds
+ ]]
+ g_wavy_anim, g_slime_trail_anim, g_bg_scl = 0, 0, 0
+ --[[
+  g_even_frame this is an even or odd frame
+ ]]
+ g_even_frame = true
+ --[[
+  g_func_update update function for the current game mode
+  g_func_draw draw function for the current game mode
+ ]]
+ g_func_update, g_func_draw = nil
+ --[[
+  g_pal_stage_bg pallete used for stage backgrounds
+ ]]
+ g_pal_stage_bg = str2tbl("1c0d237164", 5)
 
  -- convert all the stage data
  convert_stages()
  -- tmp
- unpack_stage(1, 1)
+ unpack_stage(2, 1)
 
 -- tmp
 g_cam_x, g_cam_y = 0,0
 end
 
-function _update60()
+function _update()
+ 
+ 
+ g_even_frame = g_even_frame == false
+
+ g_wavy_anim += .035
+ g_wavy_anim %= 1
+ 
+ 
+ g_bg_scl += .15
+ g_bg_scl %= 32
+
+ g_func_update()
+
  -- tmp
  if (btn(4)) then
+ 
+
+  -- tmp, force reload on every menu change
+  if (btnp() & 0xF > 0) g_px9_ind_sprites = 0
+
   if (btnp(0)) unpack_stage(g_p_i_world, g_p_i_stage - 1)
   if (btnp(1)) unpack_stage(g_p_i_world, g_p_i_stage + 1)
   if (btnp(2)) unpack_stage(g_p_i_world - 1, g_p_i_stage)
@@ -52,26 +89,18 @@ function _update60()
 end
 
 function _draw()
+ g_func_draw()
 
--- all of this is temp code
- cls(3)
- camera(g_cam_x, g_cam_y)
- local _s_w, _s_h = g_p_sst.s_width * 2 + 2, g_p_sst.s_height * 2 + 2
--- get ready to draw the map, using white as the transparent color
- palt(0b0000000100000000)
- -- draw the puzzle floor
- map(0, 0, 0, 0, _s_w, _s_h, 1)
- -- now draw the map again, with flipped tiles only
- do_tile_mirror()
- map(0, 0, -7, 0, _s_w, _s_h, 128)
- do_tile_mirror()
- -- draw lava/water/ice
- palt(0b0100000000000000)
- map(0, 0, 0, 0, _s_w, _s_h, 12)
- palt()
- -- draw the slime trail
- map(0, 0, 0, 0, _s_w, _s_h, 2)
+ -- tmp
+ camera(0, 0)
+ -- cpu and memory
+ ?flr((stat(1)) * 100).."%", 0, 122, 7
+ ?flr(stat(0)).."/2048kb", 18, 122, 7
+end
 
+function finalize_game_mode(_func_update, _func_draw)
+ g_func_update, g_func_draw = _func_update, _func_draw
+ pal()
 end
 
 function do_tile_mirror()
@@ -88,6 +117,18 @@ function do_tile_mirror()
 end
 
 function unpack_stage(_world, _stage)
+ finalize_game_mode(gameplay_update, gameplay_draw)
+
+
+ local _need_sprites_update = g_px9_ind_sprites != 2
+
+ -- (re)set all variables involved in levels
+ --[[
+  g_stage_bg_anim animation factor for stage background
+  g_shimmer_water for animating water/lava
+ ]]
+ g_stage_bg_anim, g_shimmer_water = 0, 0b1111000111110000.1110000111111000
+
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))
  _stage = mid(1, _stage, count(g_levels[_world]))
@@ -96,7 +137,26 @@ function unpack_stage(_world, _stage)
  -- decompress sprites (if needed)
  decompress_sprites(2)
  -- if the tile at this position isn't right, decompress map
- if (mget(97, 2) != 16) decompress_map(2, 96, 0)
+
+ if (_need_sprites_update) then
+  -- get ready to recolor the puzzle
+  poke(0x5f55,0x0)
+  local _t = str2tbl("2854ef234924d6d54924", 4)
+  for i=1,4 do
+    pal(_t[1][i], _t[_world][i])
+  end
+  -- recolor the puzzle walls
+  spr(1, 8, 0, 14, 1)
+  -- recolor the puzzle floor
+  spr(16, 0, 8, 2, 2)
+  -- don't draw on the sprite sheet anymore
+  poke(0x5f55,0x60)
+  -- unpack the stage background for this world
+  decompress_stagebg(_world)
+  -- unpack the puzzle element lookups
+  decompress_map(2, 96, 0)
+ end
+
  -- start loading the stage into the map
  local _stage, _width, _tile = g_p_sst.s_data, g_p_sst.s_width + 2
  for i=1,#_stage,2 do
@@ -158,6 +218,7 @@ end
 #include res/r_levels.lua
 #include scripts/s_px9.lua
 #include scripts/s_util.lua
+#include scripts/s_gameplay.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4

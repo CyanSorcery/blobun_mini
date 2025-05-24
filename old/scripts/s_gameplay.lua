@@ -15,40 +15,12 @@ function draw_gameplay()
  -- update the coin sprites
  if (g_updt_coin) redraw_coin_blocks()
 
- -- update conveyer belts? otherwise, redraw lava
- if g_even_frame then redraw_conveyers() else redraw_waterlava() end
-
- redraw_slimetrail()
 
  if (g_updt_zap) redraw_floor_zappers()
 
  -- stop updating the sprite sheet
  poke(0x5f55,0x60)
 
- -- clear the background
- cls(g_pal_stage_bg[1][g_p_ind_w])
- pal(7, g_pal_stage_bg[2][g_p_ind_w])
- local _startx, _starty = -32+g_bg_scl, -g_bg_scl
- -- disable autoscrolling for worlds 3 and 5
- if (g_p_ind_w == 3 or g_p_ind_w == 5) _startx, _starty = -g_cam_x/2,-g_cam_y/2
- -- draw the background
- for _x=_startx,128,32 do
-  for _y=_starty,128,32 do
-   spr(148, _x, _y, 4, 2)
-   spr(152, _x, _y + 16, 4, 2)
-  end
- end
- 
- poke(0x5f54, 0x60)
- -- apply gradient
- -- tmp
- --g_pal_grad = {{0,0,1,1,1,5,5,2,5,5,1,1,1,2,5}, {1,2,1,2,1,13,13,2,4,13,3,3,5,4,13}, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},{5,4,12,14,13,7,7,8,15,10,11,12,13,14,7},{13,14,11,6,6,7,7,14,10,7,11,6,15,15,7}}
- --for _y=0,127,8 do pal(g_pal_grad[_y\26+1]) sspr(0, _y, 128, 8, 0, _y) end
- pal()
- -- apply funky animation to background to worlds 1 and 2
- if (g_p_ind_w <= 2) for _y=0,127 do sspr(0, _y, 128, 1, sin(g_stage_bg_anim + (_y >> 4)) * 1.4, _y) end
-
- poke(0x5f54, 0x00)
  
  -- set our camera position
  camera(g_cam_x, g_cam_y)
@@ -165,77 +137,7 @@ function redraw_coin_blocks()
  g_updt_coin = false
 end
 
-function redraw_conveyers()
- -- east
- sspr(12, 56, 1, 15, 0, 56)
- sspr(4, 56, 8, 15, 5, 56)
- sspr(0, 56, 1, 15, 4, 56)
- 
- -- north (uses bottom right of sprite sheet, on arrows)
- sspr(17, 59, 15, 1, 112, 127)
- sspr(17, 60, 15, 8, 17, 59)
- sspr(112, 127, 15, 1, 17, 67)
- 
- -- west
- sspr(36, 56, 1, 15, 0, 56)
- sspr(37, 56, 8, 15, 36, 56)
- sspr(0, 56, 1, 15, 44, 56)
- 
- -- south
- sspr(49, 67, 15, 1, 112, 127)
- sspr(49, 59, 15, 8, 49, 60)
- sspr(112, 127, 15, 1, 49, 59)
- 
- -- cleanup
- line(112, 127, 127, 127, 7)
- line(0, 56, 0, 71, 0)
-end
 
-function redraw_waterlava()
- local _sw, _col, _x, _tst1, _tst2 = g_shimmer_water, 0, 0, false, false
- -- tc and tl
- for i=0,10 do
-  _x, _tst1, _tst2 = 21 + i, _sw & (1 << i) > 0, _sw & (8 << i) > 0
-  -- water
-  sset(_x, 98, _tst1 and 7 or 12)
-  sset(_x, 96, _tst2 and 7 or 0)
-  -- lava
-  sset(_x, 92, _tst1 and 9 or 4)
-  sset(_x, 90, _sw & (32 << i) > 0 and 10 or 9)
-  sset(_x, 88, _tst2 and 10 or 0)
- end
- -- tr
- for i=0,4 do
-  _x, _tst1, _tst2 = 8+i, _sw & (16 << i) > 0, _sw & (64 << i) > 0
-  -- water
-  sset(_x, 98, _tst1 and 7 or 12)
-  sset(_x, 96, _tst2 and 7 or 0)
-  -- lava
-  sset(_x, 90, _tst1 and 10 or 9)
-  sset(_x, 88, _tst2 and 10 or 0)
- end
- -- other edges
- for i=0,7 do
-  -- reuse variables from earlier to save tokens
-  _x,_tst1, _tst2 = 103-i,95-i,88+i
-  _col = _sw & 1 << i > 0 and 7 or 12
-  sset(_x, 101, _col)
-  sset(50, 103 - i, _col)
-  sset(78, 96 + i, _col)
-
-  _col = _sw & 1 << i > 0 and 9 or 4
-  sset(_x, 91, _col)
-  sset(52, _tst1, _col)
-  sset(76, _tst2, _col)
-  _col = _sw & 4 << i > 0 and 9 or 10
-  sset(_x, 93, _col)
-  sset(50, _tst1, _col)
-  sset(78, _tst2, _col)
- end
- 
- -- update animations
- g_shimmer_water >><= 1
-end
 
 
 function draw_arrows()
@@ -255,12 +157,6 @@ function update_gameplay()
   if (btn(6)) poke(0x5f30,1)
   if ((g_btn4_press and g_level_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
  end
-
- g_slime_trail_anim += .075
- g_slime_trail_anim %= 1
-
- g_stage_bg_anim += .015
- g_stage_bg_anim %= 1
 
  -- update blinking
  g_p_blink -= 1

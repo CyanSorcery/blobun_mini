@@ -40,9 +40,8 @@ function _init()
    g_time - how long the game has been running
    g_intro_anim, g_outro_anim - intro/outro animations for changing game states
    g_menu - list of menus that are active
-   g_bg_scl - animator for scrolling backgrounds
  ]]
- g_fillp_anim, g_wavy_anim, g_even_frame, g_time, g_intro_anim, g_outro_anim, g_menu, g_bg_scl = 0, 0, false, time(), 0, 1, {}, 0
+ g_fillp_anim, g_wavy_anim, g_even_frame, g_time, g_intro_anim, g_outro_anim, g_menu = 0, 0, false, time(), 0, 1, {}, 0
  --[[
    g_play_sfx - sound effect to play this frame
    g_puzz_world_target - when loading a new puzzle, these are set
@@ -55,10 +54,9 @@ function _init()
  --[[
   g_pal_dark - used for darkening the screen
   g_pal_zappers - color order is cmy, plate/highlight, off/wait/on. use center colors to recolor
-  g_pal_stage_bg - palette used for drawing stage backgrounds
   g_pal_stage_trans - used for stage transitions
  ]]
- g_pal_dark, g_pal_zappers, g_pal_stage_bg, g_pal_stage_trans = str2tbl("0001115525511125",16), str2tbl("155dd6122889142449",6), str2tbl("1c0d237164", 5), str2tbl("3c26915154", 5)
+ g_pal_dark, g_pal_zappers, g_pal_stage_trans = str2tbl("0001115525511125",16), str2tbl("155dd6122889142449",6), str2tbl("3c26915154", 5)
 
  -- parse the level data
  parse_levels()
@@ -111,13 +109,7 @@ function _update()
  g_fillp_anim += .2
  g_fillp_anim %= 4
  -- update wavy factor
- g_wavy_anim += .035
- g_wavy_anim %= 1
- 
- g_bg_scl += .15
- g_bg_scl %= 32
 
- g_even_frame = g_even_frame == false
 
  -- run the update function
  g_func_update()
@@ -236,8 +228,6 @@ end
 function unpack_level(_world, _stage)
  finalize_game_mode(update_gameplay, draw_gameplay)
 
- local _need_sprites_update = g_px9_ind_sprites != 2
-
  -- make sure sprites and the appropriate music are decompressed
  decompress_sprites(2)
  decompress_music(1)
@@ -284,10 +274,8 @@ function unpack_level(_world, _stage)
    g_p_started - the player has started the puzzle
    g_new_dir - used for input buffering, stores upcoming direction
    g_p_blink - how many frames until the player blinks
-   g_slime_trail_anim - animation factor for the player slime trail
-   g_stage_bg_anim - animation factor for stage bg
  ]]
- g_p_zap_turn, g_updt_zap, g_p_time, g_p_started, g_new_dir, g_p_blink, g_slime_trail_anim, g_stage_bg_anim = 0, true, 0, false, -1, 5, 0, 0
+ g_p_zap_turn, g_updt_zap, g_p_time, g_p_started, g_new_dir, g_p_blink = 0, true, 0, false, -1, 5, 0, 0
 
  -- clamp the world index
  _world = mid(1, _world, count(g_levels))
@@ -302,22 +290,6 @@ function unpack_level(_world, _stage)
  ]]
  g_p_ind_w, g_p_ind_s, g_p_fst = _world, _stage, g_levels[_world][_stage]
 
- if (_need_sprites_update) then
-  -- get ready to recolor the puzzle
-  poke(0x5f55,0x0)
-  local _t = str2tbl("2854ef234924d6d54924", 4)
-  for i=1,4 do
-    pal(_t[1][i], _t[_world][i])
-  end
-  -- recolor the puzzle walls
-  spr(1, 8, 0, 14, 1)
-  -- recolor the puzzle floor
-  spr(16, 0, 8, 2, 2)
-  -- don't draw on the sprite sheet anymore
-  poke(0x5f55,0x60)
-  -- unpack the stage background for this world
-  decompress_stagebg(_world)
- end
 
  -- get ready to parse the level data
  local _level_data, _data_len, _data, _offset, _level_width = {}, #g_p_fst.l_data, g_p_fst.l_data, 1, (g_p_fst.l_width << 1) + 1
