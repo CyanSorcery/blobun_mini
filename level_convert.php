@@ -48,20 +48,46 @@ foreach ($worldpak->pak_worlds as $world)
 		//The hint arrow data
 		$ministage .= pico_hint_arrows($stage->stage_replay_data);
 
-		//Get the packed tilemap for this stage
-		$packed_tilemap 	= pico_puzzle_data($stage);
+		//The packed tile data for this stage
+		$ministage 	.= pico_puzzle_data($stage);
 
-		array_push($miniworld, ['s_info' => $ministage, 's_tilemap' => $packed_tilemap]);
+		array_push($miniworld, $ministage);
 
-		if ($stage->stage_name == 'TEST STAGE!')
-			file_put_contents('map.txt', $packed_tilemap);
-
-		//print("$ministage\r\n");
 		$stage_count++;
 	}
-	array_push($minipak, $ministage);
+	array_push($minipak, $miniworld);
 	$world_count++;
 }
 echo "Converted {$stage_count} stage(s) across {$world_count} world(s).\r\n";
+
+$output_str 	= 'g_cart_name = "cyansorcery_blobun_wp_pico8"'."\r\ng_levels = {\r\n";
+$worlds 	= count($minipak);
+for ($world = 0; $world < $worlds; $world++)
+{
+	$output_str .= "{\r\n";
+	$miniworld 	= $minipak[$world];
+
+	$stages 	= count($miniworld);
+
+	for ($stage = 0; $stage < $stages; $stage++)
+		$output_str .= '"'.$miniworld[$stage].'"'.($stage + 1 < $stages ? ',' : '')."\r\n";
+
+	$output_str .= '}'.($world + 1 < $worlds ? ',' : '')."\r\n";
+}
+$output_str 	.= "\r\n}";
+file_put_contents('res/r_levels.lua', $output_str);
+
+//Get ready to convert all the puzzle element/tile lookups into a pico8 map
+$metatile_grid 	= grid_create(128, 32, 0);
+for ($x = 0; $x < 16; $x++)
+	for ($y = 0; $y < 16; $y++)
+		puzz_copy_to_stage($x + 48, $y, $lut_tile[($x * 16) + $y], $metatile_grid);
+
+//Create a pico8 cartridge with just this map in it
+file_put_contents('res/map_lut.p8', "pico-8 cartridge // http://www.pico-8.com
+version 42
+__map__
+".grid_pack($metatile_grid, true));
+echo "Updated metatile map lookup table cartridge.\r\n";
 
 ?>

@@ -38,6 +38,111 @@ function pico_puzzle_data($stage)
 	$puzz_w 	= $stage->stage_width;
 	$puzz_h 	= $stage->stage_height;
 
+	//Create a grid to hold the puzzle elements, with padding to hold the borders
+	$ele_grid 	= grid_create($puzz_w + 2, $puzz_h + 2, 0);
+	//Fill the element grid with values from the stage data
+	$len 	= strlen($stage_data);
+	for ($i = 0; $i < $len; $i += 2)
+	{
+		$fin_i 	= $i / 2;
+
+		$ele_grid[($fin_i % $puzz_w) + 1][floor($fin_i / $puzz_w) + 1] = hexdec(substr($stage_data, $i, 2));
+	}
+
+	$puzz_w += 1;
+	$puzz_h += 1;
+	
+	//Prepare an autotile reference grid to look up for wall generation
+	$wall_ele_grid 	= grid_create($puzz_w, $puzz_h, 0);
+	grid_copy_to_grid($ele_grid, 0, 0, $puzz_w, $puzz_h, $wall_ele_grid, 0, 0);
+	//For each element of the grid, prep it for autotiling
+	for ($x = 0; $x < $puzz_w; $x++)
+		for ($y = 0; $y < $puzz_h; $y++)
+			$wall_ele_grid[$x][$y] = $wall_ele_grid[$x][$y] >= 1 ? 0 : 1;
+
+	//Now, perform the blob wang autotile on this
+	//Ashe and Roxy note: this is a fair bit slower than what's in the game,
+	//but since this isn't meant to run in real time, we don't have to be as efficient
+	for ($x = 0; $x < $puzz_w; $x++)
+	{
+		$xl 	= max($x - 1, 0);
+		$xr 	= min($x + 1, $puzz_w  - 1);
+
+		for ($y = 0; $y < $puzz_h; $y++)
+		{
+			$yt 	= max($y - 1, 0);
+			$yb 	= min($y + 1, $puzz_h - 1);
+
+			//If the center tile is 0, skip
+			if ($wall_ele_grid[$x][$y] != 0)
+			{
+				$tile_id 	= $lut_blob_wang_indices[
+					$wall_ele_grid[$xl][$yt] |
+					($wall_ele_grid[$x][$yt] << 1) |
+					($wall_ele_grid[$xr][$yt] << 2) |
+					($wall_ele_grid[$xl][$y] << 3) |
+					($wall_ele_grid[$xr][$y] << 4) |
+					($wall_ele_grid[$xl][$yb] << 5) |
+					($wall_ele_grid[$x][$yb] << 6) |
+					($wall_ele_grid[$xr][$yb] << 7)
+				];
+
+				//if it's an autotile set, go anead and put it in
+				if ($tile_id > 0)
+					$ele_grid[$x][$y]	= $lut_metaremap_walls[$tile_id];
+			}
+		}
+	}
+
+	//now do the autotiling for lava and water tiles
+	$metaremap 	= [41 => $lut_metaremap_lava, 73 => $lut_metaremap_water];
+	foreach ($metaremap as $tile_id => $remap)
+	{
+		$wall_ele_grid 	= grid_create($puzz_w, $puzz_h, 0);
+		grid_copy_to_grid($ele_grid, 0, 0, $puzz_w, $puzz_h, $wall_ele_grid, 0, 0);
+		//For each element of the grid, prep it for autotiling
+		for ($x = 0; $x < $puzz_w; $x++)
+			for ($y = 0; $y < $puzz_h; $y++)
+				$wall_ele_grid[$x][$y] = $wall_ele_grid[$x][$y] == $tile_id ? 1 : 0;
+
+		for ($x = 0; $x < $puzz_w; $x++)
+		{
+			$xl 	= max($x - 1, 0);
+			$xr 	= min($x + 1, $puzz_w  - 1);
+
+			for ($y = 0; $y < $puzz_h; $y++)
+			{
+				$yt 	= max($y - 1, 0);
+				$yb 	= min($y + 1, $puzz_h - 1);
+
+				//If the center tile is 0, skip
+				if ($wall_ele_grid[$x][$y] != 0)
+				{
+					$tile_id 	= $lut_blob_wang_indices[
+						$wall_ele_grid[$xl][$yt] |
+						($wall_ele_grid[$x][$yt] << 1) |
+						($wall_ele_grid[$xr][$yt] << 2) |
+						($wall_ele_grid[$xl][$y] << 3) |
+						($wall_ele_grid[$xr][$y] << 4) |
+						($wall_ele_grid[$xl][$yb] << 5) |
+						($wall_ele_grid[$x][$yb] << 6) |
+						($wall_ele_grid[$xr][$yb] << 7)
+					];
+
+					//if it's an autotile set, go anead and put it in
+					if ($tile_id > 0)
+						$ele_grid[$x][$y]	= $remap[$tile_id];
+				}
+			}
+		}
+	}
+
+	//Return the final element grid
+	return grid_pack($ele_grid);
+
+	//ASHE NOTE: This was the prototyping script that made a tilemap to
+	//manually shove into pico 8. It's no longer necessary but we're saving it just in case
+	/*
 	//Create a grid to hold the puzzle elements
 	$ele_grid 	= grid_create($puzz_w, $puzz_h, 0);
 	//Fill the element grid with values from the stage data
@@ -45,7 +150,7 @@ function pico_puzzle_data($stage)
 	for ($i = 0; $i < $len; $i += 2)
 	{
 		$fin_i 	= $i / 2;
-		$ele_grid[floor($fin_i % $puzz_w)][$fin_i / $puzz_w] = hexdec(substr($stage_data, $i, 2));
+		$ele_grid[$fin_i % $puzz_w][floor($fin_i / $puzz_w)] = hexdec(substr($stage_data, $i, 2));
 	}
 
 	//Now, fill in the grid that'll represent the puzzle tiles themselves
@@ -149,23 +254,14 @@ function pico_puzzle_data($stage)
 		}
 	}
 
-	//Create a metatile grid for all 256 possible puzzle tiles
-	$metatile_grid 	= grid_create(32, 32, 0);
-	for ($x = 0; $x < 16; $x++)
-		for ($y = 0; $y < 16; $y++)
-			puzz_copy_to_stage($x, $y, $lut_tile[($x * 16) + $y], $metatile_grid);
-
 	//Copy the puzzle grid into the final grid
 	//This is offset by one tile, since the top row and left column are always empty anyways
 	//ASHE NOTE: The destination is offset by -1, -1. it shouldn't have to be,
 	//but I don't feel like fixing the script at this point as it'll break everything else
 	grid_copy_to_grid($puzz_grid, 1, 1, ($puzz_w * 2) + 2, ($puzz_h * 2) + 2, $fin_grid, -1, -1);
-	
-	//Copy this into the final grid
-	grid_copy_to_grid($metatile_grid, 0, 0, 32, 32, $fin_grid, 96, 0);
 
 	//Pack the grid into a hex string and return it
-	return grid_pack($fin_grid);
+	return grid_pack($fin_grid);*/
 }
 
 //misc utility functions
@@ -232,7 +328,7 @@ function grid_copy_to_grid($src_grid, $src_x, $src_y, $src_w, $src_h, &$dst_grid
 	}
 }
 
-function grid_pack($grid)
+function grid_pack($grid, $for_pico8 = false)
 {
 	//Figure out the size of this grid
 	$grid_w 	= count($grid);
@@ -246,8 +342,8 @@ function grid_pack($grid)
 	{
 		for ($x = 0; $x < $grid_w; $x++)
 			$packed 	.= str_pad(dechex($grid[$x][$y]), 2, '0', STR_PAD_LEFT);
-		//tmp
-		$packed	.= "\r\n";
+		if ($for_pico8)
+			$packed	.= "\r\n";
 	}
 	return $packed;
 }
