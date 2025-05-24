@@ -48,19 +48,17 @@ function pico_puzzle_data($stage)
 	}
 
 	//Now, fill in the grid that'll represent the puzzle tiles themselves
-	$puzz_grid 	= grid_create($puzz_w * 2, $puzz_h * 2, 0);
+	//This had padding around it so that we can autotile it later
+	$puzz_grid 	= grid_create(($puzz_w * 2) + 4, ($puzz_h * 2) + 4, 0);
 
 	//For each tile space, get the element tile array and place it into the puzzle tile grid
 	for ($x = 0; $x < $puzz_w; $x++)
 		for ($y = 0; $y < $puzz_h; $y++)
-			puzz_copy_to_stage($x, $y, $lut_tile[$ele_grid[$x][$y]], $puzz_grid);
+			puzz_copy_to_stage($x + 1, $y + 1, $lut_tile[$ele_grid[$x][$y]], $puzz_grid);
 	
 	//Create a grid that'll represent the entirety of this puzzle's playfield
 	//TMP: Make it as big as pico 8 (should be 36 when done)
 	$fin_grid 	= grid_create(128, 32, 0);
-
-	//Copy the puzzle grid into the final grid
-	grid_copy_to_grid($puzz_grid, 0, 0, $puzz_w * 2, $puzz_h * 2, $fin_grid, 2, 2);
 
 	//Copy the element grid into a bigger grid so we can do wall autotiles
 	$fin_w	= $puzz_w + 2;
@@ -101,7 +99,7 @@ function pico_puzzle_data($stage)
 
 				//if it's an autotile set, go anead and put it in
 				if ($tile_id > 0)
-					puzz_copy_to_stage($x, $y, $lut_tile[$lut_metaremap_walls[$tile_id]], $fin_grid);
+					puzz_copy_to_stage($x, $y, $lut_tile[$lut_metaremap_walls[$tile_id]], $puzz_grid);
 			}
 		}
 	}
@@ -111,6 +109,12 @@ function pico_puzzle_data($stage)
 	for ($x = 0; $x < 16; $x++)
 		for ($y = 0; $y < 16; $y++)
 			puzz_copy_to_stage($x, $y, $lut_tile[($x * 16) + $y], $metatile_grid);
+
+	//Copy the puzzle grid into the final grid
+	//This is offset by one tile, since the top row and left column are always empty anyways
+	//ASHE NOTE: The destination is offset by -1, -1. it shouldn't have to be,
+	//but I don't feel like fixing the script at this point as it'll break everything else
+	grid_copy_to_grid($puzz_grid, 1, 1, ($puzz_w * 2) + 2, ($puzz_h * 2) + 2, $fin_grid, -1, -1);
 	
 	//Copy this into the final grid
 	grid_copy_to_grid($metatile_grid, 0, 0, 32, 32, $fin_grid, 96, 0);
