@@ -6,6 +6,9 @@ function gameplay_update()
 
  g_stage_bg_anim += .015
  g_stage_bg_anim %= 1
+ 
+ -- process all objects
+ for _obj in all(g_list_obj) do _obj:onstep() end
 
 end
 
@@ -61,13 +64,16 @@ function gameplay_draw()
  do_tile_mirror()
  map(0, 0, -7, 0, _s_w, _s_h, 128)
  do_tile_mirror()
+ -- draw arrows
+ -- AUTUMN NOTE: put arrows here
  -- draw lava/water/ice
  palt(0b0100000000000000)
  map(0, 0, 0, 0, _s_w, _s_h, 12)
  palt()
  -- draw the slime trail
  map(0, 0, 0, 0, _s_w, _s_h, 2)
-
+ -- draw all the objects
+ for _obj in all(g_list_obj) do _obj:ondraw() end
 end
 
 function redraw_conveyers()

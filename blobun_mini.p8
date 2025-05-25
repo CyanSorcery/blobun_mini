@@ -128,6 +128,14 @@ function unpack_stage(_world, _stage)
   g_shimmer_water for animating water/lava
  ]]
  g_stage_bg_anim, g_shimmer_water = 0, 0b1111000111110000.1110000111111000
+ --[[
+  g_list_obj list of objects in the stage
+ ]]
+ g_list_obj = {}
+ --[[
+  g_p_octogems how many octogems the player has touched
+ ]]
+ g_p_octogems = 0
 
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))
@@ -163,10 +171,17 @@ function unpack_stage(_world, _stage)
   _tile = subl(_stage, i, 0x1, 1)
   tile_copy(96 + (_tile \ 16) * 2, (_tile % 16) * 2, ((i - 1) \ 2 % _width) * 2 - 1, ((i - 1) \ 2 \ _width) * 2 - 1)
  end
+
+ -- load all the objects
+ local _obj_end = g_p_sst.s_obj_count - 1
+ for i=0,_obj_end do
+  add(g_list_obj, obj_create(sub(g_p_sst.s_obj_str, i * 5 + 1, i * 5 + 6)))
+ end
+
 end
 
 function convert_stages()
- local _lvl_strs, _wst, _sst, _offset, _bytes = g_levels
+ local _lvl_strs, _wst, _sst, _offset, _bytes, _off_end = g_levels
  g_levels = {}
  for _world in all(_lvl_strs) do
   _wst = {}
@@ -197,8 +212,13 @@ function convert_stages()
     printh("put hint code here")
    end
    _offset += _bytes + 1
+   -- the object list
+   _bytes = subl(_stage, _offset, 0x1, 1)
+   _off_end = _offset + 2 + _bytes * 5
+   _sst.s_obj_count = _bytes;
+   _sst.s_obj_str = sub(_stage, _offset + 2, _off_end - 1)
    -- the rest is just the stage data itself
-   _sst.s_data = sub(_stage, _offset)
+   _sst.s_data = sub(_stage, _off_end)
    -- figure out the height
    _sst.s_height = (#_sst.s_data \ 2) \ (_sst.s_width + 2) - 2
    add(_wst, _sst)
@@ -211,6 +231,7 @@ end
 #include scripts/s_px9.lua
 #include scripts/s_util.lua
 #include scripts/s_gameplay.lua
+#include scripts/s_objects.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4

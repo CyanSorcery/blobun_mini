@@ -38,6 +38,13 @@ function pico_puzzle_data($stage)
 	$puzz_w 	= $stage->stage_width;
 	$puzz_h 	= $stage->stage_height;
 
+	//Create an array to hold object data
+	//This creates a default Stephanie that is overwritten later
+	$obj_arr 	= ['00000'];
+	//This array holds floor portals we found previously (or null if not found)
+	//Order is RGBY
+	$floor_portals = [null, null, null, null];
+
 	//Create a grid to hold the puzzle elements, with padding to hold the borders
 	$ele_grid 	= grid_create($puzz_w + 2, $puzz_h + 2, 0);
 	//Fill the element grid with values from the stage data
@@ -47,13 +54,57 @@ function pico_puzzle_data($stage)
 		$fin_i 	= $i / 2;
 
 		$tile_id	= hexdec(substr($stage_data, $i, 2));
-		$dst_x		= ($fin_i % $puzz_w) + 1;
-		$dst_y 		= floor($fin_i / $puzz_w) + 1;
-		//If this is an arrow tile, replace it with a normal tile
-		//COCO NOTE: later on, capture arrows here and pass them back with the stage data
-		if (($tile_id & 0x1F) == 17) $tile_id = 1;
-		//later on, capture objects/etc here too and return them
+		$dst_x		= ($fin_i % $puzz_w);
+		$dst_y 		= floor($fin_i / $puzz_w);
+		$poskey 	= dechex($dst_x).dechex($dst_y);
+		$ele_id 	= $tile_id & 0x1F;
+		$sub_id 	= ($tile_id >> 5) & 0x7;
+		//Stephanie (overwrite the first entry if so)
+		if ($tile_id == puzz_ele_to_bitmask(1, 1)) $obj_arr[0] = "0{$poskey}00";
+		//Heart
+		if ($tile_id == puzz_ele_to_bitmask(2, 0)) $obj_arr[] = "1{$poskey}53";
+		//Diamond
+		if ($tile_id == puzz_ele_to_bitmask(2, 1)) $obj_arr[] = "2{$poskey}54";
+		//Triangle
+		if ($tile_id == puzz_ele_to_bitmask(2, 2)) $obj_arr[] = "3{$poskey}55";
+		//Coin
+		if ($tile_id == puzz_ele_to_bitmask(2, 3)) $obj_arr[] = "4{$poskey}56";
+		//Octogem (encode index in sprite)
+		if ($ele_id == 15) $obj_arr[] = "5{$poskey}0".dechex($sub_id);
+		//Normal state
+		if ($tile_id == puzz_ele_to_bitmask(8, 0)) $obj_arr[] = "6{$poskey}e6";
+		//Fire state
+		if ($tile_id == puzz_ele_to_bitmask(8, 1)) $obj_arr[] = "7{$poskey}e7";
+		//Ice state
+		if ($tile_id == puzz_ele_to_bitmask(8, 2)) $obj_arr[] = "8{$poskey}e8";
+		//Generic key
+		if ($tile_id == puzz_ele_to_bitmask(12, 1)) $obj_arr[] = "9{$poskey}9f";
+		//Floor portal?
+		if ($ele_id == 5)
+		{
+			//Do we have a matching floor portal? If not, store it for later
+			//if so, create a pair of objects
+			if ($floor_portals[$sub_id] == null)
+				$floor_portals[$sub_id] = $poskey;
+			else
+			{
+				$dstkey 	= $floor_portals[$sub_id];
+				$floor_portals[$sub_id] = null;
+				$obj_arr[]	= "a{$poskey}{$dstkey}";
+				$obj_arr[]	= "a{$dstkey}{$poskey}";
+			}
+		}
+		//Arrows
+		if ($ele_id == 17)
+		{
+			$obj_arr[]	= "b{$poskey}0{$sub_id}";
+			//Clear the arrow tile
+			$tile_id = 1;
+		}
 
+		//Offset the destination
+		$dst_x	+= 1;
+		$dst_y 	+= 1;
 		//Apply the checkerboard?
 		if ($tile_id == 1 && ($dst_x + $dst_y) % 2 == 1) $tile_id = 255;
 
@@ -148,8 +199,14 @@ function pico_puzzle_data($stage)
 		}
 	}
 
-	//Return the final element grid
-	return grid_pack($ele_grid);
+	//Create the object list by first encoding the amount of objects
+	$obj_str 	= str_pad(dechex(count($obj_arr)), 2, '0', STR_PAD_LEFT);
+	//Now, add all the objects to the end of the string
+	foreach ($obj_arr as $str)
+		$obj_str .= $str;
+
+	//Return the final object list and element grid
+	return $obj_str.grid_pack($ele_grid);
 
 	//ASHE NOTE: This was the prototyping script that made a tilemap to
 	//manually shove into pico 8. It's no longer necessary but we're saving it just in case

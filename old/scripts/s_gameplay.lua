@@ -231,20 +231,14 @@ function create_obj_key(_x, _y, _key, _spr)
  function _obj:ondraw()
   -- is this a generic key?
   if (self.type == 16) then
-   spr(self.spr, self.x + 4, self.y + (sin(self.anim) * 2), 1, 2)
+   
   -- if this is an octogem on the right sequence, or isn't an octogem at all
   elseif (self.type - 8 == g_p_octog or self.type < 8 or self.type > 15) then
-   local _x, _y, _sx, _sy, _modx = self.x, self.y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * .5) * -8)
-   if (_modx <= 3) rectfill(_x + 7, _y + 1, _x + 9, _y + 14, 7)
-   sspr(_sx, _sy, 8, 16, _x + 9 - _modx, _y, _modx, 16)
-   sspr(_sx, _sy, 8, 16, _x + 8, _y, _modx, 16, true)
+   
   end
  end
  function _obj:onstep()
-  self.anim += .02
-  self.anim %= 1
-  self.spin += .035
-  self.spin %= 1
+  
  end
  return _obj
 end
