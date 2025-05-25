@@ -9,7 +9,7 @@ function str2tbl(_str, _delimiter)
   _offset = (_aa - 1) * _delimiter
   for i=1,_delimiter do
    _offset += 1
-   add(_t[_aa], subl(_str,_offset, 0, 0x1))
+   add(_t[_aa], subl(_str,_offset, 0x1, 0))
   end
  end
  return _t

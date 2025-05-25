@@ -11,6 +11,8 @@ $lut_tile[0]	= [0, 0, 0, 0];
 
 //blank tile
 $lut_tile[puzz_ele_to_bitmask(1, 0)] = puzz_get_mirrored_tile(16);
+//second blank tile
+$lut_tile[255] = puzz_get_mirrored_tile(17);
 
 //player tile
 $lut_tile[puzz_ele_to_bitmask(1, 1)] = puzz_get_full_tile(218);
@@ -230,14 +232,15 @@ $lut_blob_wang_tiles = [[2, 1, 4, 8],[6, 9, 4, 8],[3, 1, 12, 8],[7, 9, 12, 8],[1
 
 //This takes all the metatiles and maps them into the tile LUT using the given table
 //if $clear_15th is set, the 15th tile is replaced with 0
-function add_metaremaps_to_tile_lut(&$lut_tile, $metaremap, $lut_bw, $clear_15th, $add_val = 0)
+function add_metaremaps_to_tile_lut(&$lut_tile, $metaremap, $lut_bw, $clear_15th, $add_val = 0, $do_water_lava_tile = false)
 {
 	//first, do any necessary modification to the given values
 	$arrlen 	= count($lut_bw);
 	for ($i = 0; $i < $arrlen; $i++)
 		for ($j = 0; $j < 4; $j++)
 		{
-			if ($clear_15th)
+			//if we're to clear out the 15th tile, or are applying the lava/water grid, do this
+			if ($clear_15th || ($do_water_lava_tile && $j == 3))
 				if ($lut_bw[$i][$j] == 15)
 					$lut_bw[$i][$j] = 0;
 			
@@ -278,8 +281,8 @@ $lut_metaremap_water 	= [135,136,139,140,141,142,144,145,
 
 //Add the walls into the lookup table
 add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_walls, $lut_blob_wang_tiles, true);
-add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_lava, $lut_blob_wang_tiles, false, 176);
-add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_water, $lut_blob_wang_tiles, false, 192);
+add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_lava, $lut_blob_wang_tiles, false, 176, true);
+add_metaremaps_to_tile_lut($lut_tile, $lut_metaremap_water, $lut_blob_wang_tiles, false, 192, true);
 
 
 //Output the first 47 blank tile indices

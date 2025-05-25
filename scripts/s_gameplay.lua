@@ -11,6 +11,7 @@ end
 
 function gameplay_draw()
 
+
  -- get ready to update the sprite sheet
  poke(0x5f55,0x0)
 
@@ -48,6 +49,9 @@ function gameplay_draw()
  poke(0x5f54, 0x00)
 
  camera(g_cam_x, g_cam_y)
+ -- (debug) draw the whole map
+ --map(0,0,0,0,128,32)
+
  local _s_w, _s_h = g_p_sst.s_width * 2 + 2, g_p_sst.s_height * 2 + 2
 -- get ready to draw the map, using white as the transparent color
  palt(0b0000000100000000)
@@ -200,4 +204,13 @@ function redraw_slimetrail()
    sset(79 - _y, 104 + _x, sget(24 + _x, 104 + _y))
   end
  end]]
+end
+
+
+function tile_copy(_srcx, _srcy, _dstx, _dsty)
+ for _x=0,1 do
+  for _y=0,1 do
+   mset(_dstx + _x, _dsty + _y, mget(_srcx + _x, _srcy + _y))
+  end
+ end
 end

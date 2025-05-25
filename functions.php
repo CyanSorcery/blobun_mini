@@ -29,7 +29,7 @@ function pico_hint_arrows($replay_data)
 
 function pico_puzzle_data($stage)
 {
-	global $lut_tile, $lut_metaremap_walls, $lut_blob_wang_indices;
+	global $lut_metaremap_walls, $lut_blob_wang_indices;
 	global $lut_metaremap_lava, $lut_metaremap_water;
 
 	//First, unpack the stage data
@@ -46,7 +46,18 @@ function pico_puzzle_data($stage)
 	{
 		$fin_i 	= $i / 2;
 
-		$ele_grid[($fin_i % $puzz_w) + 1][floor($fin_i / $puzz_w) + 1] = hexdec(substr($stage_data, $i, 2));
+		$tile_id	= hexdec(substr($stage_data, $i, 2));
+		$dst_x		= ($fin_i % $puzz_w) + 1;
+		$dst_y 		= floor($fin_i / $puzz_w) + 1;
+		//If this is an arrow tile, replace it with a normal tile
+		//COCO NOTE: later on, capture arrows here and pass them back with the stage data
+		if (($tile_id & 0x1F) == 17) $tile_id = 1;
+		//later on, capture objects/etc here too and return them
+
+		//Apply the checkerboard?
+		if ($tile_id == 1 && ($dst_x + $dst_y) % 2 == 1) $tile_id = 255;
+
+		$ele_grid[$dst_x][$dst_y] = $tile_id;
 	}
 
 	$puzz_w += 2;
@@ -87,8 +98,8 @@ function pico_puzzle_data($stage)
 					($wall_ele_grid[$xr][$yb] << 7)
 				];
 
-				//if it's an autotile set, go anead and put it in
-				if ($tile_id > 0)
+				//if it's an autotile set, go ahead and put it in
+				if ($tile_id < 255)
 					$ele_grid[$x][$y]	= $lut_metaremap_walls[$tile_id];
 			}
 		}
