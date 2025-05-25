@@ -53,10 +53,9 @@ function _init()
  g_play_sfx, g_puzz_world_target, g_puzz_level_target, g_game_mode_target, g_func_update, g_func_draw = nil
  --[[
   g_pal_dark - used for darkening the screen
-  g_pal_zappers - color order is cmy, plate/highlight, off/wait/on. use center colors to recolor
   g_pal_stage_trans - used for stage transitions
  ]]
- g_pal_dark, g_pal_zappers, g_pal_stage_trans = str2tbl("0001115525511125",16), str2tbl("155dd6122889142449",6), str2tbl("3c26915154", 5)
+ g_pal_dark, g_pal_stage_trans = str2tbl("0001115525511125",16), str2tbl("3c26915154", 5)
 
  -- parse the level data
  parse_levels()
@@ -268,13 +267,10 @@ function unpack_level(_world, _stage)
  ]]
  g_updt_coin, g_btn4_held, g_level_win, g_level_lose, g_p_use_conv, g_p_use_port, g_new_time, g_s_intro_cd = true, false, false, false, false, false, false, g_skip_l_intro == true and 0 or 90, false
  --[[
-   g_p_zap_turn - which zapper is the active one, in this order: 012 = cmy
-   g_updt_zap - when set, update the visuals on the floor zappers
    g_p_time - how much time the player has spent on this stage
    g_p_started - the player has started the puzzle
-   g_new_dir - used for input buffering, stores upcoming direction
  ]]
- g_p_zap_turn, g_updt_zap, g_p_time, g_p_started, g_new_dir = 0, true, 0, false, -1, 5, 0, 0
+ g_p_time, g_p_started = 0, true, 0, false
 
  -- clamp the world index
  _world = mid(1, _world, count(g_levels))

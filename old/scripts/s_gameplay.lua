@@ -16,8 +16,6 @@ function draw_gameplay()
  if (g_updt_coin) redraw_coin_blocks()
 
 
- if (g_updt_zap) redraw_floor_zappers()
-
  -- stop updating the sprite sheet
  poke(0x5f55,0x60)
 
@@ -108,18 +106,6 @@ function do_tile_mirror()
  poke(0x5f55,0x60)
 end
 
-function redraw_floor_zappers()
- local _subt, _o1
- for i=1,3 do
-  _o1, _subt = (((i + g_p_zap_turn) % 3) << 1) + 1, g_pal_zappers[i]
-  pal(_subt[3], _subt[_o1])
-  pal(_subt[4], _subt[_o1 + 1])
-  spr(155 + i, 96 + (i << 3), 8, 1, 2)
- end
- pal()
-
- g_updt_zap = false
-end
 
 function redraw_coin_blocks()
  local _col1, _col2, _ypos
@@ -160,15 +146,6 @@ function update_gameplay()
 
  g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
  
- -- move camera while binding it to the stage edges/centering it
- local _obj, _lw, _lh = g_o_list[1], g_p_fst.l_width << 4, g_p_fst.l_height << 4
- g_cam_x = g_p_fst.l_width > 8
-    and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
-    or (_lw >> 1) - 56
-
- g_cam_y = g_p_fst.l_height > 7
-    and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
-    or (_lh >> 1) - 60
  
  -- process objects, but only if the stage animation is done
  if (_is_go) proc_objects() proc_particles()
