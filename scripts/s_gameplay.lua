@@ -165,8 +165,8 @@ function redraw_slimetrail()
   _dx1 += 16
  end
 
- --[[-- initial copy of stephanie to work area
- local _obj = g_o_list[1]
+ -- initial copy of stephanie to work area
+ local _obj = g_list_obj[1]
  clip()
  palt(0, false)
  spr(208, 24, 104, 3, 1)
@@ -189,18 +189,18 @@ function redraw_slimetrail()
  if (_obj.haskey) spr(145, 32, 104) spr(145, 39, 104, 1, 1, true)
 
  -- get ready to draw her expression on
- local _eye_determined, _eye_blink, _spr = (btn(4) or _obj.sprint) and g_p_use_conv == false, g_p_blink < 3 or g_level_win
+ local _eye_determined, _eye_blink, _spr = (btn(4) or _obj.sprint) and _obj.onconvey == false, _obj.blink < 4 or g_stage_win
 
  -- eyes
   _spr = 215
  if (_eye_determined) _spr = 214
- if (_eye_blink or g_level_lose) _spr = 216
- spr(_spr, g_level_win and 37 or 36, 104, 1, 1, g_level_win)
+ if (_eye_blink or g_stage_lose) _spr = 216
+ spr(_spr, g_stage_win and 37 or 36, 104, 1, 1, g_stage_win)
  -- mouth
  _spr = 251
  if (_eye_determined) _spr = 252
- if (g_level_lose) _spr = 160
- if (g_level_win) _spr = 250
+ if (g_stage_lose) _spr = 160
+ if (g_stage_win) _spr = 250
  spr(_spr, 40, 104)
 
  -- copy this sprite to the side angle
@@ -209,7 +209,7 @@ function redraw_slimetrail()
   for _y=0,7 do
    sset(79 - _y, 104 + _x, sget(24 + _x, 104 + _y))
   end
- end]]
+ end
 end
 
 

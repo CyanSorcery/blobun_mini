@@ -158,10 +158,6 @@ function update_gameplay()
   if ((g_btn4_press and g_level_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
  end
 
- -- update blinking
- g_p_blink -= 1
- if (g_p_blink <= 0) g_p_blink = 30 + flr(rnd(60))
-
  g_bottom_msg_anim = mid(0, (g_level_win or g_level_lose) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
  
  -- move camera while binding it to the stage edges/centering it
@@ -214,31 +210,4 @@ function add_hint_arrow(_x, _y, _dir)
   x=(_x << 4) + 12,
   y=(_y << 4) + 12
  })
-end
-
--- this creates keys we can grab
-function create_obj_key(_x, _y, _key, _spr)
- local _obj = {
-    type=_key,
-    iskey=true,
-    x=(_x << 4) + 8,
-    y=(_y << 4) + 5,
-    pos=(_x << 4) | _y, -- positional key
-    spr=_spr, -- our key sprite
-    anim=rnd(1), -- animation offset
-    spin=rnd(1), -- for rotating
- }
- function _obj:ondraw()
-  -- is this a generic key?
-  if (self.type == 16) then
-   
-  -- if this is an octogem on the right sequence, or isn't an octogem at all
-  elseif (self.type - 8 == g_p_octog or self.type < 8 or self.type > 15) then
-   
-  end
- end
- function _obj:onstep()
-  
- end
- return _obj
 end

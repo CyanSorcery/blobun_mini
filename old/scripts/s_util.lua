@@ -29,10 +29,6 @@ function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
 end
 
 
--- from https://www.lexaloffle.com/bbs/?tid=40577
-function lerp(a,b,t)
-	return a+(b-a)*t
-end
 
 function add_undo()
  local _undo = {}

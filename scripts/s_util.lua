@@ -15,3 +15,7 @@ function str2tbl(_str, _delimiter)
  return _t
 end
 
+-- from https://www.lexaloffle.com/bbs/?tid=40577
+function lerp(a,b,t)
+	return a+(b-a)*t
+end

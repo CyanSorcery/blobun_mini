@@ -273,9 +273,8 @@ function unpack_level(_world, _stage)
    g_p_time - how much time the player has spent on this stage
    g_p_started - the player has started the puzzle
    g_new_dir - used for input buffering, stores upcoming direction
-   g_p_blink - how many frames until the player blinks
  ]]
- g_p_zap_turn, g_updt_zap, g_p_time, g_p_started, g_new_dir, g_p_blink = 0, true, 0, false, -1, 5, 0, 0
+ g_p_zap_turn, g_updt_zap, g_p_time, g_p_started, g_new_dir = 0, true, 0, false, -1, 5, 0, 0
 
  -- clamp the world index
  _world = mid(1, _world, count(g_levels))

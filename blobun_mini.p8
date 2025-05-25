@@ -134,8 +134,10 @@ function unpack_stage(_world, _stage)
  g_list_obj = {}
  --[[
   g_p_octogems how many octogems the player has touched
+  g_stage_lose player has been destroyed by some puzzle element
+  g_stage_win player has won the stage
  ]]
- g_p_octogems = 0
+ g_p_octogems, g_stage_lose, g_stage_win = 0, false, false
 
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))
@@ -232,6 +234,7 @@ end
 #include scripts/s_util.lua
 #include scripts/s_gameplay.lua
 #include scripts/s_objects.lua
+#include scripts/s_player.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4
