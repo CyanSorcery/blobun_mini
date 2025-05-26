@@ -39,6 +39,8 @@ function player_step(self)
   self.sprint = false
   local _new_dir = self.nextdir
   if _new_dir != -1 or self.inportal then
+   -- prevent bug where you can come out of the portal 1 tile over in the held direction
+   if (self.inportal) _new_dir = -1
    -- do a check if this is solid or not. if we're on portal, we can move
    -- if sprite flag 5 is set, this is a floor tile we can move into
    local _can_move, _check, _chx, _chy = self.inportal, 16, self.x + cos(_new_dir >> 2), self.y + sin(_new_dir >> 2)
@@ -47,8 +49,6 @@ function player_step(self)
    -- next block is ice block and they're in fire state OR next block is lock and they have a key OR check if next tile is slimed already (or is otherwise passable)
    local _nextblock = mget((_chx << 1) + 2, (_chy << 1) + 1)
    if (_nextblock == 121 and self.pstate == 1 or _nextblock == 51 and self.haskey or fget(_nextblock) & _check > 0) _can_move = true
-
-   --if (_nextblock == 10 and self.pstate == 1 or _nextblock == 138 and self.haskey or mget(_chx + 48, _chy) & _check > 0) _can_move = true
 
    -- reset the buffered input and face us in this direction
    self.nextdir, self.dir = -1, _new_dir
@@ -96,6 +96,98 @@ function player_step(self)
 end
 
 function player_end_move(self)
+ -- mark turn as finished
+ self.ismove = false
+ 
+ -- figure out what tile we're on, and if we should destroy the object on this tile
+ local _x, _y, _destroy_obj, _doslime = self.x, self.y, true, true
+ local _tile, _poskey, _collision_obj = mget((_x << 1) + 2, (_y << 1) + 1), _x << 4 | _y
+ 
+ -- heart
+ if (_tile == 52) tile_swap(19, 20, 3, 4)
+ -- diamond
+ if (_tile == 53) tile_swap(21, 22, 35, 36)
+ -- triangle
+ if (_tile == 54) tile_swap(23, 24, 67, 68)
+ -- coins
+ if _tile == 55 then
+  self.coins += 1
+  if self.coins == 3 then
+   self.coins = 0
+   tile_swap(25, 26, 99, 100)
+  end
+  g_p_updt_coin = true;
+ end
+
+ -- states: 0 normal, 1 fire, 2 ice
+ for i=0,2 do
+  if (_tile == 80 + i) self.pstate = i
+ end
+
+ -- octogems
+ for i=0,7 do
+  if _tile == 56 + i and self.octogems == i then
+   self.octogems += 1
+   -- put code for putting particles at next octogem location
+  end
+ end
+ -- was that the last octogem?
+ if (self.octogems == 8) tile_swap(27, 28, 74, 106) self.octogems = 0
+
+ -- generic key?
+ if _tile == 18 then
+  if self.haskey then _destroy_obj = false else
+   self.haskey = true
+  end
+ end
+
+ -- if this is a key block, take their key away (passage into this block is checked elsewhere)
+ if (_tile == 51) self.haskey = false
+
+ -- slime trap code
+
+ -- cracked floor code
+
+ -- conveyer code
+
+ -- ice tile code
+
+ -- set new direction?
+
+ -- fetch and then destroy object at this position
+ for i,_obj in pairs(g_list_obj) do
+  if _obj.poskey == _poskey then 
+   _collision_obj = _obj
+   if (_destroy_obj) deli(g_list_obj, i)
+   break
+  end
+ end
+
+ -- are we on a floor portal? don't process it though if we're *in* the portal
+ if self.inportal then
+  self.inportal = false
+ else
+  for i=0,6,2 do
+   if _tile == 89 + i then
+    -- slime this tile
+    tile_copy(126, self.pstate << 1, (_x << 1) + 1, (_y << 1) + 1)
+    -- set our new position
+    self.oldx, self.oldy = _x, _y
+    self.x, self.y = _collision_obj.dst_x, _collision_obj.dst_y
+    self.inportal = true
+   end
+  end
+ end
+
+ -- overlap our own trail?
+
+ -- process stuff that destroys stephanie
+ if false then
+  -- boom
+ elseif _doslime then
+  self.tilestouched += 1
+  tile_copy(126, self.pstate << 1, (_x << 1) + 1, (_y << 1) + 1)
+ end
 
 end
 

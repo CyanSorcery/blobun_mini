@@ -79,9 +79,9 @@ $lut_tile[puzz_ele_to_bitmask(15, 7)] = puzz_get_mirrored_tile(63);
 //Normal state
 $lut_tile[puzz_ele_to_bitmask(8, 0)] = puzz_get_mirrored_tile(80);
 //Fire state
-$lut_tile[puzz_ele_to_bitmask(8, 1)] = puzz_get_mirrored_tile(82);
+$lut_tile[puzz_ele_to_bitmask(8, 1)] = puzz_get_mirrored_tile(81);
 //Ice state
-$lut_tile[puzz_ele_to_bitmask(8, 2)] = puzz_get_mirrored_tile(81);
+$lut_tile[puzz_ele_to_bitmask(8, 2)] = puzz_get_mirrored_tile(82);
 
 //Red portal
 $lut_tile[puzz_ele_to_bitmask(5, 0)] = puzz_get_full_tile(88);
@@ -114,6 +114,13 @@ $lut_tile[puzz_ele_to_bitmask(9, 0)] = puzz_get_full_tile(124);
 $lut_tile[puzz_ele_to_bitmask(9, 1)] = puzz_get_single_tile(191);
 //Water tile
 $lut_tile[puzz_ele_to_bitmask(9, 2)] = puzz_get_single_tile(207);
+
+//Slime tile (normal)
+$lut_tile[240] = puzz_get_full_tile(218);
+//Slime tile (fire)
+$lut_tile[241] = puzz_get_full_tile(220);
+//Slime tile (ice)
+$lut_tile[242] = puzz_get_full_tile(222);
 
 /*
 //Metatile lookup from Blobun

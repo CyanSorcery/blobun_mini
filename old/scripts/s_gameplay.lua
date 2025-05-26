@@ -1,24 +1,5 @@
 
 function draw_gameplay()
- --[[
-	notes about sprite flags
-	1: puzzle floor
-	2: slime trail
-	4: lava/water tiles
-	8: ice tiles
-
-	128: drawn in tilemap flip mode
- ]]
- 
- -- get ready to update the sprite sheet
- poke(0x5f55,0x0)
- -- update the coin sprites
- if (g_updt_coin) redraw_coin_blocks()
-
-
- -- stop updating the sprite sheet
- poke(0x5f55,0x60)
-
  
  -- set our camera position
  camera(g_cam_x, g_cam_y)
@@ -92,38 +73,6 @@ function draw_gameplay()
  end
 
 end
-
-function do_tile_mirror()
- -- riley note: need to move the camera, then move it back
- poke(0x5f55,0x0)
- camera(0, 0)
- local _dx, _dy
- for i=0,34 do
-  _dx, _dy = (i << 3) % 128, ((i \ 16) << 4) + 8
-  sspr(_dx, _dy, 8, 16, _dx, _dy, 8, 16, true)
- end
- camera(g_cam_x, g_cam_y)
- poke(0x5f55,0x60)
-end
-
-
-function redraw_coin_blocks()
- local _col1, _col2, _ypos
- for i=0,1 do
-  _col1, _col2 = 4, 5
-  if (g_p_coins > i) _col1, _col2 = 9, 4
-  _ypos = 17 - (i * 3)
-  for _x=0,8,8 do
-   line(72 + _x, _ypos, 76 + _x, _ypos, _col1)
-   line(72 + _x, _ypos - 1, 75 + _x, _ypos - 1, _col1)
-   _ypos +=1
-   _col1 = _col2
-  end
- end
- g_updt_coin = false
-end
-
-
 
 
 function draw_arrows()

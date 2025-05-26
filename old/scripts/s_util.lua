@@ -1,4 +1,4 @@
-
+--[[
 -- assumed first tile is raised, second is lowered
 function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
  local _tile, _tgt_tile, _tgt_tl, _tx, _ty, _block, _doflip
@@ -26,7 +26,7 @@ function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
    end
   end
  end
-end
+end]]
 
 
 

@@ -1,25 +1,23 @@
 
 
 function player_end_move(_obj)
- -- mark turn as finished
- _obj.ismove = false
  
  -- proc what tile we're on
- local _x, _y, _doslime, _destroy_obj = _obj.x, _obj.y, true, true
+ --local _x, _y, _doslime, _destroy_obj = _obj.x, _obj.y, true, true
  local _xcenter, _ycenter, _collectcol = (_x << 4) + 12, (_y << 4) + 12
- local _tile = mget(_x + 32, _y)
+ --local _tile = mget(_x + 32, _y)
 
  -- if we're on a water tile and in the ice state, freeze that tile
  if (_tile == 73 and _obj.pstate == 2) _tile = 105
  
  -- heart
- if (_tile == 2) do_key_swap(3, 4, 19, 20) _collectcol, g_play_sfx = {8, 7}, g_sfx_lut.t_switch
+ --if (_tile == 2) do_key_swap(3, 4, 19, 20) _collectcol, g_play_sfx = {8, 7}, g_sfx_lut.t_switch
  -- diamond
- if (_tile == 34) do_key_swap(35, 36, 21, 22) _collectcol, g_play_sfx = {11, 7}, g_sfx_lut.t_switch
+ --if (_tile == 34) do_key_swap(35, 36, 21, 22) _collectcol, g_play_sfx = {11, 7}, g_sfx_lut.t_switch
  -- triangle
- if (_tile == 66) do_key_swap(67, 68, 23, 24) _collectcol, g_play_sfx = {12, 7}, g_sfx_lut.t_switch
+ --if (_tile == 66) do_key_swap(67, 68, 23, 24) _collectcol, g_play_sfx = {12, 7}, g_sfx_lut.t_switch
 
- if _tile == 98 then
+ --[[if _tile == 98 then
   g_p_coins += 1
   _collectcol, g_play_sfx = {10, 9, 7}, g_sfx_lut.t_coin
   if g_p_coins == 3 then
@@ -28,14 +26,14 @@ function player_end_move(_obj)
    g_play_sfx = g_sfx_lut.t_switch
   end
   g_updt_coin    = true;
- end
+ end]]
  
  -- states: 0 normal, 1 fire, 2 ice
- local _st = str2tbl("b31a9876d",3)
+ --[[local _st = str2tbl("b31a9876d",3)
  for i=0,2 do
   if (_tile == 8 | i << 5) _obj.pstate, _collectcol, g_play_sfx = i, _st[i + 1], g_sfx_lut.p_state[i + 1]
- end
-
+ end]]
+--[[
  -- is this an octogem?
  for i=0,7 do
   if _tile == 15 | i << 5 and g_p_octog == i then
@@ -50,9 +48,10 @@ function player_end_move(_obj)
  end
  -- did we just get the last octogem? if so, process it and reset
  if (g_p_octog == 8) do_key_swap(74,106,27, 28) g_p_octog = 0
+]]
 
  -- is this a key? if we don't have one, go ahead and pick it up
- if _tile == 44 then
+ --[[if _tile == 44 then
   if _obj.haskey then _destroy_obj = false else
    _obj.haskey = true
    _collectcol = {6, 13, 5}
@@ -60,7 +59,7 @@ function player_end_move(_obj)
  end
 
  -- is this a key block? we can assume we let them through earlier
- if (_tile == 138) _obj.haskey = false
+ if (_tile == 138) _obj.haskey = false]]
 
  -- fetch the previous tile
  local _oldx, _oldy = _obj.oldx, _obj.oldy
@@ -91,10 +90,10 @@ function player_end_move(_obj)
  g_p_use_conv = _dir != -1
 
  -- destroy floating object at this position
- if (_destroy_obj) add(g_o_del, _x << 4 | _y)
+ --if (_destroy_obj) add(g_o_del, _x << 4 | _y)
 
  -- are we on a floor portal?
- g_p_use_port = false
+ --[[g_p_use_port = false
  if _tile == 5 or _tile == 37 or _tile == 69 or _tile == 101 then
   -- delete portal, then find pair
   mset(_x + 32, _y, 1)
@@ -105,7 +104,7 @@ function player_end_move(_obj)
    _obj.x, _obj.y = _pair_loc.x - 32, _pair_loc.y
    g_p_use_port = true
   end
- end
+ end]]
 
  -- do we create collectible particles here?
  if (_collectcol != nil) part_create_item_grab(_xcenter, _ycenter, _collectcol)
@@ -131,10 +130,10 @@ function player_end_move(_obj)
   then
   player_destroy(_obj, true)
  -- put slime on the playfield here?
- elseif _doslime then
+--[[ elseif _doslime then
   g_s_touched += 1
   mset(_obj.x + 48, _obj.y, 2)
-  put_x16_tile((_obj.x << 1) + 1, (_obj.y << 1) + 1, 218 + (_obj.pstate << 1))
+  put_x16_tile((_obj.x << 1) + 1, (_obj.y << 1) + 1, 218 + (_obj.pstate << 1))]]
  end
 end
 

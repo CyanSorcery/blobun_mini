@@ -6,17 +6,17 @@ function obj_create(_str)
   x = subl(_str, 2, 0x1),
   y = subl(_str, 3, 0x1),
   spr = subl(_str, 4, 0x1, 1),
-  -- when interacting with this object, this is used
-  poskey = sub(_str, 2, 3),
   anim = rnd(),
   spin = rnd()
  }
+  -- when interacting with this object, this is used
+ _obj.poskey = _obj.x << 4 | _obj.y
 
  -- if this is the player, add additional variables
  if _obj.type == 0 then
   _obj.startx, -- where the player started
   _obj.starty,
-  _obj.poskey, -- reset this so it wont match
+  _obj.poskey, -- reset this so it wont match (otherwise game can destroy stephanie for reals)
   _obj.dir, -- direction she faces
   _obj.anim, -- movement animation
   _obj.jiggle, -- little shake when player presses sprint
@@ -34,14 +34,18 @@ function obj_create(_str)
   _obj.octogems, -- how many octogems she's carrying
   _obj.coins, -- how many coins she's carrying
   _obj.nextdir, -- the next direction she'll go (input buffering)
-  _obj.tilestouched -- how many tiles she's touched
-  = _obj.x, _obj.y, -1, 3, 1, 0, false, 0, false, _obj.x, _obj.y, _obj.x, _obj.y, false, false, false, 0, 0, 0, -1, 0
+  _obj.tilestouched, -- how many tiles she's touched
+  _obj.isdead -- player was destroyed and shouldn't be drawn
+  = _obj.x, _obj.y, -1, 3, 1, 0, false, 0, false, _obj.x, _obj.y, _obj.x, _obj.y, false, false, false, 0, 0, 0, -1, 0, false
   _obj.onstep = player_step
   _obj.ondraw = player_draw
  else
  
   -- if this is an octogem, set the octo index and correct sprite
   if (_obj.type == 5) _obj.oct_ind = _obj.spr _obj.spr = 87
+
+  -- if this is a floor portal, set destination coordinates
+  if (_obj.type == 10) _obj.dst_x, _obj.dst_y = subl(_str, 4, 0x1), subl(_str, 5, 0x1)
 
   function _obj:onstep()
    -- is this a floating key?
@@ -57,7 +61,7 @@ function obj_create(_str)
    local _w_x, _w_y = (self.x << 4) + 8, self.y << 4
    if self.type < 9 then
     -- only draw if this isn't an octogem, or if it is and is the correct index
-    if self.oct_ind == nil or self.oct_ind == g_p_octogems then
+    if self.oct_ind == nil or self.oct_ind == g_list_obj[1].octogems then
      local _y, _sx, _sy, _modx = _w_y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * .5) * -8)
      if (_modx <= 3) rectfill(_w_x + 7, _y + 1, _w_x + 9, _y + 14, 7)
      sspr(_sx, _sy, 8, 16, _w_x + 9 - _modx, _y, _modx, 16)

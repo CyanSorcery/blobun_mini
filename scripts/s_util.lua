@@ -19,3 +19,26 @@ end
 function lerp(a,b,t)
 	return a+(b-a)*t
 end
+
+function tile_copy(_srcx, _srcy, _dstx, _dsty)
+ for _x=0,1 do
+  for _y=0,1 do
+   mset(_dstx + _x, _dsty + _y, mget(_srcx + _x, _srcy + _y))
+  end
+ end
+end
+
+-- source and destination top right tile, source puzzle ID, dest puzzle ID
+function tile_swap(_str, _dtr, _smp, _dmp)
+ local _w, _h, _smp_x, _smp_y, _dmp_x, _dmp_y, _tile = g_p_sst.s_width << 1, g_p_sst.s_height << 1, (48 + _smp \ 16) << 1, (_smp % 16) << 1, (48 + _dmp \ 16) << 1, (_dmp % 16) << 1
+ for _x=1,_w,2 do
+  for _y=1,_h,2 do
+   _tile = mget(_x + 1, _y)
+   if _tile == _str then
+    tile_copy(_dmp_x, _dmp_y, _x, _y)
+   elseif _tile == _dtr then
+    tile_copy(_smp_x, _smp_y, _x, _y)
+   end
+  end
+ end
+end

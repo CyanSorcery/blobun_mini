@@ -12,18 +12,29 @@ function gameplay_update()
  
  -- move camera while binding it to the stage edges/centering it
  local _obj, _lw, _lh = g_list_obj[1], g_p_sst.s_width << 4, g_p_sst.s_height << 4
+ local _anim = _obj.inportal and cos((1 - _obj.anim) >> 2) or _obj.anim
  g_cam_x = g_p_sst.s_width > 8
-    and mid(0, (lerp(_obj.oldx, _obj.x, _obj.anim) << 4) - 48, _lw - 112)
+    and mid(0, (lerp(_obj.oldx, _obj.x, _anim) << 4) - 48, _lw - 112)
     or (_lw >> 1) - 56
 
  g_cam_y = g_p_sst.s_height > 7
-    and mid(-8, (lerp(_obj.oldy, _obj.y, _obj.anim) << 4) - 48, _lh - 108)
+    and mid(-8, (lerp(_obj.oldy, _obj.y, _anim) << 4) - 48, _lh - 108)
     or (_lh >> 1) - 60
 
 end
 
 function gameplay_draw()
 
+ --[[
+	notes about sprite flags
+	1: puzzle floor
+	2: slime trail
+	4: lava/water tiles
+	8: ice tiles
+    16: player can step on
+
+	128: drawn in tilemap flip mode
+ ]]
 
  -- get ready to update the sprite sheet
  poke(0x5f55,0x0)
@@ -31,6 +42,7 @@ function gameplay_draw()
  -- what should we redraw?
  if (g_even_frame) redraw_conveyers() else redraw_waterlava()
  if (g_p_updt_zap) redraw_floor_zappers()
+ if (g_p_updt_coin) redraw_coin_blocks()
 
  redraw_slimetrail()
 
@@ -223,15 +235,6 @@ function redraw_slimetrail()
  end
 end
 
-
-function tile_copy(_srcx, _srcy, _dstx, _dsty)
- for _x=0,1 do
-  for _y=0,1 do
-   mset(_dstx + _x, _dsty + _y, mget(_srcx + _x, _srcy + _y))
-  end
- end
-end
-
 function redraw_floor_zappers()
  local _subt, _o1
  for i=1,3 do
@@ -243,4 +246,34 @@ function redraw_floor_zappers()
  pal()
 
  g_p_updt_zap = false
+end
+
+
+function do_tile_mirror()
+ -- riley note: need to move the camera, then move it back
+ poke(0x5f55,0x0)
+ camera(0, 0)
+ local _dx, _dy
+ for i=0,34 do
+  _dx, _dy = (i << 3) % 128, ((i \ 16) << 4) + 8
+  sspr(_dx, _dy, 8, 16, _dx, _dy, 8, 16, true)
+ end
+ camera(g_cam_x, g_cam_y)
+ poke(0x5f55,0x60)
+end
+
+function redraw_coin_blocks()
+ local _coins, _col1, _col2, _ypos = g_list_obj[1].coins
+ for i=0,1 do
+  _col1, _col2 = 4, 5
+  if (_coins > i) _col1, _col2 = 9, 4
+  _ypos = 17 - (i * 3)
+  for _x=0,8,8 do
+   line(72 + _x, _ypos, 76 + _x, _ypos, _col1)
+   line(72 + _x, _ypos - 1, 75 + _x, _ypos - 1, _col1)
+   _ypos +=1
+   _col1 = _col2
+  end
+ end
+ g_p_updt_coin = false
 end
