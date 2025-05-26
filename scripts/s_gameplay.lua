@@ -97,6 +97,12 @@ function gameplay_draw()
  map(0, 0, 0, 0, _s_w, _s_h, 2)
  -- draw all the objects
  for _obj in all(g_list_obj) do _obj:ondraw() end
+
+ --tmp
+ camera(0, 0)
+ ?"c "..(g_p_zap_turn == 0 and "yes" or "no"), 8, 8, 7
+ ?"m "..(g_p_zap_turn == 1 and "yes" or "no"), 8, 16, 7
+ ?"y "..(g_p_zap_turn == 2 and "yes" or "no"), 8, 24, 7
 end
 
 function redraw_conveyers()
@@ -236,9 +242,13 @@ function redraw_slimetrail()
 end
 
 function redraw_floor_zappers()
- local _subt, _o1
+ -- order is {LLMMHH}, {C}{M}{Y}
+ g_pal_zappers = {{1, 13, 5, 12, 13, 12}, {1, 2, 5, 8, 4, 8}, {1, 4, 5, 9, 4, 9}}
+ local _subt, _o1, _addmod
  for i=1,3 do
-  _o1, _subt = (((i + g_p_zap_turn) % 3) << 1) + 1, g_pal_zappers[i]
+  --_addmod = ((g_p_zap_turn + 1) % 3 == i - 1 and g_p_zap_cntd < 8) and 1 or 0
+  _addmod = 0
+  _o1, _subt = (((i + g_p_zap_turn + 2 + _addmod) % 3) << 1) + 1, g_pal_zappers[i]
   pal(_subt[3], _subt[_o1])
   pal(_subt[4], _subt[_o1 + 1])
   spr(155 + i, 96 + (i << 3), 8, 1, 2)

@@ -42,3 +42,20 @@ function tile_swap(_str, _dtr, _smp, _dmp)
   end
  end
 end
+
+-- coco note: this *may* cause an issue if there's a lot of contiguous floor tiles
+function proc_cracked_floor(_x, _y)
+ local _tile = mget(_x, _y)
+ if (_tile != 125 and _tile != 127) return false
+
+ -- turn this tile into a pit, and then check adjacent tiles
+ tile_copy(126, 24, _x - 1, _y)
+
+ proc_cracked_floor(_x - 2, _y)
+ proc_cracked_floor(_x + 2, _y)
+ proc_cracked_floor(_x, _y - 2)
+ proc_cracked_floor(_x, _y + 2)
+
+ -- return we did something
+ return true
+end

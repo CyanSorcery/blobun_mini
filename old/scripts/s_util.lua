@@ -1,32 +1,3 @@
---[[
--- assumed first tile is raised, second is lowered
-function do_key_swap(_src_tile, _dst_tile, _src_tl, _dst_tl)
- local _tile, _tgt_tile, _tgt_tl, _tx, _ty, _block, _doflip
-
- for _x = 32,48 do
-  for _y = 0,16 do
-   _tgt_tile, _tile = nil, mget(_x, _y)
-   
-   -- only do this if this tile hasn't been slimed
-   if mget(_x + 16, _y) & 2 == 0 then
-    if _tile == _src_tile then
-     _tgt_tile, _tgt_tl, _block = _dst_tile, _dst_tl, 1
-    elseif _tile == _dst_tile then
-     _tgt_tile, _tgt_tl, _block = _src_tile, _src_tl, 0
-    end
- 
-    -- swap the tile ids in the workspace as well as the visuals
-    if _tgt_tile != nil then
-     _doflip = _dst_tl < 56
-     mset(_x, _y, _tgt_tile)
-     mset(_x + 16, _y, _block)
-     _tx, _ty = ((_x - 32) << 1) + 1, (_y << 1) + 1
-     if _doflip then put_mirrored_tile(_tx, _ty, _tgt_tl) else put_x16_tile(_tx, _ty, _tgt_tile) end
-    end
-   end
-  end
- end
-end]]
 
 
 
@@ -87,37 +58,6 @@ function unpack_undo_tiles(_t, _offset_x, _size)
  end
 end
 
--- coco note: this *may* cause an issue if there's a lot of contiguous floor tiles
-function proc_cracked_floor(_x, _y)
- -- if the tile at this position isn't a cracked floor, give up
- if (mget(_x + 32, _y) != 9) return false
-
- -- unslime this tile, turn it into a pit and mark it as a wall
- place_puzz_tile(_x, _y, 192)
- mset(_x + 48, _y, 0)
- mset(_x + 32, _y, 0)
-
- --check adjacent tiles
- proc_cracked_floor(_x - 1, _y)
- proc_cracked_floor(_x + 1, _y)
- proc_cracked_floor(_x, _y - 1)
- proc_cracked_floor(_x, _y + 1)
- -- return that we did something
- return true
-end
-
-
--- roxy note: this only finds the first tile
-function find_tile_loc(_tile)
- local _w, _h = g_p_fst.l_width + 32, g_p_fst.l_height
- for _dx=32,_w do
-  for _dy=0,_h do
-   if (mget(_dx, _dy) == _tile) return {x=_dx-32, y=_dy}
-  end
- end
- -- if we get here, this means we didn't find it
- return nil
-end
 
 -- tile that's laid out as a block on the tilesheet
 function put_x16_tile(_x, _y, _tile)

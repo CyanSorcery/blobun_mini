@@ -122,6 +122,15 @@ $lut_tile[241] = puzz_get_full_tile(220);
 //Slime tile (ice)
 $lut_tile[242] = puzz_get_full_tile(222);
 
+//Cracked floor (alternate)
+$lut_tile[254] = puzz_get_full_tile(126);
+
+//Closed slime trap
+$lut_tile[253] = puzz_get_mirrored_tile(49);
+
+//pit
+$lut_tile[252] = puzz_get_mirrored_tile(50);
+
 /*
 //Metatile lookup from Blobun
 $lut_metatile = [

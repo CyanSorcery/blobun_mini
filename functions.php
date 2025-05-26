@@ -107,6 +107,8 @@ function pico_puzzle_data($stage)
 		$dst_y 	+= 1;
 		//Apply the checkerboard?
 		if ($tile_id == 1 && ($dst_x + $dst_y) % 2 == 1) $tile_id = 255;
+		//Apply checkerboard to cracked floor?
+		if ($tile_id == 9 && ($dst_x + $dst_y) % 2 == 0) $tile_id = 254;
 
 		$ele_grid[$dst_x][$dst_y] = $tile_id;
 	}

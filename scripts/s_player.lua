@@ -100,8 +100,11 @@ function player_end_move(self)
  self.ismove = false
  
  -- figure out what tile we're on, and if we should destroy the object on this tile
- local _x, _y, _destroy_obj, _doslime = self.x, self.y, true, true
- local _tile, _poskey, _collision_obj = mget((_x << 1) + 2, (_y << 1) + 1), _x << 4 | _y
+ local _x, _y, _oldx, _oldy, _destroy_obj, _doslime = self.x, self.y, (self.oldx << 1) + 2, (self.oldy << 1) + 1, true, true
+ local _tile, _prevtile, _poskey, _collision_obj = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
+
+ -- if we're on a water tile and are in the ice state, treat as ice floor
+ if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
  
  -- heart
  if (_tile == 52) tile_swap(19, 20, 3, 4)
@@ -144,15 +147,28 @@ function player_end_move(self)
  -- if this is a key block, take their key away (passage into this block is checked elsewhere)
  if (_tile == 51) self.haskey = false
 
- -- slime trap code
+ -- was the previous tile a slime trap?
+ if (self.prevslimetrap) tile_copy(126, 26, _oldx - 1, _oldy)
 
- -- cracked floor code
+ -- are we on a slime trap right now?
+ self.prevslimetrap = _tile == 48
 
- -- conveyer code
+ -- if the previous tile was a cracked floor, put it back and then process them
+ if (self.prevcrackedfloor) _doslime = false _tile = 50 tile_copy(96, 18, _oldx - 1, _oldy) proc_cracked_floor(_oldx, _oldy)
 
- -- ice tile code
+ -- are we on a cracked floor right now?
+ self.prevcrackedfloor = _tile == 125 or _tile == 127
 
- -- set new direction?
+ -- are we on a conveyer? if so, overwrite new direction
+ local _dir = -1
+ for i=0,3 do
+  if (_tile == 113 + (i << 1)) _dir = i
+ end
+ -- are we on an ice tile?
+ if (_tile == 123) _dir = self.dir
+ -- enforce the new direction?
+ if (_dir != -1) self.nextdir = _dir
+ self.onconvey = _dir != -1
 
  -- fetch and then destroy object at this position
  for i,_obj in pairs(g_list_obj) do
@@ -179,16 +195,37 @@ function player_end_move(self)
   end
  end
 
- -- overlap our own trail?
+ -- put collectible particles code here
+
+ -- did we overlap our own trail? this (vaguely) captures all slime tiles
+ if (_tile > 208) player_destroy(self)
 
  -- process stuff that destroys stephanie
- if false then
-  -- boom
+ if  
+ -- did we step on a lava tile and aren't in the right state
+  _tile \ 16 == 11 and self.pstate == 0 or
+ -- did we step on an water tile (if we're in ice state, the tile is pre-converted above)
+  _tile \ 16 == 12 or
+ -- did we step on a cracked floor that just broke?
+  _tile == 50 or
+ -- did we step on a floor zapper on the wrong turn?
+  _tile == 29 and g_p_zap_turn == 0 or -- cyan
+  _tile == 30 and g_p_zap_turn == 1 or -- magenta
+  _tile == 31 and g_p_zap_turn == 2 -- yellow
+  then
+  player_destroy(self, true)
  elseif _doslime then
   self.tilestouched += 1
   tile_copy(126, self.pstate << 1, (_x << 1) + 1, (_y << 1) + 1)
  end
 
+end
+
+function player_destroy(self, _kill)
+ g_stage_lose = true
+  -- colors for normal, fire, ice
+ --local _t = str2tbl("13b49a5d6", 3)
+ if (_kill) self.isdead = true --part_create_slime_explode((_obj.x << 4) + 12, (_obj.y << 4) + 12, _t[_obj.pstate + 1])
 end
 
 function player_draw(self)
