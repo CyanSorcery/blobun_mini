@@ -14,7 +14,7 @@ function player_step(self)
  self.jiggle = max(self.jiggle - .2, 0)
 
  -- do undo?
- --if (btnp(5) and not g_stage_win) perform_undo()
+ if (btnp(5) and not g_stage_win) perform_undo()
 
  -- do the move animation
  self.anim = min(self.anim + ((self.sprint or self.onconvey or self.inportal) and .2 or .1111), 1)
@@ -61,7 +61,7 @@ function player_step(self)
     if not self.inportal and not self.onconvey then
      -- update the end turn position for the next undo
      self.startturnx, self.startturny = self.x, self.y
-     --add_undo()
+     add_undo()
      
      -- increment the floor zappers
      g_p_zap_turn += 1

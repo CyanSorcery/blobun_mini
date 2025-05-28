@@ -65,7 +65,7 @@ function _init()
  -- tmp
  --unpack_intro()
  --unpack_title()
- unpack_stage(1, 1)
+ unpack_stage(2, 1)
  --unpack_stage_select()
  --unpack_credits()
 
@@ -254,8 +254,9 @@ function unpack_stage(_world, _stage)
  g_p_intro_cd, -- how long the puzzle intro shows on screen
  g_p_time, -- how much time the player has been on this stage
  g_p_started, -- the player has started the puzzle
- g_list_part -- list of particles in this puzzle
- ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{}
+ g_list_part, -- list of particles in this puzzle
+ g_list_undo -- undo states for the puzzle
+ ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{}
 
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))

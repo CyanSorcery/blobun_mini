@@ -1,3 +1,66 @@
+function add_undo()
+ local _undo = {}
+ -- copy all object references
+ _undo.obj_list = tbl_copy(g_list_obj)
+ -- copy the player object
+ _undo.player = tbl_copy(g_list_obj[1])
+ -- store additional parameters
+ _undo.g_p_zap_turn = g_p_zap_turn
+ -- copy the playfield
+ _undo.playfield = pack_undo_tiles()
+ -- add this to the undo queue
+ add(g_list_undo, _undo)
+ -- if there's too many undos, remove one
+ if (count(g_list_undo) > 40) deli(g_list_undo, 1)
+end
+
+function perform_undo()
+ -- find out the top undo and, if it's not the last one, delete it
+ local _count = count(g_list_undo)
+ if (_count == 0) return -- unlikely scenario, but prevents crash
+ local _undo = g_list_undo[_count]
+ if (_count > 1) deli(g_list_undo)
+ -- replace object list and player object
+ g_list_obj     = _undo.obj_list
+ g_list_obj[1]  = _undo.player
+ -- replace any other variables
+ g_p_zap_turn, g_stage_lose = _undo.g_p_zap_turn,_undo.g_stage_lose
+ -- reset these variables
+ local _player = g_list_obj[1]
+ _player.nextdir, _player.isdead, _player.ismove, g_stage_lose, g_p_updt_coin, g_p_updt_zap = -1, false, false, false, true, true
+ -- put the playfield back how it was
+ unpack_undo_tiles(_undo.playfield)
+end
+
+function pack_undo_tiles()
+ -- ashe note: this function is hard coded to take way more than most puzzles
+ -- will ever need. however, we want consistency in how big undos are
+ local _t = {}
+ for _x=0,34 do
+  _t[_x] = {}
+  for _y=0,32 do
+   _t[_x][_y] = mget(_x, _y)
+  end
+ end
+ return _t
+end
+
+function unpack_undo_tiles(_t)
+ for _x=0,34 do
+  for _y=0,32 do
+   mset(_x, _y, _t[_x][_y])
+  end
+ end
+end
+
+function tbl_copy(_t)
+ local _d = {}
+ for _k,_v in pairs(_t) do
+  _d[_k] = _v
+ end
+ return _d
+end
+
 function subl(_str, _offset, _flag, _len)
  return tonum(sub(_str, _offset, _offset + (_len and _len or 0)), _flag)
 end
