@@ -34,11 +34,11 @@ function obj_create(_str)
   _obj.octogems, -- how many octogems she's carrying
   _obj.coins, -- how many coins she's carrying
   _obj.nextdir, -- the next direction she'll go (input buffering)
-  _obj.tilestouched, -- how many tiles she's touched
+  _obj.tilestouched, -- how many tiles she's touched (starts at 1 for her spawn tile)
   _obj.isdead, -- player was destroyed and shouldn't be drawn
   _obj.prevslimetrap, -- previous move was a slime trap
   _obj.prevcrackedfloor -- previous move was on a cracked floor
-  = _obj.x, _obj.y, -1, 3, 1, 0, false, 0, false, _obj.x, _obj.y, _obj.x, _obj.y, false, false, false, 10, 0, 0, -1, 0, false, false, false
+  = _obj.x, _obj.y, -1, 3, 1, 0, false, 0, false, _obj.x, _obj.y, _obj.x, _obj.y, false, false, false, 10, 0, 0, -1, 1, false, false, false
   _obj.onstep = player_step
   _obj.ondraw = player_draw
  else

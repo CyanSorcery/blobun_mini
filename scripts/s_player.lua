@@ -83,7 +83,7 @@ function player_step(self)
  if g_stage_win == false and self.tilestouched >= g_p_sst.s_tiles then
   g_stage_win = true
   -- if the player time is lower than the record, store it
-  if (g_p_time < dget(g_p_sst.p_saveslot)) dset(g_p_sst.p_saveslot, g_p_time) g_p_new_time = true
+  if (g_p_time < dget(g_p_sst.s_saveslot)) dset(g_p_sst.s_saveslot, g_p_time) g_p_new_time = true
  end
 
  -- if we've won, make stephanie face down

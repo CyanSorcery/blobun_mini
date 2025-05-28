@@ -7,14 +7,13 @@ function gameplay_update()
  g_stage_bg_anim += .015
  g_stage_bg_anim %= 1
  
- --[[-- show pause menu?
+ -- show pause menu?
  if g_p_intro_cd <= 45 and _is_go then
   if (btn(6)) poke(0x5f30,1)
   if ((g_btn4_press and g_stage_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
  end
 
  g_bottom_msg_anim = mid(0, (g_stage_win or g_stage_lose) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
- ]]
 
  -- process objects, but only if the stage animation is done
  if _is_go then
@@ -153,6 +152,8 @@ function gameplay_draw()
  if g_stage_win or g_stage_lose then
   draw_wavy_text(g_stage_win and "stage clear!" or "❎ undo", g_stage_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
+ 
+ ?g_list_obj[1].tilestouched.."/"..g_p_sst.s_tiles,8,32,7
 
 end
 

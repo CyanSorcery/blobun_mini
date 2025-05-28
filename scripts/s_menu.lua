@@ -35,7 +35,7 @@ function menu_create(_x, _y, _w, _items)
    -- should we show this?
    if (_is_top_pane and _m_count > 1 and g_menu[_m_count - 1].m_anim_factor > 0) return false
    -- brute force detection of in puzzle or not
-   local _count, _sprchk = count(self.m_items), count(g_o_list) > 0 and 147 or 241
+   local _count, _sprchk = count(self.m_items), count(g_list_obj) > 0 and 147 or 241
    -- draw background
    local _b_h = lerp(5, self.m_h, self.m_anim_factor)
    local _x1, _y1, _is_hilite = self.m_x, self.m_y - (_b_h >> 1)
@@ -87,7 +87,7 @@ end
 
 function menu_create_puzz()
  menu_create(16, 64, 96,{
-  menu_item_base((g_level_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
+  menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
   menu_item_base("show hints", unpack_hints),
   menu_item_base("stage select", function() set_game_mode(1) end),
@@ -111,7 +111,7 @@ function menu_create_title()
  })
 end
 function menu_create_options()
- menu_create(16, count(g_o_list) > 0 and 64 or 92, 96, {
+ menu_create(16, count(g_list_obj) > 0 and 64 or 92, 96, {
   menu_item_setting("show timers", 1),
   menu_item_setting("slime overlap", 2),
   menu_item_setting("sprint by default", 3),
