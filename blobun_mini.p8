@@ -26,44 +26,61 @@ function _init()
   _offset += 2 + (_data&0x1fff)
   _data = %_offset
  end
- --[[
-  g_wavy_anim animation for wavy text and whatnot
-  g_slime_trail_anim animation for player slime
-  g_bg_scl animation for scrolling backgrounds
-  g_p_zap_cntd countdown to animate the floor zappers
- ]]
- g_wavy_anim, g_slime_trail_anim, g_bg_scl, g_p_zap_cntd = 0, 0, 0, 0
- --[[
-  g_even_frame this is an even or odd frame
- ]]
- g_even_frame = true
+
+ -- different fillp patterns
+ g_fillp_diag, g_fillp_transition = {0xc936, 0x6c93, 0x36c9, 0x936c}, {0x8001.8, 0xa5a5.8, 0xedb7.8, 0xffff.8}
+ 
+ g_wavy_anim, -- animation for wavy text and whatnot
+ g_slime_trail_anim, -- animation for player slime
+ g_bg_scl, -- animation for scrolling backgrounds
+ g_p_zap_cntd, -- countdown to animate the floor zappers
+ g_fillp_anim, -- fillp animation factor
+ g_even_frame, -- if it's an even or odd frame
+ g_time, -- how long the game has been running
+ g_intro_anim, -- used for stage transitions
+ g_outro_anim, -- used for stage transitions
+ g_menu -- all menus that are currently active
+ =0,0,0,0,0,true,time(),0,1,{}
+
  --[[
   g_func_update update function for the current game mode
   g_func_draw draw function for the current game mode
  ]]
  g_func_update, g_func_draw = nil
- --[[
-  g_pal_stage_bg pallete used for stage backgrounds
- ]]
- g_pal_stage_bg = str2tbl("1c0d237164", 5)
+ 
+ g_pal_stage_bg, -- pallete used for stage backgrounds
+ g_pal_dark, -- used for darkening the screen
+ g_pal_stage_trans -- used for stage transitions
+ = str2tbl("1c0d237164", 5),
+ str2tbl("0001115525511125",16),
+ str2tbl("3c26915154", 5)
 
  -- convert all the stage data
  convert_stages()
+ -- initialize the save data
+ init_config()
+ -- decompress the game's sound effects
+ decompress_sfx(1)
+
  -- tmp
- unpack_stage(2, 1)
+ unpack_stage(1, 1)
 
 -- tmp
 g_cam_x, g_cam_y = 0,0
 end
 
 function _update()
- 
+ -- get rid of menus when pressing pause?
+ --if (count(g_menu) > 0 and btn(6)) poke(0x5f30,1) menus_remove()
  
  g_even_frame = g_even_frame == false
 
+ -- run fillp animation
+ g_fillp_anim += .2
+ g_fillp_anim %= 4
+
  g_wavy_anim += .035
  g_wavy_anim %= 1
- 
  
  g_bg_scl += .15
  g_bg_scl %= 32
@@ -72,24 +89,74 @@ function _update()
  if g_p_zap_cntd <= 0 then g_p_zap_cntd = 14 elseif g_p_zap_cntd % 7 == 1 then g_p_updt_zap = true end
 
  g_func_update()
- --[[
- -- tmp
- if (btn(4)) then
- 
 
-  -- tmp, force reload on every menu change
-  if (btnp() & 0xF > 0) g_px9_ind_sprites = 0
-
-  if (btnp(0)) unpack_stage(g_p_i_world, g_p_i_stage - 1)
-  if (btnp(1)) unpack_stage(g_p_i_world, g_p_i_stage + 1)
-  if (btnp(2)) unpack_stage(g_p_i_world - 1, g_p_i_stage)
-  if (btnp(3)) unpack_stage(g_p_i_world + 1, g_p_i_stage)
+ -- allow to skip stage intro
+ if (btnp() & 0x30 > 0 and g_p_intro_cd > 45) g_p_intro_cd = 45
+ g_p_intro_cd = max(g_p_intro_cd - 1)
+ -- do intro animation?
+ if (g_p_intro_cd <= 45) g_intro_anim = min(g_intro_anim + .1, 1)
+--[[
+  -- are we going to a different screen?
+ if g_game_mode_target != nil then
+  g_outro_anim = max(g_outro_anim - .1)
+  if g_outro_anim == 0 then
+   if g_game_mode_target == 0 then
+    unpack_title()
+   elseif g_game_mode_target == 1 then
+    unpack_stage_select()
+   elseif g_game_mode_target == 2 then
+    unpack_level(g_puzz_world_target, g_puzz_level_target)
+   elseif g_game_mode_target == 3 then
+    unpack_intro()
+   elseif g_game_mode_target == 4 then
+    unpack_credits()
+   end
+   -- reset everything
+   g_intro_anim, g_outro_anim, g_game_mode_target, g_puzz_world_target, g_puzz_level_target = 0, 1
+  end
  end
- ]]
+ 
+ -- process menus (if we have em)
+ for i,_pane in pairs(g_menu) do _pane:m_step(i) end
+]]
+
+ -- play a sound effect this frame?
+ if (g_play_sfx != nil) sfx(g_play_sfx >> 10 & 0x3f, 3, g_play_sfx >> 5 & 0x1f, g_play_sfx & 0x1f) g_play_sfx = nil
+ 
+ 
+ g_time = time()
+ -- if time rolls over, stop the game since timers will break
+ if (g_time < 0) stop"game has been running for too long. take a break!"
 end
 
 function _draw()
  g_func_draw()
+ 
+
+
+ -- set up for stage transition animation
+ local _isgame = g_game_mode_target == 2 or g_game_mode_target == nil and count(g_list_obj) > 0
+ local _world = _isgame and g_puzz_world_target != nil and g_puzz_world_target or g_p_i_world or 1
+ local _colbg, _colshd = _isgame and g_pal_stage_trans[1][_world] or 1, g_pal_stage_trans[2][_world]
+
+ -- draw transition?
+ local _w = 64 * cos((g_intro_anim * g_outro_anim) >> 2)
+ if (_w > 0) rectfill(0, 0, _w, 127, _colbg) rectfill(127 - _w, 0, 127, 127, _colbg)
+
+ -- draw the stage intro?
+ -- ashe note: kinda had to put it here for layering
+ if g_p_intro_cd > 0 then
+  local _sname, _offset = "stage "..g_p_i_stage, cos(abs(max(abs(g_p_intro_cd-45),35)-35)/40)*64-64
+  local _o1, _o2 = _offset + 8, _offset + 9
+  local _x = print_shd(_sname, _offset + 12, 97, 7, _colshd)
+  line(_o2, 105, _o2 + _x, 105, _colshd)
+  line(_o1, 104, _o1 + _x, 104, 7)
+  print_shd(g_p_sst.s_name, _o1, 107, 7, _colshd)
+  if (_w > 0) ?g_p_sst.s_author, _o1, 115, _colshd
+ end
+ 
+ -- draw menus (if we have em)
+ for i,_pane in pairs(g_menu) do _pane:m_draw(i) end
 
  -- tmp
  camera(0, 0)
@@ -97,6 +164,21 @@ function _draw()
  ?flr((stat(1)) * 100).."%", 0, 122, 7
  ?flr(stat(0)).."/2048kb", 18, 122, 7
 end
+
+
+-- the second parameter may be nil, that's fine
+function set_game_mode(_mode, _world_target, _level_target, _skip_l_intro)
+ g_game_mode_target, g_puzz_world_target, g_puzz_level_target, g_p_skip_intro, g_p_intro_cd = _mode, _world_target, _level_target, _skip_l_intro, 0
+ --menus_remove()
+ -- stop music
+ music(-1)
+end
+--[[
+function finalize_game_mode(_func_update, _func_draw)
+ g_func_update, g_func_draw, g_p_intro_cd, g_o_list = _func_update, _func_draw, 0, {}
+ pal()
+end]]
+
 
 function finalize_game_mode(_func_update, _func_draw)
  g_func_update, g_func_draw = _func_update, _func_draw
@@ -115,25 +197,29 @@ function unpack_stage(_world, _stage)
   g_shimmer_water for animating water/lava
  ]]
  g_stage_bg_anim, g_shimmer_water = 0, 0b1111000111110000.1110000111111000
- --[[
-  g_list_obj list of objects in the stage
- ]]
- g_list_obj = {}
- --[[
-  g_stage_lose player has been destroyed by some puzzle element
-  g_stage_win player has won the stage,
-  g_btn4_press used for an accurate reading of pressing button 4
-  g_btn4_held
-  g_p_zap_turn what turn the floor zappers are on (cmy)
-  g_p_updt_zap if we need to redraw floor zappers
-  g_p_updt_coin if we need to redraw the coins
- ]]
- g_stage_lose, g_stage_win, g_btn4_press, g_btn4_held, g_p_zap_turn, g_p_updt_zap, g_p_updt_coin = false, false, false, false, 0, true, false
+ 
+ g_list_obj, -- all objects that are in this puzzle
+ g_stage_lose, -- player has been destroyed by some puzzle element
+ g_stage_win, -- player has won the stage
+ g_btn4_press, -- used for an accurate reading of pressing button 4
+ g_btn4_held,
+ g_p_zap_turn, -- what turn the floor zappers are on (cmy)
+ g_p_updt_zap, -- if we need to redraw floor zappers
+ g_p_updt_coin, -- if we need to redraw the coins
+ g_bottom_msg_anim, -- for animating message during gameplay
+ g_p_new_time, -- the player got a new time on this puzzle
+ g_p_intro_cd, -- how long the puzzle intro shows on screen
+ g_p_time, -- how much time the player has been on this stage
+ g_p_started -- the player has started the puzzle
+ ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false
 
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))
  _stage = mid(1, _stage, count(g_levels[_world]))
  g_p_i_world, g_p_i_stage, g_p_sst = _world, _stage, g_levels[_world][_stage]
+
+ -- store this for later
+ last_worldstage_set(_world, _stage)
 
  -- decompress sprites (if needed)
  decompress_sprites(2)
@@ -170,7 +256,6 @@ function unpack_stage(_world, _stage)
  for i=0,_obj_end do
   add(g_list_obj, obj_create(sub(g_p_sst.s_obj_str, i * 5 + 1, i * 5 + 6)))
  end
-
 end
 
 function convert_stages()
@@ -228,6 +313,7 @@ end
 #include scripts/s_gameplay.lua
 #include scripts/s_objects.lua
 #include scripts/s_player.lua
+#include scripts/s_config.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4

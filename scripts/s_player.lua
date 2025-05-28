@@ -1,7 +1,7 @@
 function player_step(self)
  -- if lesbians aren't allowed, don't do this
  -- also don't if a menu is open right now
- --if (not setting_get(6) or count(g_menu) > 0) return
+ if (not setting_get(6) or count(g_menu) > 0) return
 
  self.blink -= 1
  if (self.blink <= 1) self.blink = 30 + flr(rnd(60))
@@ -83,14 +83,14 @@ function player_step(self)
  if g_stage_win == false and self.tilestouched >= g_p_sst.s_tiles then
   g_stage_win = true
   -- if the player time is lower than the record, store it
-  --if (g_p_time < dget(g_p_fst.l_saveslot)) dset(g_p_fst.l_saveslot, g_p_time) g_new_time = true
+  if (g_p_time < dget(g_p_sst.p_saveslot)) dset(g_p_sst.p_saveslot, g_p_time) g_p_new_time = true
  end
 
  -- if we've won, make stephanie face down
  if (g_stage_win) self.dir = 3
  
  -- timer
- --if (g_p_started and not g_stage_win) g_p_time = min(g_p_time + (time() - g_time), 599.999)
+ if (g_p_started and not g_stage_win) g_p_time = min(g_p_time + (time() - g_time), 599.999)
 
 
 end

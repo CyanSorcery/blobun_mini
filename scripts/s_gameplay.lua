@@ -1,5 +1,5 @@
 function gameplay_update()
-
+ local _is_go = g_intro_anim * g_outro_anim == 1
 
  g_slime_trail_anim += .075
  g_slime_trail_anim %= 1
@@ -7,9 +7,21 @@ function gameplay_update()
  g_stage_bg_anim += .015
  g_stage_bg_anim %= 1
  
- -- process all objects
- for _obj in all(g_list_obj) do _obj:onstep() end
- 
+ --[[-- show pause menu?
+ if g_p_intro_cd <= 45 and _is_go then
+  if (btn(6)) poke(0x5f30,1)
+  if ((g_btn4_press and g_stage_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
+ end
+
+ g_bottom_msg_anim = mid(0, (g_stage_win or g_stage_lose) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
+ ]]
+
+ -- process objects, but only if the stage animation is done
+ if _is_go then
+  for _obj in all(g_list_obj) do _obj:onstep() end
+  --proc_particles()
+end
+
  -- move camera while binding it to the stage edges/centering it
  local _obj, _lw, _lh = g_list_obj[1], g_p_sst.s_width << 4, g_p_sst.s_height << 4
  local _anim = _obj.inportal and cos((1 - _obj.anim) >> 2) or _obj.anim
@@ -98,11 +110,50 @@ function gameplay_draw()
  -- draw all the objects
  for _obj in all(g_list_obj) do _obj:ondraw() end
 
- --tmp
+ -- draw_particles()
+
+ -- get ready to draw UI stuff
  camera(0, 0)
- ?"c "..(g_p_zap_turn == 0 and "yes" or "no"), 8, 8, 7
- ?"m "..(g_p_zap_turn == 1 and "yes" or "no"), 8, 16, 7
- ?"y "..(g_p_zap_turn == 2 and "yes" or "no"), 8, 24, 7
+
+ 
+ local _show_timers = setting_get(1)
+ local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 87
+ 
+ -- darken areas of the screen
+ poke(0x5F54, 0x60)
+ pal(g_pal_dark[1])
+ sspr(_left_top_bar, 0, 128, 9, _left_top_bar, 0)
+ if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
+ pal()
+ poke(0x5F54, 0x00)
+ -- time below goal time?
+ local _col = g_p_time <= g_p_sst.s_goaltime and 7 or 13
+ -- time below dev time?
+ if (g_stage_win and g_p_time <= g_p_sst.s_devtime) _col = 10
+ -- if the player has beaten this stage or not
+ local _curr_time = dget(g_p_sst.s_saveslot)
+ spr(_curr_time < 599.995 and 147 or 146, 88, 0)
+ --show timer and "new time?"
+ if _show_timers then
+  ?format_time(g_p_time), 2, 2, _col
+  if (g_p_new_time) draw_wavy_text("new time!", 32, 2, _col, 1.3)
+  -- player has minimum time?
+  if (_curr_time <= g_p_sst.s_goaltime) ?"⧗", 81, 2, 9
+  -- player has dev time?
+  if (_curr_time <= g_p_sst.s_devtime) ?"♥", 75, 2, 14
+ end
+
+ -- draw slimebar
+ rect(96, 1, 126, 7, 7)
+ fillp(g_fillp_diag[ceil(g_fillp_anim)])
+ rectfill(124 - max(1, (g_list_obj[1].tilestouched / g_p_sst.s_tiles) * 26), 3, 124, 5, 59)
+ fillp()
+
+ -- did we win or lose?
+ if g_stage_win or g_stage_lose then
+  draw_wavy_text(g_stage_win and "stage clear!" or "❎ undo", g_stage_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
+ end
+
 end
 
 function redraw_conveyers()
