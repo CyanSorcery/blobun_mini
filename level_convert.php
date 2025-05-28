@@ -41,8 +41,6 @@ foreach ($worldpak->pak_worlds as $world)
 		$ministage .= dechex(clamp($stage->stage_width - 1, 0, 15));
 		//Stage save slot
 		$ministage .= str_pad($save_id, 2, "0", STR_PAD_LEFT);
-		//How many tiles this stage has to touch
-		$ministage .= str_pad(dechex($stage->stage_tile_count), 2, "0", STR_PAD_LEFT);
 		//The stage target time
 		$ministage .= pico_time_format($stage->stage_target_time);
 		//The stage dev time

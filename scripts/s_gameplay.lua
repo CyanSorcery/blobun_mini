@@ -18,7 +18,7 @@ function gameplay_update()
  -- process objects, but only if the stage animation is done
  if _is_go then
   for _obj in all(g_list_obj) do _obj:onstep() end
-  --proc_particles()
+  proc_particles()
 end
 
  -- move camera while binding it to the stage edges/centering it

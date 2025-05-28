@@ -176,12 +176,6 @@ function set_game_mode(_mode, _world_target, _level_target, _skip_l_intro)
  -- stop music
  music(-1)
 end
---[[
-function finalize_game_mode(_func_update, _func_draw)
- g_func_update, g_func_draw, g_p_intro_cd, g_list_obj = _func_update, _func_draw, 0, {}
- pal()
-end]]
-
 
 function finalize_game_mode(_func_update, _func_draw)
  g_func_update, g_func_draw, g_p_intro_cd, g_list_obj = _func_update, _func_draw, 0, {}
@@ -259,8 +253,9 @@ function unpack_stage(_world, _stage)
  g_p_new_time, -- the player got a new time on this puzzle
  g_p_intro_cd, -- how long the puzzle intro shows on screen
  g_p_time, -- how much time the player has been on this stage
- g_p_started -- the player has started the puzzle
- ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false
+ g_p_started, -- the player has started the puzzle
+ g_list_part -- list of particles in this puzzle
+ ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{}
 
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))
@@ -327,13 +322,11 @@ function convert_stages()
    _sst.s_width = subl(_stage, _offset, 0x1) + 1
    -- stage save slot
    _sst.s_saveslot = subl(_stage, _offset + 1, 0, 1)
-   -- stage tiles
-   _sst.s_tiles = subl(_stage, _offset + 3, 0x1, 1)
    -- stage target time
-   _sst.s_goaltime = subl(_stage, _offset + 5, 0, 7)
+   _sst.s_goaltime = subl(_stage, _offset + 3, 0, 7)
    -- stage dev time
-   _sst.s_devtime = subl(_stage, _offset + 13, 0, 7)
-   _offset += 21
+   _sst.s_devtime = subl(_stage, _offset + 11, 0, 7)
+   _offset += 19
    -- hint count (coco note: for now, it's 0)
    _bytes = subl(_stage, _offset, 0x1)
    _sst.s_hints = {}
@@ -346,8 +339,10 @@ function convert_stages()
    _off_end = _offset + 2 + _bytes * 5
    _sst.s_obj_count = _bytes;
    _sst.s_obj_str = sub(_stage, _offset + 2, _off_end - 1)
+   -- stage tiles
+   _sst.s_tiles = subl(_stage, _off_end, 0x1, 1)
    -- the rest is just the stage data itself
-   _sst.s_data = sub(_stage, _off_end)
+   _sst.s_data = sub(_stage, _off_end + 2)
    -- figure out the height
    _sst.s_height = (#_sst.s_data \ 2) \ (_sst.s_width + 2) - 2
    add(_wst, _sst)
@@ -365,6 +360,7 @@ end
 #include scripts/s_config.lua
 #include scripts/s_nongame.lua
 #include scripts/s_menu.lua
+#include scripts/s_particles.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4

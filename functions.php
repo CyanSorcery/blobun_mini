@@ -49,6 +49,8 @@ function pico_puzzle_data($stage)
 	$ele_grid 	= grid_create($puzz_w + 2, $puzz_h + 2, 0);
 	//Fill the element grid with values from the stage data
 	$len 	= strlen($stage_data);
+	//How many tiles the player has to touch
+	$tile_count 	= 0;
 	for ($i = 0; $i < $len; $i += 2)
 	{
 		$fin_i 	= $i / 2;
@@ -109,6 +111,7 @@ function pico_puzzle_data($stage)
 		if ($tile_id == 1 && ($dst_x + $dst_y) % 2 == 1) $tile_id = 255;
 		//Apply checkerboard to cracked floor?
 		if ($tile_id == 9 && ($dst_x + $dst_y) % 2 == 0) $tile_id = 254;
+		if ($tile_id > 0) $tile_count++;
 
 		$ele_grid[$dst_x][$dst_y] = $tile_id;
 	}
@@ -207,8 +210,8 @@ function pico_puzzle_data($stage)
 	foreach ($obj_arr as $str)
 		$obj_str .= $str;
 
-	//Return the final object list and element grid
-	return $obj_str.grid_pack($ele_grid);
+	//Return the object list, number of tiles, and the stage data
+	return $obj_str.str_pad(dechex($tile_count), 2, '0', STR_PAD_LEFT).grid_pack($ele_grid);
 
 	//ASHE NOTE: This was the prototyping script that made a tilemap to
 	//manually shove into pico 8. It's no longer necessary but we're saving it just in case

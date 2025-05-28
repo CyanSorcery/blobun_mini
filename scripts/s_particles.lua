@@ -1,6 +1,6 @@
 -- wrapper function for creating particles
 function part_create(_x, _y, _spd, _dir, _col, _time)
- add(g_p_list, {x=_x, y=_y, spd = _spd, dir=_dir, col=_col,time_max=_time,time=_time})
+ add(g_list_part, {x=_x, y=_y, spd = _spd, dir=_dir, col=_col,time_max=_time,time=_time})
 end
 
 function part_create_slime_explode(_x, _y, _col)
@@ -26,19 +26,19 @@ function part_create_item_grab(_x, _y, _col)
 end
 
 function proc_particles()
- for _part in all(g_p_list) do
+ for _part in all(g_list_part) do
   local _factor = _part.dir / 360
   _part.x += _part.spd * cos(_factor)
   _part.y += _part.spd * sin(_factor)
 
   -- subtract off the time and, if it's done, destroy it
   _part.time -= 1
-  if (_part.time <= 0) del(g_p_list, _part)
+  if (_part.time <= 0) del(g_list_part, _part)
  end
 end
 
 function draw_particles()
- for _part in all(g_p_list) do
+ for _part in all(g_list_part) do
   pal(7, _part.col)
   spr(flr(lerp(163, 161, _part.time/_part.time_max) + .5), _part.x, _part.y)
  end

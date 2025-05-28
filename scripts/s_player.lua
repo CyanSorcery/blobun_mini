@@ -44,7 +44,7 @@ function player_step(self)
    -- do a check if this is solid or not. if we're on portal, we can move
    -- if sprite flag 5 is set, this is a floor tile we can move into
    local _can_move, _check, _chx, _chy = self.inportal, 16, self.x + cos(_new_dir >> 2), self.y + sin(_new_dir >> 2)
-   if (self.onconvey--[[or setting_get(2)]]) _check = 18 -- allow for move on slime
+   if (self.onconvey or setting_get(2)) _check = 18 -- allow for move on slime
    -- check the top left corner of the tile they're moving into
    -- next block is ice block and they're in fire state OR next block is lock and they have a key OR check if next tile is slimed already (or is otherwise passable)
    local _nextblock = mget((_chx << 1) + 2, (_chy << 1) + 1)
@@ -70,7 +70,7 @@ function player_step(self)
     end
 
     -- reset move factor, set if move is sprint, set she's moving
-    self.anim, self.sprint, self.ismove = 0, tonum(--[[setting_get(3)]]false) ^^ tonum(btn(4)) == 1, true
+    self.anim, self.sprint, self.ismove = 0, tonum(setting_get(3)) ^^ tonum(btn(4)) == 1, true
     -- set where she's moving from
     if (self.inportal == false) self.oldx, self.oldy = self.x, self.y
     if (_new_dir >= 0) self.x, self.y = _chx, _chy
@@ -232,7 +232,7 @@ function player_draw(self)
  -- if the player was destroyed by something, don't draw
  -- also don't draw if the player is in a floor portal
  -- or if lesbians are not allowed
- if (self.isdead or self.inportal --[[or not setting_get(6)]]) return
+ if (self.isdead or self.inportal or not setting_get(6)) return
 
  local _dir, _x, _y, _anim, _offset, _dir = self.dir, self.x << 4, self.y << 4, self.anim
  
