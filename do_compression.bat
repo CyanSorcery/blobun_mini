@@ -1,0 +1,6 @@
+@echo off
+echo Running level conversion...
+php level_convert.php "C:\Users\spark\AppData\Local\Blobun\worldpak\usermade\pak_cyansorcery_pico8wp.json"
+echo Performing compression routine...
+start /wait pico8.exe -x compress_assets.p8
+echo Done.

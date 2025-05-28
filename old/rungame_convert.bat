@@ -1,6 +1,0 @@
-@echo off
-echo Performing level conversion...
-php level_convert.php
-echo Performing compression routine...
-start /wait pico8.exe -x compress_assets.p8
-call rungame_base.bat
