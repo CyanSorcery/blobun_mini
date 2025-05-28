@@ -45,8 +45,6 @@ foreach ($worldpak->pak_worlds as $world)
 		$ministage .= pico_time_format($stage->stage_target_time);
 		//The stage dev time
 		$ministage .= pico_time_format($stage->stage_dev_time);
-		//The hint arrow data
-		$ministage .= pico_hint_arrows($stage->stage_replay_data);
 
 		//The packed tile data for this stage
 		$ministage 	.= pico_puzzle_data($stage);

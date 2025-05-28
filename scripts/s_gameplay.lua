@@ -99,7 +99,7 @@ function gameplay_draw()
  map(0, 0, -7, 0, _s_w, _s_h, 128)
  do_tile_mirror()
  -- draw arrows
- -- AUTUMN NOTE: put arrows here
+ for _arrow in all(g_list_arrows[g_arrow_index]) do _arrow:ondraw() end
  -- draw lava/water/ice
  palt(0b0100000000000000)
  map(0, 0, 0, 0, _s_w, _s_h, 12)

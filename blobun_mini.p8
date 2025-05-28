@@ -65,7 +65,7 @@ function _init()
  -- tmp
  --unpack_intro()
  --unpack_title()
- unpack_stage(2, 1)
+ unpack_stage(1, 1)
  --unpack_stage_select()
  --unpack_credits()
 
@@ -255,8 +255,10 @@ function unpack_stage(_world, _stage)
  g_p_time, -- how much time the player has been on this stage
  g_p_started, -- the player has started the puzzle
  g_list_part, -- list of particles in this puzzle
- g_list_undo -- undo states for the puzzle
- ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{}
+ g_list_undo, -- undo states for the puzzle
+ g_list_arrows, -- arrows for the stage. [1] is arrows that come with the stage, and [2] are hint arrows
+ g_arrow_index -- which arrows we're showing on the playfield
+ ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{},{{},{}},1
 
  -- cap the world and stage to what we actually have
  _world = mid(1, _world, count(g_levels))
@@ -297,10 +299,32 @@ function unpack_stage(_world, _stage)
  end
 
  -- load all the objects
- local _obj_end = g_p_sst.s_obj_count - 1
+ local _obj_end, _obj = g_p_sst.s_obj_count - 1
  for i=0,_obj_end do
-  add(g_list_obj, obj_create(sub(g_p_sst.s_obj_str, i * 5 + 1, i * 5 + 6)))
+  _obj = obj_create(sub(g_p_sst.s_obj_str, i * 5 + 1, i * 5 + 6))
+  if (_obj.type == 11) then
+   add(g_list_arrows[1], arrow_create(_obj.spr, _obj.x, _obj.y))
+  else
+   add(g_list_obj, _obj)
+  end
  end
+
+ -- add arrows to hint list
+ for _arrow in all(g_p_sst.s_hints) do add(g_list_arrows[2], arrow_create(_arrow)) end
+end
+
+-- arrows can come from either the hint string, or the object array (where they'll be passed in as numbers)
+function arrow_create(_str_dir, _x, _y)
+ local _obj = {
+  dir = type(_str_dir) == "number" and _str_dir or subl(_str_dir, 1, 0x1),
+  x = ((_x and _x or subl(_str_dir, 2, 0x1)) << 4) + 12,
+  y = ((_y and _y or subl(_str_dir, 3, 0x1)) << 4) + 12
+ }
+ function _obj:ondraw()
+  _dir = self.dir
+  spr(_dir % 2 == 0 and 254 or 255, self.x, self.y, 1, 1, cos(_dir >> 2) < 0, sin(_dir >> 2) >= 0)
+ end
+ return _obj
 end
 
 function convert_stages()
@@ -328,11 +352,11 @@ function convert_stages()
    -- stage dev time
    _sst.s_devtime = subl(_stage, _offset + 11, 0, 7)
    _offset += 19
-   -- hint count (coco note: for now, it's 0)
-   _bytes = subl(_stage, _offset, 0x1)
+   -- hint count
+   _bytes = subl(_stage, _offset, 0x1) * 3
    _sst.s_hints = {}
-   for i=1,_bytes,2 do
-    printh("put hint code here")
+   for i=1,_bytes,3 do
+    add(_sst.s_hints, sub(_stage, _offset + i, _offset + i + 2))
    end
    _offset += _bytes + 1
    -- the object list

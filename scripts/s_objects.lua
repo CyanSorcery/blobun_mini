@@ -1,6 +1,7 @@
 -- object constructor
 function obj_create(_str)
  -- get the variables from the string
+ -- format is type, x, y, spr spr
  local _obj = {
   type = subl(_str, 1, 0x1),
   x = subl(_str, 2, 0x1),

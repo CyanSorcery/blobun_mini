@@ -89,7 +89,7 @@ function menu_create_puzz()
  menu_create(16, 64, 96,{
   menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
-  menu_item_base("show hints", unpack_hints),
+  menu_item_base((g_arrow_index == 2 and "hide" or "show").." hints", function() g_arrow_index = g_arrow_index == 2 and 1 or 2 menus_remove() end),
   menu_item_base("stage select", function() set_game_mode(1) end),
   menu_item_base("options", menu_create_options),
   menu_item_base("go to title", function() set_game_mode(0) end)

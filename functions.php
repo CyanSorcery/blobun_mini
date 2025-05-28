@@ -21,10 +21,48 @@ function pico_label($str)
 	return dechex(strlen($str) - 1).$str;
 }
 
-function pico_hint_arrows($replay_data)
+function pico_hint_arrows($stage, $start_x, $start_y)
 {
-	//For now, don't parse this and just return 0 hints
-	return '0';
+	//if there's no hints, just return 0
+	if ($stage->stage_replay_data == '') return '0';
+
+	$decode_bin		= base64_decode($stage->stage_replay_data);
+	$uncompressed	= zlib_decode($decode_bin);
+	$strhex 		= bin2hex($uncompressed);
+
+	//For whatever reason, Gamemaker stores 16bit values with bits flipped
+	//so we have to flip them back
+	$move_count 	= hexdec(substr($strhex, 2, 2).substr($strhex, 0, 2));
+	$hint_count 	= min($move_count, $stage->stage_hint_count, 15);
+	
+	//flip this so that the replay moves can be in the right order
+	//ashe note: this code is scuffed but it's not my job to figure this out fancy like. it works
+	$flipprep = unpack('C*', pack('h*', $strhex));
+	$strhex		= '';
+	foreach ($flipprep as $int) $strhex .= str_pad(dechex($int), 2, "0", STR_PAD_LEFT);
+
+	//parse the hint arrows. This way we can put *exactly* the hint arrows we need
+	$hintstr 	= substr($strhex, 4, strlen($strhex) - 4);
+	$hint_arrows 	= [];
+	for ($i = 0; $i < $hint_count; $i++)
+	{
+		$int	= hexdec(substr($hintstr, $i >> 1, 1));
+		$sub 	= ($int >> ($i % 2 == 0 ? 2 : 0)) & 0x3;
+		array_push($hint_arrows, $sub);
+	}
+
+	//Now that we have our hints, go ahead and make a string of them
+	$finstr 	= dechex(count($hint_arrows));
+	foreach ($hint_arrows as $dir)
+	{
+		//Format is DXY - Direction, X, Y
+		$finstr 	.= $dir.dechex($start_x).dechex($start_y);
+		$start_x 	+= round(cos(deg2rad($dir * 90)));
+		$start_y 	-= round(sin(deg2rad($dir * 90)));
+	}
+
+	return $finstr;
+
 }
 
 function pico_puzzle_data($stage)
@@ -41,6 +79,9 @@ function pico_puzzle_data($stage)
 	//Create an array to hold object data
 	//This creates a default Stephanie that is overwritten later
 	$obj_arr 	= ['00000'];
+	//Player start coordinates
+	$player_start_x 	= 0;
+	$player_start_y 	= 0;
 	//This array holds floor portals we found previously (or null if not found)
 	//Order is RGBY
 	$floor_portals = [null, null, null, null];
@@ -62,7 +103,12 @@ function pico_puzzle_data($stage)
 		$ele_id 	= $tile_id & 0x1F;
 		$sub_id 	= ($tile_id >> 5) & 0x7;
 		//Stephanie (overwrite the first entry if so)
-		if ($tile_id == puzz_ele_to_bitmask(1, 1)) $obj_arr[0] = "0{$poskey}00";
+		if ($tile_id == puzz_ele_to_bitmask(1, 1))
+		{
+			$obj_arr[0] = "0{$poskey}00";
+			$player_start_x	= $dst_x;
+			$player_start_y = $dst_y;
+		}
 		//Heart
 		if ($tile_id == puzz_ele_to_bitmask(2, 0)) $obj_arr[] = "1{$poskey}53";
 		//Diamond
@@ -211,7 +257,7 @@ function pico_puzzle_data($stage)
 		$obj_str .= $str;
 
 	//Return the object list, number of tiles, and the stage data
-	return $obj_str.str_pad(dechex($tile_count), 2, '0', STR_PAD_LEFT).grid_pack($ele_grid);
+	return pico_hint_arrows($stage, $player_start_x, $player_start_y).$obj_str.str_pad(dechex($tile_count), 2, '0', STR_PAD_LEFT).grid_pack($ele_grid);
 
 	//ASHE NOTE: This was the prototyping script that made a tilemap to
 	//manually shove into pico 8. It's no longer necessary but we're saving it just in case
