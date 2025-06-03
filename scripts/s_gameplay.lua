@@ -61,11 +61,10 @@ function gameplay_draw()
  poke(0x5f55,0x60)
 
  -- clear the background
- cls(g_pal_stage_bg[1][g_p_i_world])
- pal(7, g_pal_stage_bg[2][g_p_i_world])
+ palt(0)
  local _startx, _starty = -32+g_bg_scl, -g_bg_scl
- -- disable autoscrolling for worlds 3 and 5
- if (g_p_i_world == 3 or g_p_i_world == 5) _startx, _starty = -g_cam_x/2,-g_cam_y/2
+ -- disable autoscrolling for these worlds
+ if (g_p_i_world >= 3) _startx, _starty = -32 + -g_cam_x/2, -32 + -g_cam_y/2
  -- draw the background
  for _x=_startx,128,32 do
   for _y=_starty,128,32 do
