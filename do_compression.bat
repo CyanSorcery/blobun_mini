@@ -1,6 +1,6 @@
 @echo off
 echo Running level conversion...
-php level_convert.php "C:\Users\spark\AppData\Local\Blobun\worldpak\usermade\pak_cyansorcery_pico8wp.json"
+call minipak_gen.exe -i "C:\Users\spark\AppData\Local\Blobun\worldpak\usermade\pak_cyansorcery_pico8wp.json" -o "D:\Dropbox\Homebase\pico8\blobun_mini\res\r_levels.lua" -m "D:\Dropbox\Homebase\pico8\blobun_mini\res\map_lut.p8"
 echo Performing compression routine...
 start /wait pico8.exe -x compress_assets.p8
 echo Done.
