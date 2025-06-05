@@ -39,8 +39,9 @@ function _init()
  g_time, -- how long the game has been running
  g_intro_anim, -- used for stage transitions
  g_outro_anim, -- used for stage transitions
- g_menu -- all menus that are currently active
- =0,0,0,0,0,true,time(),0,1,{}
+ g_menu, -- all menus that are currently active
+ g_prev_was_gameplay -- previous screen was the main game mode
+ =0,0,0,0,0,true,time(),0,1,{},false
 
  --[[
   g_func_update update function for the current game mode
@@ -63,7 +64,7 @@ function _init()
  -- tmp
  --unpack_intro()
  --unpack_title()
- unpack_stage(1, 7)
+ unpack_stage(2, 1)
  --unpack_stage_select()
  --unpack_credits()
 
@@ -92,9 +93,9 @@ function _update()
 
  g_func_update()
 
+ g_p_intro_cd = max(g_p_intro_cd - 1)
  -- allow to skip stage intro
  if (btnp() & 0x30 > 0 and g_p_intro_cd > 45) g_p_intro_cd = 45
- g_p_intro_cd = max(g_p_intro_cd - 1)
  -- do intro animation?
  if (g_p_intro_cd <= 45) g_intro_anim = min(g_intro_anim + .1, 1)
 
@@ -171,8 +172,8 @@ end
 function set_game_mode(_mode, _world_target, _level_target, _skip_l_intro)
  g_game_mode_target, g_puzz_world_target, g_puzz_level_target, g_p_skip_intro, g_p_intro_cd = _mode, _world_target, _level_target, _skip_l_intro, 0
  menus_remove()
- -- stop music
- music(-1)
+ -- fade out the music if we're going to a non-gameplay screen
+ if (g_game_mode_target != 2) music(-1, 500) g_prev_was_gameplay = false
 end
 
 function finalize_game_mode(_func_update, _func_draw)
@@ -268,9 +269,9 @@ function unpack_stage(_world, _stage)
  ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{},{{},{}},1,g_p_sst.s_tiles
 
 
- -- decompress sprites (if needed)
+ -- decompress sprites and music (if needed)
  decompress_sprites(2)
- -- if the tile at this position isn't right, decompress map
+ decompress_music(_world)
 
  if (_need_sprites_update) then
   -- get ready to recolor the puzzle
