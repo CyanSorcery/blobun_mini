@@ -5,7 +5,7 @@ function add_undo()
  -- copy the player object
  _undo.player = tbl_copy(g_list_obj[1])
  -- store additional parameters
- _undo.g_p_zap_turn = g_p_zap_turn
+ _undo.g_p_zap_turn, _undo.g_tile_count = g_p_zap_turn, g_tile_count
  -- copy the playfield
  _undo.playfield = pack_undo_tiles()
  -- add this to the undo queue
@@ -24,7 +24,7 @@ function perform_undo()
  g_list_obj     = _undo.obj_list
  g_list_obj[1]  = _undo.player
  -- replace any other variables
- g_p_zap_turn, g_stage_lose = _undo.g_p_zap_turn,_undo.g_stage_lose
+ g_p_zap_turn, g_tile_count = _undo.g_p_zap_turn,_undo.g_tile_count
  -- reset these variables
  local _player = g_list_obj[1]
  _player.nextdir, _player.isdead, _player.ismove, g_stage_lose, g_p_updt_coin, g_p_updt_zap = -1, false, false, false, true, true
@@ -109,18 +109,17 @@ end
 -- coco note: this *may* cause an issue if there's a lot of contiguous floor tiles
 function proc_cracked_floor(_x, _y)
  local _tile = mget(_x, _y)
- if (_tile != 125 and _tile != 127) return false
+ if (_tile != 125 and _tile != 127) return 0
 
  -- turn this tile into a pit, and then check adjacent tiles
  tile_copy(126, 24, _x - 1, _y)
+ 
+ -- return how many tiles were removed
+ return 1 + proc_cracked_floor(_x - 2, _y)
+        + proc_cracked_floor(_x + 2, _y)
+        + proc_cracked_floor(_x, _y - 2)
+        + proc_cracked_floor(_x, _y + 2)
 
- proc_cracked_floor(_x - 2, _y)
- proc_cracked_floor(_x + 2, _y)
- proc_cracked_floor(_x, _y - 2)
- proc_cracked_floor(_x, _y + 2)
-
- -- return we did something
- return true
 end
 
 function draw_wavy_text(_str, _x, _y, _col, _px)

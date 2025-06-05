@@ -80,7 +80,7 @@ function player_step(self)
  end
 
  -- have we won?
- if g_stage_win == false and self.tilestouched >= g_p_sst.s_tiles then
+ if g_stage_win == false and self.tilestouched >= g_tile_count then
   g_stage_win = true
   -- if the player time is lower than the record, store it
   if (g_p_time < dget(g_p_sst.s_saveslot)) dset(g_p_sst.s_saveslot, g_p_time) g_p_new_time = true
@@ -101,6 +101,10 @@ function player_end_move(self)
  
  -- figure out what tile we're on, and if we should destroy the object on this tile
  local _x, _y, _oldx, _oldy, _destroy_obj, _doslime = self.x, self.y, (self.oldx << 1) + 2, (self.oldy << 1) + 1, true, true
+ 
+ -- if the previous tile was a cracked floor, process it
+ if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy)
+ 
  local _tile, _prevtile, _poskey, _collision_obj = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
 
  -- if we're on a water tile and are in the ice state, treat as ice floor
@@ -152,9 +156,6 @@ function player_end_move(self)
 
  -- are we on a slime trap right now?
  self.prevslimetrap = _tile == 48
-
- -- if the previous tile was a cracked floor, put it back and then process them
- if (self.prevcrackedfloor) _doslime = false _tile = 50 tile_copy(96, 18, _oldx - 1, _oldy) proc_cracked_floor(_oldx, _oldy)
 
  -- are we on a cracked floor right now?
  self.prevcrackedfloor = _tile == 125 or _tile == 127

@@ -144,7 +144,7 @@ function gameplay_draw()
  -- draw slimebar
  rect(96, 1, 126, 7, 7)
  fillp(g_fillp_diag[ceil(g_fillp_anim)])
- rectfill(124 - max(1, (g_list_obj[1].tilestouched / g_p_sst.s_tiles) * 26), 3, 124, 5, 59)
+ rectfill(124 - max(1, (g_list_obj[1].tilestouched / g_tile_count) * 26), 3, 124, 5, 59)
  fillp()
 
  -- did we win or lose?
@@ -152,7 +152,7 @@ function gameplay_draw()
   draw_wavy_text(g_stage_win and "stage clear!" or "❎ undo", g_stage_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
  
- ?g_list_obj[1].tilestouched.."/"..g_p_sst.s_tiles,8,32,7
+ ?g_list_obj[1].tilestouched.."/"..g_tile_count,8,32,7
 
 end
 
