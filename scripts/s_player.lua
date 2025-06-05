@@ -103,7 +103,7 @@ function player_end_move(self)
  local _x, _y, _oldx, _oldy, _destroy_obj, _doslime = self.x, self.y, (self.oldx << 1) + 2, (self.oldy << 1) + 1, true, true
  
  -- if the previous tile was a cracked floor, process it
- if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy)
+ if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy) self.tilestouched -= 1
  
  local _tile, _prevtile, _poskey, _collision_obj = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
 
