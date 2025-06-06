@@ -118,7 +118,7 @@ function update_stage_select()
  g_sss_menu_stage = mid(1, g_sss_menu_stage, _stages)
  
  -- select the stage?
- if (btnp(4)) set_game_mode(2, g_sss_menu_world, g_sss_menu_stage)
+ if (btnp(4)) set_game_mode(2, g_sss_menu_world, g_sss_menu_stage) music(-1, 500)
  -- go back to the title?
  if (btnp(5)) set_game_mode(0)
 end

@@ -18,7 +18,9 @@ end
 function decompress_music(_index)
  -- don't do it if we don't have to
  if (g_px9_ind_music == _index) return false
-
+ 
+ -- if music was playing, stop it first (prevents bugs/glitchy sound)
+ music(-1)
  holdframe()
  -- load data into the screen area
  px9_decomp(0, 0, g_px9_data[3][_index], pget, pset)
