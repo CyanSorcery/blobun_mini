@@ -13,9 +13,12 @@ g_sfx_lut = {
  },
  t_switch = -349,
  t_coin = -2042,
- p_state = {-1396, -1850, -1656}
+ p_state = {-1396, -1850, -1656},
+ p_win = -3053,
+ p_move = -2428,
+ p_portal = -2327
 }
 
---[[function compress_sfx(_pattern, _offset, _len)
+function compress_sfx(_pattern, _offset, _len)
  print((_pattern << 10) | (_offset << 5) | _len, 7)
-end]]
+end

@@ -56,6 +56,9 @@ function player_step(self)
    if _can_move and not g_stage_lose then
 
     g_p_started = true
+
+    -- play sound effect for moving
+    g_play_sfx = self.inportal and g_sfx_lut.p_portal or g_sfx_lut.p_move
    
     -- record the playfield before making a move?
     if not self.inportal and not self.onconvey then
@@ -82,6 +85,7 @@ function player_step(self)
  -- have we won?
  if g_stage_win == false and self.tilestouched >= g_tile_count then
   g_stage_win = true
+  g_play_sfx = g_sfx_lut.p_win
   -- if the player time is lower than the record, store it
   if (g_p_time < dget(g_p_sst.s_saveslot)) dset(g_p_sst.s_saveslot, g_p_time) g_p_new_time = true
  end
@@ -111,16 +115,17 @@ function player_end_move(self)
  if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
  
  -- heart
- if (_tile == 52) tile_swap(19, 20, 3, 4)
+ if (_tile == 52) tile_swap(19, 20, 3, 4) g_play_sfx = g_sfx_lut.t_switch
  -- diamond
- if (_tile == 53) tile_swap(21, 22, 35, 36)
+ if (_tile == 53) tile_swap(21, 22, 35, 36) g_play_sfx = g_sfx_lut.t_switch
  -- triangle
- if (_tile == 54) tile_swap(23, 24, 67, 68)
+ if (_tile == 54) tile_swap(23, 24, 67, 68) g_play_sfx = g_sfx_lut.t_switch
  -- coins
  if _tile == 55 then
   self.coins += 1
+  g_play_sfx = g_sfx_lut.t_coin
   if self.coins == 3 then
-   self.coins = 0
+   self.coins, g_play_sfx = 0, g_sfx_lut.t_switch
    tile_swap(25, 26, 99, 100)
   end
   g_p_updt_coin = true;
@@ -128,7 +133,7 @@ function player_end_move(self)
 
  -- states: 0 normal, 1 fire, 2 ice
  for i=0,2 do
-  if (_tile == 80 + i) self.pstate = i
+  if (_tile == 80 + i) self.pstate, g_play_sfx = i, g_sfx_lut.p_state[i + 1]
  end
 
  -- octogems
@@ -136,6 +141,7 @@ function player_end_move(self)
   if _tile == 56 + i and self.octogems == i then
    self.octogems += 1
    -- put code for putting particles at next octogem location
+   g_play_sfx = g_sfx_lut.octo[i + 1]
   end
  end
  -- was that the last octogem?
