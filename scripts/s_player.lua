@@ -57,8 +57,8 @@ function player_step(self)
 
     g_p_started = true
 
-    -- play sound effect for moving
-    g_play_sfx = self.inportal and g_sfx_lut.p_portal or g_sfx_lut.p_move
+    -- play sound effect for moving, but only if there's no sound effect OR if the last one was this one
+    if (g_play_sfx == nil and (g_last_played_sfx == g_sfx_lut.p_move or stat(49) == -1)) g_play_sfx = self.inportal and g_sfx_lut.p_portal or g_sfx_lut.p_move
    
     -- record the playfield before making a move?
     if not self.inportal and not self.onconvey then

@@ -41,8 +41,9 @@ function _init()
  g_outro_anim, -- used for stage transitions
  g_menu, -- all menus that are currently active
  g_prev_was_gameplay, -- previous screen was the main game mode
- g_play_sfx -- when this is set, this sound effect is played on this frame
- =0,0,0,0,0,true,time(),0,1,{},false,nil
+ g_play_sfx, -- when this is set, this sound effect is played on this frame
+ g_last_played_sfx -- the last sfx that was played
+ =0,0,0,0,0,true,time(),0,1,{},false,nil,nil
 
  --[[
   g_func_update update function for the current game mode
@@ -126,7 +127,7 @@ function _update()
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
  -- play a sound effect this frame?
- if (g_play_sfx != nil) sfx(-1, 3) sfx(g_play_sfx >> 10 & 0x3f, 3, g_play_sfx >> 5 & 0x1f, g_play_sfx & 0x1f) g_play_sfx = nil
+ if (g_play_sfx != nil) if stat(49) != -1 then sfx(-1, 3) else sfx(g_play_sfx >> 10 & 0x3f, 3, g_play_sfx >> 5 & 0x1f, g_play_sfx & 0x1f) g_last_played_sfx = g_play_sfx g_play_sfx = nil end
  
  
  g_time = time()
