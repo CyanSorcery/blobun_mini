@@ -53,9 +53,11 @@ function _init()
  g_func_update, g_func_draw = nil
  
  g_pal_dark, -- used for darkening the screen
- g_pal_stage_trans -- used for stage transitions
+ g_pal_stage_trans, -- used for stage transitions
+ g_pal_state_part -- colors for state particle generation
  = str2tbl("0001115525511125",16),
- str2tbl("3c26915154", 5)
+ str2tbl("3c26915154", 5),
+ str2tbl("13b49a5d6", 3) -- colors for normal, fire, ice
 
  #include res/r_sfx.lua
 
@@ -68,8 +70,8 @@ function _init()
 
  -- tmp
  --unpack_intro()
- unpack_title()
- --unpack_stage(5, 1)
+ --unpack_title()
+ unpack_stage(5, 1)
  --unpack_stage_select()
  --unpack_credits()
 

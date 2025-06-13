@@ -109,21 +109,21 @@ function player_end_move(self)
  -- if the previous tile was a cracked floor, process it
  if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy) self.tilestouched -= 1
  
- local _tile, _prevtile, _poskey, _collision_obj = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
+ local _tile, _prevtile, _poskey, _collision_obj, _partcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
 
  -- if we're on a water tile and are in the ice state, treat as ice floor
  if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
  
  -- heart
- if (_tile == 52) tile_swap(19, 20, 3, 4) g_play_sfx = g_sfx_lut.t_switch
+ if (_tile == 52) tile_swap(19, 20, 3, 4) g_play_sfx, _partcol = g_sfx_lut.t_switch, {7, 8, 14}
  -- diamond
- if (_tile == 53) tile_swap(21, 22, 35, 36) g_play_sfx = g_sfx_lut.t_switch
+ if (_tile == 53) tile_swap(21, 22, 35, 36) g_play_sfx, _partcol = g_sfx_lut.t_switch, {7, 3, 11}
  -- triangle
- if (_tile == 54) tile_swap(23, 24, 67, 68) g_play_sfx = g_sfx_lut.t_switch
+ if (_tile == 54) tile_swap(23, 24, 67, 68) g_play_sfx, _partcol = g_sfx_lut.t_switch, {7, 13, 12}
  -- coins
  if _tile == 55 then
   self.coins += 1
-  g_play_sfx = g_sfx_lut.t_coin
+  g_play_sfx, _partcol = g_sfx_lut.t_coin, {4, 9, 10}
   if self.coins == 3 then
    self.coins, g_play_sfx = 0, g_sfx_lut.t_switch
    tile_swap(25, 26, 99, 100)
@@ -133,7 +133,7 @@ function player_end_move(self)
 
  -- states: 0 normal, 1 fire, 2 ice
  for i=0,2 do
-  if (_tile == 80 + i) self.pstate, g_play_sfx = i, g_sfx_lut.p_state[i + 1]
+  if (_tile == 80 + i) self.pstate, g_play_sfx, _partcol = i, g_sfx_lut.p_state[i + 1], g_pal_state_part[i + 1]
  end
 
  -- octogems
@@ -226,13 +226,14 @@ function player_end_move(self)
   tile_copy(126, self.pstate << 1, (_x << 1) + 1, (_y << 1) + 1)
  end
 
+ -- make particles?
+ if (_partcol != nil) part_create_slime_explode((_x << 4) + 12, (_y << 4) + 12, _partcol)
+
 end
 
 function player_destroy(self, _kill)
  g_stage_lose = true
-  -- colors for normal, fire, ice
- --local _t = str2tbl("13b49a5d6", 3)
- if (_kill) self.isdead = true --part_create_slime_explode((_obj.x << 4) + 12, (_obj.y << 4) + 12, _t[_obj.pstate + 1])
+ if (_kill) self.isdead = true part_create_slime_explode((self.x << 4) + 12, (self.y << 4) + 12, g_pal_state_part[self.pstate + 1])
 end
 
 function player_draw(self)

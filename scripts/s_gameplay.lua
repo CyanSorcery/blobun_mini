@@ -111,7 +111,7 @@ function gameplay_draw()
  -- draw all the objects
  for _obj in all(g_list_obj) do _obj:ondraw() end
 
- -- draw_particles()
+ draw_particles()
 
  -- get ready to draw UI stuff
  camera(0, 0)
