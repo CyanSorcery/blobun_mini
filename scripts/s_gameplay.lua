@@ -8,7 +8,7 @@ function gameplay_update()
  g_stage_bg_anim %= 1
 
  -- when this is *exactly* 45, start the music
- if (g_p_intro_cd == 45 and g_prev_was_gameplay == false) music(0, 0, 7) g_prev_was_gameplay = true
+ if (g_p_intro_cd == 45 and g_prev_was_gameplay == false) music(setting_get(5) and g_music_ind or -1, 0, 7) g_prev_was_gameplay = true
  
  -- show pause menu?
  if g_p_intro_cd <= 45 and _is_go then

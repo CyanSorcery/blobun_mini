@@ -8,8 +8,8 @@ function init_config()
 	2: show timers (off)
 	3: slime overlap (on)
 	4: sprint by default (off)
-	5: unused
-	6: unused
+	5: music (on)
+	6: sfx (on)
 	7: lesbians (on)
 
 	slot 62:
@@ -26,7 +26,7 @@ function init_config()
  -- if the first bit isn't set in the last slot, we need to initialize this
  if dget(63) == 0 then
   -- set initial options
-  dset(63, 0b01000101)
+  dset(63, 0b01110101)
   -- set initial time on all stages (means it hasn't been beaten)
   for i=0,59 do
    dset(i, 599.999)

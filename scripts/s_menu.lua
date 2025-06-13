@@ -80,6 +80,8 @@ end
 function menu_item_setting(_str, _setting)
  local _item = menu_item_base(_str, function(self)
    setting_set(self.i_setting, setting_get(self.i_setting) == false)
+   -- toggle the music?
+   if (self.i_setting == 5) music(setting_get(5) and g_music_ind or -1, 0, 7)
   end)
  _item.i_setting = _setting
  return _item
@@ -115,6 +117,8 @@ function menu_create_options()
   menu_item_setting("show timers", 1),
   menu_item_setting("slime overlap", 2),
   menu_item_setting("sprint by default", 3),
+  menu_item_setting("sound effects", 4),
+  menu_item_setting("music", 5),
   menu_item_setting("lesbians allowed", 6),
   menu_item_base("pico8 menu", menu_create_pico8)
  })

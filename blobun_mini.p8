@@ -42,8 +42,9 @@ function _init()
  g_menu, -- all menus that are currently active
  g_prev_was_gameplay, -- previous screen was the main game mode
  g_play_sfx, -- when this is set, this sound effect is played on this frame
- g_last_played_sfx -- the last sfx that was played
- =0,0,0,0,0,true,time(),0,1,{},false,nil,nil
+ g_last_played_sfx, -- the last sfx that was played
+ g_music_ind -- when playing music, this is the index
+ =0,0,0,0,0,true,time(),0,1,{},false,nil,nil,nil
 
  --[[
   g_func_update update function for the current game mode
@@ -126,6 +127,8 @@ function _update()
  -- process menus (if we have em)
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
+ -- if sound effects are disabled, just reset this
+ if (setting_get(4) == false) g_play_sfx = nil
  -- play a sound effect this frame?
  if (g_play_sfx != nil) if stat(49) != -1 then sfx(-1, 3) else sfx(g_play_sfx >> 10 & 0x3f, 3, g_play_sfx >> 5 & 0x1f, g_play_sfx & 0x1f) g_last_played_sfx = g_play_sfx g_play_sfx = nil end
  
@@ -198,7 +201,8 @@ end
 function unpack_nongameplay(_mus_id)
  decompress_sprites(1)
  decompress_map(1, 0, 0)
- music(_mus_id)
+ g_music_ind = _mus_id
+ music(setting_get(5) and g_music_ind or -1, 0, 7)
  -- animation for intro/title screen background scrolling
  g_title_scroll = 0
 end
@@ -245,6 +249,8 @@ function unpack_stage(_world, _stage)
  _world = mid(1, _world, count(g_levels))
  _stage = mid(1, _stage, count(g_levels[_world]))
  g_p_i_world, g_p_i_stage, g_p_sst = _world, _stage, g_levels[_world][_stage]
+
+ g_music_ind = 0
 
  -- store this for later
  last_worldstage_set(_world, _stage)
