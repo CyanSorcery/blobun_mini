@@ -103,6 +103,8 @@ function _update()
  g_p_intro_cd = max(g_p_intro_cd - 1)
  -- allow to skip stage intro
  if (btnp() & 0x30 > 0 and g_p_intro_cd > 45) g_p_intro_cd = 45
+ -- get rid of stage name if menu is open
+ if (count(g_menu) > 0 and g_p_intro_cd > 10) g_p_intro_cd = 10
  -- do intro animation?
  if (g_p_intro_cd <= 45) g_intro_anim = min(g_intro_anim + .1, 1)
 
@@ -170,13 +172,13 @@ function _draw()
  end
 
  -- show this only on the gameplay screen
- if count(g_list_obj) > 0 then
+ --[[if count(g_list_obj) > 0 then
  -- tmp
   camera(0, 0)
   -- cpu and memory
   ?flr((stat(1)) * 100).."%", 0, 122, 7
   ?flr(stat(0)).."/2048kb", 18, 122, 7
- end
+ end]]
 end
 
 

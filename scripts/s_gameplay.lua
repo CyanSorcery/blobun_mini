@@ -117,14 +117,18 @@ function gameplay_draw()
  camera(0, 0)
 
  
- local _show_timers = setting_get(1)
+ local _show_timers, _menus_open = setting_get(1), count(g_menu)
  local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 87
  
  -- darken areas of the screen
  poke(0x5F54, 0x60)
  pal(g_pal_dark[1])
- sspr(_left_top_bar, 0, 128, 9, _left_top_bar, 0)
- if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
+ if _menus_open > 0 then
+  sspr(0, 0, 128, 128, 0, 0)
+ else
+  sspr(_left_top_bar, 0, 128, 9, _left_top_bar, 0)
+  if (g_bottom_msg_anim > 0) sspr(0, _bott_msg_y, 128, 16, 0, _bott_msg_y)
+ end
  pal()
  poke(0x5F54, 0x00)
  -- time below goal time?
@@ -153,6 +157,15 @@ function gameplay_draw()
  -- did we win or lose?
  if g_stage_win or g_stage_lose then
   draw_wavy_text(g_stage_win and "stage clear!" or "❎ undo", g_stage_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
+ end
+
+ -- show stage name and author on pause screen?
+ if (_menus_open == 1) then
+  local _offset = sin(g_menu[1].m_anim_factor >> 2) * -32 + -24
+  local _line_x = print_shd("stage "..g_p_i_stage, _offset, 106, 7, 0)
+  line(_offset - 2, 112, _offset + _line_x, 112, 7)
+  print_shd(g_p_sst.s_name, _offset, 115, 7, 0)
+  print_shd(g_p_sst.s_author, _offset, 122, 13, 0)
  end
  
  --?g_list_obj[1].tilestouched.."/"..g_tile_count,8,32,7
