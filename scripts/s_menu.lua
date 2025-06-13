@@ -11,13 +11,20 @@ function menu_create(_x, _y, _w, _items)
   m_step = function(self, _index)
    local _m_count = count(g_menu)
    local _is_top_pane = _index == _m_count
+   local _pause_press = btn(6)
+   local _i_count = count(self.m_items)
+   if (_pause_press) poke(0x5f30,1) 
    if self.m_anim_factor == 1 then
-    if (btnp(2)) self.m_highlight = max(self.m_highlight - 1, 1)
-    if (btnp(3)) self.m_highlight = min(self.m_highlight + 1, count(self.m_items))
+    if (btnp(2)) self.m_highlight -= 1
+    if (btnp(3)) self.m_highlight += 1
+    -- allow wraparound
+    if (self.m_highlight < 1) self.m_highlight = _i_count
+    if (self.m_highlight > _i_count) self.m_highlight = 1
+
     -- confirm
-    if (btnp(4)) self.m_items[self.m_highlight]:i_onclick()
+    if (btnp(5) or btnp(4) or _pause_press) self.m_items[self.m_highlight]:i_onclick()
     -- cancel
-    if (btnp(5)) self.m_anim_incr = -.25
+    --if (btnp(5)) self.m_anim_incr = -.25
    end
    
    -- only increment if a menu below is done with its animation
@@ -89,6 +96,7 @@ end
 
 function menu_create_puzz()
  menu_create(16, 64, 96,{
+  menu_item_base("back", menus_remove),
   menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
   menu_item_base((g_arrow_index == 2 and "hide" or "show").." hints", function() g_arrow_index = g_arrow_index == 2 and 1 or 2 menus_remove() end),
@@ -109,11 +117,13 @@ function menu_create_title()
   end
   ),
   menu_item_base("options", menu_create_options),
-  menu_item_base("credits", function() set_game_mode(4) end)
+  menu_item_base("credits", function() set_game_mode(4) end),
+  menu_item_base("back", menus_remove)
  })
 end
 function menu_create_options()
- menu_create(16, count(g_list_obj) > 0 and 64 or 92, 96, {
+ menu_create(16, count(g_list_obj) > 0 and 64 or 82, 96, {
+  menu_item_base("back", function() g_menu[count(g_menu)].m_anim_incr = -.25 end),
   menu_item_setting("show timers", 1),
   menu_item_setting("slime overlap", 2),
   menu_item_setting("sprint by default", 3),

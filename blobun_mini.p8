@@ -68,8 +68,8 @@ function _init()
 
  -- tmp
  --unpack_intro()
- --unpack_title()
- unpack_stage(5, 1)
+ unpack_title()
+ --unpack_stage(5, 1)
  --unpack_stage_select()
  --unpack_credits()
 
@@ -79,7 +79,7 @@ end
 
 function _update()
  -- get rid of menus when pressing pause?
- if (count(g_menu) > 0 and btn(6)) poke(0x5f30,1) menus_remove()
+ --if (count(g_menu) > 0 and btn(6)) poke(0x5f30,1) menus_remove()
  
  g_even_frame = g_even_frame == false
 
