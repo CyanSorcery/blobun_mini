@@ -167,11 +167,14 @@ function _draw()
   if (_w > 0) ?g_p_sst.s_author, _o1, 115, _colshd
  end
 
+ -- show this only on the gameplay screen
+ if count(g_list_obj) > 0 then
  -- tmp
- camera(0, 0)
- -- cpu and memory
- ?flr((stat(1)) * 100).."%", 0, 122, 7
- ?flr(stat(0)).."/2048kb", 18, 122, 7
+  camera(0, 0)
+  -- cpu and memory
+  ?flr((stat(1)) * 100).."%", 0, 122, 7
+  ?flr(stat(0)).."/2048kb", 18, 122, 7
+ end
 end
 
 

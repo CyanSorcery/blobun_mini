@@ -155,7 +155,7 @@ function gameplay_draw()
   draw_wavy_text(g_stage_win and "stage clear!" or "❎ undo", g_stage_win and 42 or 50, _bott_msg_y + 5, 7, 1.3)
  end
  
- ?g_list_obj[1].tilestouched.."/"..g_tile_count,8,32,7
+ --?g_list_obj[1].tilestouched.."/"..g_tile_count,8,32,7
 
 end
 
