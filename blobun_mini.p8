@@ -70,8 +70,8 @@ function _init()
  -- tmp
  --unpack_intro()
  --unpack_title()
- unpack_stage(5, 1)
- --unpack_stage_select()
+ --unpack_stage(5, 1)
+ unpack_stage_select()
  --unpack_credits()
 
 -- tmp

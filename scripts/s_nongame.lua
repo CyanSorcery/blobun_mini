@@ -112,15 +112,27 @@ function update_stage_select()
 
  -- roxy note: cap this to the count of unlocked stages in the above world later
  local _stages = count(g_levels[g_sss_menu_world])
+ 
+ local _pause_press = btn(6)
+ if (_pause_press) poke(0x5f30,1) 
+
  -- pick the stage
  if (btnp(2)) g_sss_menu_stage -= 1
  if (btnp(3)) g_sss_menu_stage += 1
- g_sss_menu_stage = mid(1, g_sss_menu_stage, _stages)
+ if (g_sss_menu_stage < 0) g_sss_menu_stage = _stages
+ if (g_sss_menu_stage > _stages) g_sss_menu_stage = 0;
  
  -- select the stage?
- if (btnp(4)) set_game_mode(2, g_sss_menu_world, g_sss_menu_stage) music(-1, 500)
+ if btnp(5) or btnp(4) or _pause_press then
+  if g_sss_menu_stage == 0 then
+   -- this is the back button
+   set_game_mode(0)
+  else
+   set_game_mode(2, g_sss_menu_world, g_sss_menu_stage) music(-1, 500)
+  end
+ end
  -- go back to the title?
- if (btnp(5)) set_game_mode(0)
+ --if (btnp(5)) set_game_mode(0)
 end
 
 function draw_stage_select()
@@ -145,20 +157,26 @@ function draw_stage_select()
 
  -- draw the stages
  local _stages = count(g_levels[g_sss_menu_world])
- local _start = max(min(g_sss_menu_stage - 5, _stages - 9), 0)
- local _sy1, _end, _show_timers, _is_hilite, _stagetime, _syt = 23 - (_start * 10), _start + 10, setting_get(1)
- for _y,_st in ipairs(g_levels[g_sss_menu_world]) do
+ local _start = max(min(g_sss_menu_stage - 5, _stages - 9), -1)
+ local _sy1, _end, _show_timers, _is_hilite, _stagetime, _syt = 13 - (_start * 10), _start + 10, setting_get(1)
+ for _y=0,_stages do
   _is_hilite, _sy2 = _y == g_sss_menu_stage, _sy1 + 10
   if _y > _start and _y < _end then
    _syt = _sy1 + 3
+   -- ashe note: this results in one double lookup, don't feel like fixing it
+   local _st = g_levels[g_sss_menu_world][max(1, _y)];
    local _stagetime = dget(_st.s_saveslot)
    if (_is_hilite) menu_draw_select(4, _sy1, 90, _sy2)
    pal(7, _is_hilite and 7 or _t[g_sss_menu_world][2])
-   ?(_y > 9 and "" or " ").._y.." ".._st.s_name, 15, _syt, 7
-   spr(_stagetime <= 599.995 and 241 or 240, 6, _sy1 + 1)
-   if (_show_timers) then
-    if (_stagetime <= _st.s_goaltime) ?format_time(_stagetime), 96, _syt, 7
-    if (_stagetime <= _st.s_devtime) ?"♥", 120, _syt, 7
+   if _y > 0 then
+    ?(_y > 9 and "" or " ").._y.." ".._st.s_name, 15, _syt, 7
+    spr(_stagetime <= 599.995 and 241 or 240, 6, _sy1 + 1)
+    if (_show_timers) then
+     if (_stagetime <= _st.s_goaltime) ?format_time(_stagetime), 96, _syt, 7
+     if (_stagetime <= _st.s_devtime) ?"♥", 120, _syt, 7
+    end
+   else
+    ?"back", 27, _syt, 7
    end
   end
   _sy1 = _sy2
