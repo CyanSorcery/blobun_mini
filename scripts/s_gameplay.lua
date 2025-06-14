@@ -8,7 +8,7 @@ function gameplay_update()
  g_stage_bg_anim %= 1
 
  -- when this is *exactly* 45, start the music
- if (g_p_intro_cd == 45 and g_prev_was_gameplay == false) music(setting_get(5) and g_music_ind or -1, 0, 7) g_prev_was_gameplay = true
+ if (g_p_intro_cd == 45 and g_prev_was_gameplay == false) music(setting_get(5) and 0 or -1, 0, 7) g_prev_was_gameplay = true
  
  -- show pause menu?
  if g_p_intro_cd <= 45 and _is_go then
@@ -16,7 +16,7 @@ function gameplay_update()
   if ((g_btn4_press and g_stage_win or btn(6)) and count(g_menu) == 0) menu_create_puzz()
  end
 
- g_bottom_msg_anim = mid(0, (g_stage_win or g_stage_lose) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
+ g_bottom_msg_anim = mid(0, (count(g_menu) == 0 and (g_stage_win or g_stage_lose)) and g_bottom_msg_anim + .2 or g_bottom_msg_anim - .2, 1)
 
  -- process objects, but only if the stage animation is done
  if _is_go then

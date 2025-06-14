@@ -88,14 +88,14 @@ function menu_item_setting(_str, _setting)
  local _item = menu_item_base(_str, function(self)
    setting_set(self.i_setting, setting_get(self.i_setting) == false)
    -- toggle the music?
-   if (self.i_setting == 5) music(setting_get(5) and g_music_ind or -1, 0, 7)
+   if (self.i_setting == 5) music(setting_get(5) and 0 or -1, 0, 7)
   end)
  _item.i_setting = _setting
  return _item
 end
 
 function menu_create_puzz()
- menu_create(16, 64, 96,{
+ local _t = {
   menu_item_base("back", menus_remove),
   menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
@@ -103,7 +103,10 @@ function menu_create_puzz()
   menu_item_base("stage select", function() set_game_mode(1) end),
   menu_item_base("options", menu_create_options),
   menu_item_base("go to title", function() set_game_mode(0) end)
- })
+ }
+ -- if the player has won, take the "back" button off this menu
+ if (g_stage_win) deli(_t, 1)
+ menu_create(16, 64, 96, _t)
  g_btn4_press, g_btn4_held = false, false
 end
 function menu_create_title()
