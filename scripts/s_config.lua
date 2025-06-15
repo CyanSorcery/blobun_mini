@@ -33,8 +33,8 @@ function init_config()
   -- set world 1 stage 1 unlocked and as last stage
   dset(62, 0b0000000000000001.0001001000000000)
   -- currently unused
-  dset(61, 0)
-  dset(60, 0)
+  --dset(61, 0)
+  --dset(60, 0)
  end
 end
 function setting_get(_ind)

@@ -43,13 +43,7 @@ function _init()
  g_menu, -- all menus that are currently active
  g_prev_was_gameplay, -- previous screen was the main game mode
  g_play_sfx -- when this is set, this sound effect is played on this frame
- =0,0,0,0,0,true,time(),0,1,{},false,nil,nil,nil
-
- --[[
-  g_func_update update function for the current game mode
-  g_func_draw draw function for the current game mode
- ]]
- g_func_update, g_func_draw = nil
+ =0,0,0,0,0,true,time(),0,1,{},false
  
  g_pal_dark, -- used for darkening the screen
  g_pal_stage_trans, -- used for stage transitions
@@ -77,14 +71,9 @@ function _init()
  --unpack_credits()
  --set_game_mode(5, 1) unpack_victory()
 
--- tmp
-g_cam_x, g_cam_y = 0,0
 end
 
-function _update()
- -- get rid of menus when pressing pause?
- --if (count(g_menu) > 0 and btn(6)) poke(0x5f30,1) menus_remove()
- 
+function _update() 
  g_even_frame = g_even_frame == false
 
  -- run fillp animation
@@ -114,19 +103,16 @@ function _update()
  if g_game_mode_target != nil then
   g_outro_anim = max(g_outro_anim - .1)
   if g_outro_anim == 0 then
-   if g_game_mode_target == 0 then
-    unpack_title()
-   elseif g_game_mode_target == 1 then
-    unpack_stage_select()
-   elseif g_game_mode_target == 2 then
-    unpack_stage(g_puzz_world_target, g_puzz_level_target)
-   elseif g_game_mode_target == 3 then
-    unpack_intro()
-   elseif g_game_mode_target == 4 then
-    unpack_credits()
-   elseif g_game_mode_target == 5 then
-    unpack_victory()
-   end
+   -- this saves on tokens. only stage select uses the arguments
+   local _t = {
+    unpack_title,
+    unpack_stage_select,
+    unpack_stage,
+    unpack_intro,
+    unpack_credits,
+    unpack_victory
+   }
+   _t[g_game_mode_target+1](g_puzz_world_target, g_puzz_level_target)
    -- reset everything
    g_intro_anim, g_outro_anim, g_game_mode_target, g_puzz_world_target, g_puzz_level_target = 0, 1
   end
@@ -136,7 +122,7 @@ function _update()
  for i,_pane in pairs(g_menu) do _pane:m_step(i) end
 
  -- if sound effects are disabled, just reset this
- if (setting_get(4) == false) g_play_sfx = nil
+ if (not setting_get(4)) g_play_sfx = nil
  -- play a sound effect this frame?
  if (g_play_sfx != nil) sfx(g_play_sfx >> 10 & 0x3f, 3, g_play_sfx >> 5 & 0x1f, g_play_sfx & 0x1f) g_play_sfx = nil
  
@@ -212,33 +198,29 @@ end
 ]]
 
 -- this is used for the intro, title, and stage select
-function unpack_nongameplay(_mus_id)
+function unpack_nongameplay(_mus_id, _upd_fnc, _drw_fnc)
+ decompress_music(6)
  decompress_sprites(1)
  decompress_map(1, 0, 0)
  music(setting_get(5) and _mus_id or -1, 0, 7)
  -- animation for intro/title screen background scrolling
  g_title_scroll = 0
+ finalize_game_mode(_upd_fnc, _drw_fnc)
 end
 
 -- this function puts us on the intro screen
 function unpack_intro()
- decompress_music(6)
- unpack_nongameplay(-1)
- finalize_game_mode(update_intro, draw_intro)
+ unpack_nongameplay(-1, update_intro, draw_intro)
  g_intro_countdown = 90
 end
 
  -- this function puts us on the title screen
 function unpack_title()
- decompress_music(6)
- unpack_nongameplay(0)
- finalize_game_mode(update_title, draw_title)
+ unpack_nongameplay(0, update_title, draw_title)
 end
 
 function unpack_stage_select()
- decompress_music(6)
- unpack_nongameplay(4)
- finalize_game_mode(update_stage_select, draw_stage_select)
+ unpack_nongameplay(4, update_stage_select, draw_stage_select)
  -- set the world/stage select variables
  local _ws = last_worldstage_get()
  g_sss_menu_world, g_sss_menu_world_tgt = mid(1, _ws.world, count(g_levels))
@@ -247,22 +229,17 @@ function unpack_stage_select()
 end
 
 function unpack_credits()
- decompress_music(6)
- unpack_nongameplay(4)
- finalize_game_mode(update_credits, draw_credits)
+ unpack_nongameplay(4, update_credits, draw_credits)
  -- make sure to not draw a victory message
  g_victory_mode = nil
 end
 
 function unpack_victory()
- decompress_music(6)
- unpack_nongameplay(4)
- finalize_game_mode(update_credits, draw_credits)
+ unpack_nongameplay(4, update_credits, draw_credits)
 end
 
 function unpack_stage(_world, _stage)
  finalize_game_mode(gameplay_update, gameplay_draw)
-
 
  local _need_sprites_update = g_px9_ind_sprites != 2
 
@@ -279,7 +256,7 @@ function unpack_stage(_world, _stage)
   g_stage_bg_anim animation factor for stage background
   g_shimmer_water for animating water/lava
  ]]
- g_stage_bg_anim, g_shimmer_water = 0, 0b1111000111110000.1110000111111000
+ g_stage_bg_anim, g_shimmer_water, g_cam_x, g_cam_y = 0, 0b1111000111110000.1110000111111000, 0, 0
  
  g_list_obj, -- all objects that are in this puzzle
  g_stage_lose, -- player has been destroyed by some puzzle element
@@ -302,7 +279,7 @@ function unpack_stage(_world, _stage)
  g_final_world_clr, -- if they've cleared the final world
  g_game_clear, -- they've beaten every puzzle
  g_game_fast_clear, -- they've beaten every puzzle fast
- g_game_dev_clear -- they've beaten every dev time
+ g_game_dev_clear, -- they've beaten every dev time
  ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{},{{},{}},1,g_p_sst.s_tiles,achv_beat_last_world(),achv_beat_game_stages(),achv_beat_game_times(false),achv_beat_game_times(true)
 
 
@@ -340,7 +317,7 @@ function unpack_stage(_world, _stage)
  local _obj_end, _obj = g_p_sst.s_obj_count - 1
  for i=0,_obj_end do
   _obj = obj_create(sub(g_p_sst.s_obj_str, i * 5 + 1, i * 5 + 6))
-  if (_obj.type == 11) then
+  if _obj.type == 11 then
    add(g_list_arrows[1], arrow_create(_obj.spr, _obj.x, _obj.y))
   else
    add(g_list_obj, _obj)
@@ -418,7 +395,7 @@ end
 #include scriptsmin/s_px9.lua
 #include scriptsmin/s_util.lua
 #include scripts/s_gameplay.lua
-#include scriptsmin/s_objects.lua
+#include scripts/s_objects.lua
 #include scripts/s_player.lua
 #include scriptsmin/s_config.lua
 #include scripts/s_nongame.lua
