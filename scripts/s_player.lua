@@ -57,8 +57,10 @@ function player_step(self)
 
     g_p_started = true
 
-    -- play sound effect for moving, but only if there's no sound effect OR if the last one was this one
-    if (g_play_sfx == nil and (g_last_played_sfx == g_sfx_lut.p_move or stat(49) == -1)) g_play_sfx = self.inportal and g_sfx_lut.p_portal or g_sfx_lut.p_move
+    -- play floor portal sound?
+    if (self.inportal) g_play_sfx = g_sfx_lut.p_portal
+    -- if no sfx is playing, and we're not on a conveyer, play the move sound
+    if (g_play_sfx == nil and stat(49) == -1 and not self.onconvey) g_play_sfx = g_sfx_lut.p_move
    
     -- record the playfield before making a move?
     if not self.inportal and not self.onconvey then
@@ -107,7 +109,7 @@ function player_end_move(self)
  local _x, _y, _oldx, _oldy, _destroy_obj, _doslime = self.x, self.y, (self.oldx << 1) + 2, (self.oldy << 1) + 1, true, true
  
  -- if the previous tile was a cracked floor, process it
- if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy) self.tilestouched -= 1
+ if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy) self.tilestouched -= 1 g_play_sfx = g_sfx_lut.pit_o self.prevcrackedfloor = false
  
  local _tile, _prevtile, _poskey, _collision_obj, _partcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
 
@@ -158,13 +160,13 @@ function player_end_move(self)
  if (_tile == 51) self.haskey = false
 
  -- was the previous tile a slime trap?
- if (self.prevslimetrap) tile_copy(126, 26, _oldx - 1, _oldy)
+ if (self.prevslimetrap) tile_copy(126, 26, _oldx - 1, _oldy) g_play_sfx = g_sfx_lut.s_trap
 
  -- are we on a slime trap right now?
  self.prevslimetrap = _tile == 48
 
  -- are we on a cracked floor right now?
- self.prevcrackedfloor = _tile == 125 or _tile == 127
+ if (_tile == 125 or _tile == 127) self.prevcrackedfloor = true g_play_sfx = g_sfx_lut.pit_t
 
  -- are we on a conveyer? if so, overwrite new direction
  local _dir = -1
@@ -233,7 +235,7 @@ end
 
 function player_destroy(self, _kill)
  g_stage_lose = true
- if (_kill) self.isdead = true part_create_slime_explode((self.x << 4) + 12, (self.y << 4) + 12, g_pal_state_part[self.pstate + 1])
+ if (_kill) g_play_sfx = g_sfx_lut.p_hurt self.isdead = true part_create_slime_explode((self.x << 4) + 12, (self.y << 4) + 12, g_pal_state_part[self.pstate + 1])
 end
 
 function player_draw(self)

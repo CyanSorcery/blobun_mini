@@ -2,156 +2,186 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()cls(1)?"loading...",1,122,13
-flip()memcpy(32768,0,17152)A={{},{},{},{},{},{}}ff,fr=0,0local e,f=32768,%32768while(f~=0)add(A[f>>13&7],e+2)e+=2+(f&8191)f=%e
-f9,fb={51510,27795,14025,37740},{32769.5,42405.5,60855.5,-.5}f2,fe,D,S,T,fn,f8,j,k,a,fo,s,f7=0,0,0,0,0,true,time(),0,1,{},false,nil,nil,nil fu,fs=nil fh,fx,fm,U=E("0001115525511125",16),E("3c26915154",5),E("13b49a5d6",3),E(U,1)g={octo={64515,-925,-829,-733,-637,-541,-445,-248},t_switch=-349,t_coin=63494,p_state={64140,63686,63880},p_win=62483,p_move=63108,p_portal=63209}function eg(f,e,n)print(f<<10|e<<5|n,7)end fK()fL()fM(1)fg()V,W=0,0end function _update()fn=fn==false T+=.2T%=4f2+=.035f2%=1D+=.15D%=32S-=1if S<=0then S=14elseif S%7==1then K=true end fu()x=max(x-1)if(btnp()&48>0and x>45)x=45
-if(count(a)>0and x>10)x=10
-if(x<=45)j=min(j+.1,1)
-if p~=nil then k=max(k-.1)if(k==0)if p==0then fN()elseif p==1then fg()elseif p==2then fO(X,fp)elseif p==3then fP()elseif p==4then fQ()end j,k,p,X,fp=0,1
-end for f,e in pairs(a)do e:m_step(f)end if(h(4)==false)s=nil
-if(s~=nil)if stat(49)~=-1then sfx(-1,3)else sfx(s>>10&63,3,s>>5&31,s&31)f7=s s=nil end
-f8=time()if(f8<0)stop"game has been running for too long. take a break!"
-end function _draw()fs()for f,e in pairs(a)do e:m_draw(f)end local f=p==2or p==nil and count(u)>0local e=f and X~=nil and X or q or 1local n,f,e=f and fx[1][e]or 1,fx[2][e],64*cos(j*k>>2)if(e>0)rectfill(0,0,e,127,n)rectfill(127-e,0,127,127,n)
-if x>0then local a,o="stage "..G,cos(abs(max(abs(x-45),35)-35)/40)*64-64local n,d,o=o+8,o+9,w(a,o+12,97,7,f)line(d,105,d+o,105,f)line(n,104,n+o,104,7)w(i.s_name,n,107,7,f)if(e>0)?i.s_author,n,115,f
-end end function o(f,e,n,o)p,X,fp,fR,x=f,e,n,o,0Y()if(p~=2)music(-1,500)fo=false
-end function L(f,e)fu,fs,x,u=f,e,0,{}pal()end function e(f)fw(1)fy(1,0,0)music(h(5)and f or-1,0,7)d=0end function fP()M(6)e(-1)L(fS,fT)Z=90end function fN()M(6)e(0)L(fU,fV)end function fg()M(6)e(4)L(fW,fX)local f=fk()r,N=mid(1,f.world,count(b))y=mid(1,f.stage,count(b[r]))d,B,H,fY=0,0,.125,E("13b224cd02415d6d2494",4)end function fQ()M(6)e(4)L(fZ,f_)end function fO(f,e)L(e1,e0)local n=ff~=2f=mid(1,f,count(b))e=mid(1,e,count(b[f]))q,G,i=f,e,b[f][e]e4(f,e)f5,fz=0,61936.8827u,z,l,_,f6,v,K,f1,O,fv,x,C,fF,f0,I,fd,f4,P={},false,false,false,false,0,true,false,0,false,fR==true and 0or 90,0,false,{},{},{{},{}},1,i.s_tiles fw(2)M(f)if(n)poke(24405,0)local e=E("2854ef234924d6d54924",4)for n=1,4do pal(e[1][n],e[f][n])end spr(1,8,0,14,1)spr(16,0,8,2,2)poke(24405,96)e3(f)fy(2,96,0)
-local n,o,f=i.s_data,i.s_width+2for e=1,#n,2do f=c(n,e,1,1)F(96+f\16*2,f%16*2,(e-1)\2%o*2-1,(e-1)\2\o*2-1)end local e,f=i.s_obj_count-1for e=0,e do f=ef(sub(i.s_obj_str,e*5+1,e*5+6))if(f.type==11)add(fd[1],fA(f.spr,f.x,f.y))else add(u,f)
-end for f in all(i.s_hints)do add(fd[2],fA(f))end end function fA(f,e,n)local f={dir=type(f)=="number"and f or c(f,1,1),x=((e and e or c(f,2,1))<<4)+12,y=((n and n or c(f,3,1))<<4)+12}function f:ondraw()fa=self.dir spr(fa%2==0and 254or 255,self.x,self.y,1,1,cos(fa>>2)<0,sin(fa>>2)>=0)end return f end function fK()local n,a,e,f,o,d=b b={}for n in all(n)do a={}for n in all(n)do e={}f=2o=c(n,1,1)e.s_name=sub(n,f,f+o)f+=o+2o=c(n,f-1,1)e.s_author=sub(n,f,f+o)f+=o+1e.s_width=c(n,f,1)+1e.s_saveslot=c(n,f+1,0,1)e.s_goaltime=c(n,f+3,0,7)e.s_devtime=c(n,f+11,0,7)f+=19o=c(n,f,1)*3e.s_hints={}for o=1,o,3do add(e.s_hints,sub(n,f+o,f+o+2))end f+=o+1o=c(n,f,1,1)d=f+2+o*5e.s_obj_count=o e.s_obj_str=sub(n,f+2,d-1)e.s_tiles=c(n,d,1,1)e.s_data=sub(n,d+2)e.s_height=#e.s_data\2\(e.s_width+2)-2add(a,e)end add(b,a)end end e2="4fe5729bd9f69189773150d1dfc52318"U="55332"b={{"6tadpole3ashe601004.8344002.8344c0013110123221230221321310300400503600600100b3101b5100b0200b1203b3301124e4e4e38181818404e38184033ff01ff13403321131d010b01ff3b3301ff0cff01ff013b4c3101ff01ff01394d4e4c41414141414d4e","8suspicion3ashe402004.8344002.834451441431421412400104400124e3818181818403810ff01ff013b33ff01110dff3b3301ff01ff013b4c3101ff01ff3b4e33ff3931213b4e4c414d4c414d","efractured floor3ashe605006.8344004.836160450551651643632640504500a1160a6011a2540a40251e3818181830181818403301ff011a25ff053b33ff05ff121b01ff3b3301ff01ff1214143f3614141b01ff01ff3b3301ff121b01ff013b33ff01251a2101ff3b4c4141414b4141414d","btwisted path3ashe504005.3344003.334431031021010100300154e3818181818404e3810ff01ff01134033ff01ff19ff013b33010b011f0dff3b332101890cff013b4c413101ff01394d4e4e4c4141414d4e","asilly swine3ashe603007.7010005.501141051041031020100500223818181830181818403301ff011a01ff013b33ff0bff0cff0bff3b3301ff89ff89ff013b33ff11142a140dff3b3301ff010c01ff013b332101ff01ff01ff3b4c414141414141414d","dtricky portals3coco411005.3344003.567770323421431422411312300503200a1220a2012a2322a222315381818181818403301ff25ff013b33ff018901ff3b3301254521013b33ff014501ff3b4c41414141414d","cstylish bunny5autumn632007.4677005.501170561662651552541440430305600a4020a2040214e4e38183018404e4e4e3810451a4513404e4e3301ff1aff013b4e4e33ff010c01ff3b4e381001ff01ff0113403301ff0bff0bff013b33ff01ff89ff01ff3b4c31ff01ff0121394d4e4c41414141414d4e","dtesting stage!4unset758600.1000000.11000010150040381818181818181818403301ff01fffeff01ff3b33ff010901090109013b3301fffefffefffeff3b33ff010901090109013b3301fffefffefffeff3b33ff21ff010901ff013b3301ff01ff0109fe093b33090109010901ff013b4c41414141414141414d"},{"cbarrier break3ashe606006.6677004.717750010110211310300200100131531d4e4e3818181818404e381810040403ff134033210104020301ff3b3301ff01ff03ff013b330301ff010301ff3b4c4131030303ff394d4e4e4c414141414d4e","estaggered coins3coco627006.5011004.5011310310200104003004005643156462561c3818181818181818403362ff01ff01ff013b33ff19ff62ff19ff3b33010c0119010c623b332101ff0cff64ff3b4c31ff01ff01ff633b4e4c4141414141414d","cdiamond coins3ashe607007.9344005.68446024034044054164163050240046056402564325620454233818181818181818403301ff01ff01ff623b33ff6464016363ff3b33626464626363243b33ff01ff23ff01243b33222321ff2424013b4c414141414141414d","dunlocking path3ashe608006.3344004.334472232131031020011110100502300a4121a21419039f363551b3818181818181818403301ff448a44ff013b33ff01050b0501ff3b3301ff014301ff013b332c012143ff01423b4c414141414141414d","dtriangle coins3coco626006.5011004.50116163162261251341242060630045056412563425530355433561c3818181818181818403301ff01444462633b33ff01ff01ff01ff3b33646243ff4243013b334264ff62ff43213b4c414141414141414d","dfractured isle5willow620008.8677006.35105266256246236126090660035055a6100a00612035431355a0664a640621654273818181818181818403325ff01444442013b33ff01ff444401253b36141414141b24243b332242ff011a24243b33432323441aff053b33432323441214143f33052201ff01ff213b4c414141414141414d","atoggle maze3coco612009.8010007.23446263253243233223213090630042056461562125436455a0522a2205425569359f2b3818181818181818403344ff626301ff433b33ff01ff63ff01623b33012205238a23013b33242424448944213b3323ff01ff43ff423b330501622cff01ff3b4c414141414141414d","cnumerous keys4riley633009.8010007.117752432332232131030a043003405540156441569629f113534045624454a0560a60052b381818181818181840330303014442ff053b336201ff016264643b330144444343242c3b33ff0204012124243b33626363632289013b330501ff018a23233b4c414141414141414d"},{"ewatch your step5autumn330004.3011002.501140031132121020200300310551038181818184033014201ff3b33474443013b3301ff43ff3b332101ff273b4c414141414d","ccareful moves5willow518005.1677003.16774143142241231030430035055223541438181818181818403301ff01ff27423b33ff23ff0124433b4c3123014701394d4e33232227213b4e4e4c414141414d4e","cdiamond house3ashe509006.1677004.1844f154153252142141240330231221211301302003313114030540020254252541a4e4e381818404e4e381810232313184033ff012323ff013b332224242424223b33ff47ff0147013b33010701ff07213b4c4141414141414d","9conveyance3roxy528006.8344004.83446104103102101000010030040011353253541e38181818181818403301ff66ff01663b33ff664601ff663b330166060601663b33ff02030123223b33210303ff23233b4c4141414141414d","dunstable floor4riley417005.8344003.851040040140240340200400321551a381818181818403301ff0144443b33ff014244443b334343fe09fe3b334343ff89ff3b3321ff0109013b4c41414141414d","aforest maze5autumn531006.4677004.884440041140133230600400a5100a00519029f152539549f1f3818181818181840336589464646273b338a03ff8aff653b332cff010926023b33ff0404feff013b3321ff4709012c3b4c4141414141414d","bmisdirection3coco829007.7010005.501161030021122110010110700300280541715332255a2300a00239839f2238181818181818181818403325ff01ff06ff43ff223b33ff0144231924ff02ff3b33014442230c240404033b3321012501468aff032c3b4c4141414141414141414d"},{"dbring the heat3ashe416005.1677003.167732232131030202300741e714381818181818403301696969013b33ff0a0a0a283b33010a0a0a013b33ff012101ff3b4c41414141414d","acold circle5willow619006.1100004.501120031130300300a6360a60631c3818181818181818403301ff696969ff053b33ff6969696969ff3b33016969696969013b33210169696901053b4c414141414141414d","bfrozen water3mika624006.5011004.501112630406300811e8a1260a60121c3818181818181818403301ff696969ff053b33ff48acb5a401ff3b33010591968dff013b33ff0169696901213b4c414141414141414d","ahot diamond3mika523006.8344004.83445300301002012322030000025054724e71e381818181818184033210a7a8272223b33ff01578184723b3301ff017c86743b33ff0189575c543b3323ff28ff0a394d4c41414141414d4e","9lava coins3coco625006.5011004.51776103002112211001111060030041056730e74505626154433561c38181818181818184033016201280a620a3b33ff24ff017a72223b33016463558077523b332164236257540a3b4c414141414141414d","ahot springs3ashe810010.2677007.33442001111090010025054811e8761e7813e8a6320a2063a8404a04842d3818181818181818181840330166050606220606663b332148acb5b5a4285d693b3301ffaeb9b9a6235e693b33ff489196968d0551693b332555520a0aff01ff253b4c4141414141414141414d","ccool crossing3mika622007.9344005.684440020121221210a0020042056831e8712e74525640456814e8a2562a622544656234e4e38181818404e4e4e4e3362ff013b4e4e381810ff48461318403321280a896962053b33ff4669896901ff3b3362488e928bff013b4c41310501ff39414d4e4e336363623b4e4e4e4e4c4141414d4e4e"},{"dfollow the gem3ashe714012.8344009.284453003010023123130c000005200755006352555720552300543035040120654526025460417653383818181818181818184033214aefff43cf44443b33ff4aff01430144443b33014a4a4a434201af3b33ff010f236f0403033b332fff0123230403033b33ff01ff232301ff013b3322ff4f238fff01023b4c41414141414141414d","boctogem maze3roxy613011.2010008.201061631622611513502510f06300200545300756000203545130613353553015640250505545045160334655a6606a06663138181818181818184033224a23ef01ff0f3b33ff0303030404ff3b33240303030404013b3322cf2302ff2f213b3301ff01ff43ff4f3b33af43ff018f01ff3b33056f44044204053b4c414141414141414d","bweaving path5willow821017.3440012.384441871862851751008700700e731255403569439f4735620554636e6837e815753a0834a3408818e842856a8882a82884a38181818181818181818403328ff434301ff7a720a3b33ff01ff01ff017c740a3b330142aca4010b5754453b33628e958d2c03ff628a3b3614140d2519ff6969013b332201ff011a01ff01ff3b33239769080cff2666013b33ff886948ff02ff01213b332548626301630163453b4c4141414141414141414d","bfour islands3ashef15030.3344023.734493b90ba2ca2ba0aa3ba3bb0bc2cc1c0b900210546c0e62e054a51b0ab0515a1055b30650404554031a453845e89199f549021aa53afaf4af4fa82ce873ce71ec5352d0123d545ad00a1e15a151eabe4ea4ebe5ee07834e3818181818404e4e4e4e3818181818404e38102201240113404e4e381045082422134033ff01ff24ff453b4e4e33af24240189233b3301ff012489243b4e4e330149012301ff3b338e8bff01ff013b4e4e3323cfff0104233b338fff0a0a236f3b4e4e330223010423653b4c3125ff0148394d4e4e4c3123ff0423394d4e4c414141414d4e4e4e4e4c414141414d4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e3818181818404e4e4e4e3818181818404e38102c23234f13404e4e381021ff034a1340337a75587d82723b4e4e3302ff010301653b33575449575c543b4e4e3303030303ff013b3301ff482801ff3b4e4e3301ff018902043b33ff8a2f2223013b4e4e330f016604ff013b4c312501ff05394d4e4e4c3105464aef394d4e4c414141414d4e4e4e4e4c414141414d4e"}}function fw(f)if(ff==f)return false
-holdframe()J(0,0,A[1][f],sget,sset)J(0,0,A[2][f],pget,pset)memcpy(12288,24576,255)ff=f end function M(f)if(fr==f)return false
-music(-1)holdframe()J(0,0,A[3][f],pget,pset)memcpy(12544,24576,128)memcpy(12800,24704,2176)fr=f end function fy(f,e,n)holdframe()J(e,n,A[4][f],mget,mset)end function fM(f)holdframe()J(0,0,A[5][f],pget,pset)memcpy(14976,24576,2176)end function e3(f)holdframe()J(32,72,A[6][f],sget,sset)end function J(i,e,f,t,r)local function c(f,o)local e,n=f[1],1while(e~=o)n+=1e,f[n]=f[n],e
-f[1]=o end local function a(e)local n=$f>>f%1*8<<32-e>>>16-e f+=e>>3return n end local function f(e)local f=0repeat f+=1local n=a(f)e+=n until n<(1<<f)-1return e end local b,u,s,n,l,o,d=f"0",f"0",f"1",{},{},0for f=1,f"1"do add(n,a(s))end for a=e,e+u do for i=i,i+b do o-=1if(o<1)o,d=f"1",not d
-local o=a>e and t(i,a-1)or 0local e=l[o]or{unpack(n)}l[o]=e local f=e[d and 1or f"2"]c(e,f)c(n,f)r(i,a,f)end end end function ee()local f={}f.obj_list=fj(u)f.player=fj(u[1])f.g_p_zap_turn,f.g_tile_count=v,P f.playfield=en()add(I,f)if(count(I)>40)deli(I,1)
-end function e8()local e=count(I)if(e==0)return
+flip()memcpy(32768,0,17152)j={{},{},{},{},{},{}}fe,fu=0,0local e,f=32768,%32768while(f~=0)add(j[f>>13&7],e+2)e+=2+(f&8191)f=%e
+fs,fh={51510,27795,14025,37740},{32769.5,42405.5,60855.5,-.5}fn,fo,C,T,U,f8,f5,q,o,a,f6,b=0,0,0,0,0,true,time(),0,1,{},false,nil,nil,nil fx,fm=nil fd,fy,fg,L=D("0001115525511125",16),D("3c26915154",5),D("13b49a5d6",3),D(L,1)u={octo={64515,-925,-829,-733,-637,-541,-445,-248},t_switch=-349,t_coin=63494,p_state={64140,63686,63880},p_win=62483,p_portal=63142,p_hurt=61448,p_move=61956,m_sel=61700,m_back=63333,m_confirm=61828,s_trap=62084,pit_t=62210,pit_o=62278}function eF(f,e,n)print(f<<10|e<<5|n,7)end fP()fQ()fR(1)fp()V,W=0,0end function _update()f8=f8==false U+=.2U%=4fn+=.035fn%=1C+=.15C%=32T-=1if T<=0then T=14elseif T%7==1then M=true end fx()m=max(m-1)if(btnp()&48>0and m>45)m=45
+if(count(a)>0and m>10)m=10
+if(m<=45)q=min(q+.1,1)
+if g~=nil then o=max(o-.1)if(o==0)if g==0then fS()elseif g==1then fp()elseif g==2then fT(X,fw)elseif g==3then fU()elseif g==4then fV()elseif g==5then fW()end q,o,g,X,fw=0,1
+end for f,e in pairs(a)do e:m_step(f)end if(x(4)==false)b=nil
+if(b~=nil)sfx(b>>10&63,3,b>>5&31,b&31)b=nil
+f5=time()if(f5<0)stop"game has been running for too long. take a break!"
+end function _draw()fm()for f,e in pairs(a)do e:m_draw(f)end local f=g==2or g==nil and count(h)>0local e=f and X~=nil and X or N or 1local n,f,e=f and fy[1][e]or 1,fy[2][e],64*cos(q*o>>2)if(e>0)rectfill(0,0,e,127,n)rectfill(127-e,0,127,127,n)
+if m>0then local a,o="stage "..Y,cos(abs(max(abs(m-45),35)-35)/40)*64-64local n,d,o=o+8,o+9,w(a,o+12,97,7,f)line(d,105,d+o,105,f)line(n,104,n+o,104,7)w(i.s_name,n,107,7,f)if(e>0)?i.s_author,n,115,f
+end end function y(e,f,n,o)if(e==5)Z=f f=nil
+g,X,fw,fX,m=e,f,n,o,0fv()if(g~=2)music(-1,500)f6=false
+end function E(f,e)fx,fm,m,h=f,e,0,{}pal()end function e(f)fz(1)fk(1,0,0)music(x(5)and f or-1,0,7)n=0end function fU()G(6)e(-1)E(fY,fZ)_=90end function fS()G(6)e(0)E(f_,e1)end function fp()G(6)e(4)E(e0,e4)local f=fF()r,O=mid(1,f.world,count(s))v=mid(1,f.stage,count(s[r]))n,A,H,e3=0,0,.125,D("13b224cd02415d6d2494",4)end function fV()G(6)e(4)E(fj,fq)Z=nil end function fW()G(6)e(4)E(fj,fq)end function fT(f,e)E(ef,e2)local n=fe~=2f=mid(1,f,count(s))e=mid(1,e,count(s[f]))N,Y,i=f,e,s[f][e]ee(f,e)fa,fA=0,61936.8827h,z,c,f1,fi,k,M,f0,P,fB,m,B,fC,f4,I,fl,f3,Q,en,eo,e8,e5={},false,false,false,false,0,true,false,0,false,fX==true and 0or 90,0,false,{},{},{{},{}},1,i.s_tiles,fD(),fc(),J(false),J(true)fz(2)G(f)if(n)poke(24405,0)local e=D("2854ef234924d6d54924",4)for n=1,4do pal(e[1][n],e[f][n])end spr(1,8,0,14,1)spr(16,0,8,2,2)poke(24405,96)e6(f)fk(2,96,0)
+local n,o,f=i.s_data,i.s_width+2for e=1,#n,2do f=l(n,e,1,1)F(96+f\16*2,f%16*2,(e-1)\2%o*2-1,(e-1)\2\o*2-1)end local e,f=i.s_obj_count-1for e=0,e do f=ed(sub(i.s_obj_str,e*5+1,e*5+6))if(f.type==11)add(fl[1],fE(f.spr,f.x,f.y))else add(h,f)
+end for f in all(i.s_hints)do add(fl[2],fE(f))end end function fE(f,e,n)local f={dir=type(f)=="number"and f or l(f,1,1),x=((e and e or l(f,2,1))<<4)+12,y=((n and n or l(f,3,1))<<4)+12}function f:ondraw()fr=self.dir spr(fr%2==0and 254or 255,self.x,self.y,1,1,cos(fr>>2)<0,sin(fr>>2)>=0)end return f end function fP()local n,a,e,f,o,d=s s={}for n in all(n)do a={}for n in all(n)do e={}f=2o=l(n,1,1)e.s_name=sub(n,f,f+o)f+=o+2o=l(n,f-1,1)e.s_author=sub(n,f,f+o)f+=o+1e.s_width=l(n,f,1)+1e.s_saveslot=l(n,f+1,0,1)e.s_goaltime=l(n,f+3,0,7)e.s_devtime=l(n,f+11,0,7)f+=19o=l(n,f,1)*3e.s_hints={}for o=1,o,3do add(e.s_hints,sub(n,f+o,f+o+2))end f+=o+1o=l(n,f,1,1)d=f+2+o*5e.s_obj_count=o e.s_obj_str=sub(n,f+2,d-1)e.s_tiles=l(n,d,1,1)e.s_data=sub(n,d+2)e.s_height=#e.s_data\2\(e.s_width+2)-2add(a,e)end add(s,a)end end ea="4fe5729bd9f69189773150d1dfc52318"L="55332"s={{"6tadpole3ashe601004.8344002.8344c0013110123221230221321310300400503600600100b3101b5100b0200b1203b3301124e4e4e38181818404e38184033ff01ff13403321131d010b01ff3b3301ff0cff01ff013b4c3101ff01ff01394d4e4c41414141414d4e","8suspicion3ashe402004.8344002.834451441431421412400104400124e3818181818403810ff01ff013b33ff01110dff3b3301ff01ff013b4c3101ff01ff3b4e33ff3931213b4e4c414d4c414d","efractured floor3ashe605006.8344004.836160450551651643632640504500a1160a6011a2540a40251e3818181830181818403301ff011a25ff053b33ff05ff121b01ff3b3301ff01ff1214143f3614141b01ff01ff3b3301ff121b01ff013b33ff01251a2101ff3b4c4141414b4141414d","btwisted path3ashe504005.3344003.334431031021010100300154e3818181818404e3810ff01ff01134033ff01ff19ff013b33010b011f0dff3b332101890cff013b4c413101ff01394d4e4e4c4141414d4e","asilly swine3ashe603007.7010005.501141051041031020100500223818181830181818403301ff011a01ff013b33ff0bff0cff0bff3b3301ff89ff89ff013b33ff11142a140dff3b3301ff010c01ff013b332101ff01ff01ff3b4c414141414141414d","dtricky portals3coco411005.3344003.567770323421431422411312300503200a1220a2012a2322a222315381818181818403301ff25ff013b33ff018901ff3b3301254521013b33ff014501ff3b4c41414141414d","cstylish bunny5autumn632007.4677005.501170561662651552541440430305600a4020a2040214e4e38183018404e4e4e3810451a4513404e4e3301ff1aff013b4e4e33ff010c01ff3b4e381001ff01ff0113403301ff0bff0bff013b33ff01ff89ff01ff3b4c31ff01ff0121394d4e4c41414141414d4e"},{"cbarrier break3ashe606006.6677004.717750010110211310300200100131531d4e4e3818181818404e381810040403ff134033210104020301ff3b3301ff01ff03ff013b330301ff010301ff3b4c4131030303ff394d4e4e4c414141414d4e","estaggered coins3coco627006.5011004.5011310310200104003004005643156462561c3818181818181818403362ff01ff01ff013b33ff19ff62ff19ff3b33010c0119010c623b332101ff0cff64ff3b4c31ff01ff01ff633b4e4c4141414141414d","cdiamond coins3ashe607007.9344005.68446024034044054164163050240046056402564325620454233818181818181818403301ff01ff01ff623b33ff6464016363ff3b33626464626363243b33ff01ff23ff01243b33222321ff2424013b4c414141414141414d","dunlocking path3ashe608006.3344004.334472232131031020011110100502300a4121a21419039f363551b3818181818181818403301ff448a44ff013b33ff01050b0501ff3b3301ff014301ff013b332c012143ff01423b4c414141414141414d","dtriangle coins3coco626006.5011004.50116163162261251341242060630045056412563425530355433561c3818181818181818403301ff01444462633b33ff01ff01ff01ff3b33646243ff4243013b334264ff62ff43213b4c414141414141414d","dfractured isle5willow620008.8677006.35105266256246236126090660035055a6100a00612035431355a0664a640621654273818181818181818403325ff01444442013b33ff01ff444401253b36141414141b24243b332242ff011a24243b33432323441aff053b33432323441214143f33052201ff01ff213b4c414141414141414d","atoggle maze3coco612009.8010007.23446263253243233223213090630042056461562125436455a0522a2205425569359f2b3818181818181818403344ff626301ff433b33ff01ff63ff01623b33012205238a23013b33242424448944213b3323ff01ff43ff423b330501622cff01ff3b4c414141414141414d","cnumerous keys4riley633009.8010007.117752432332232131030a043003405540156441569629f113534045624454a0560a60052b381818181818181840330303014442ff053b336201ff016264643b330144444343242c3b33ff0204012124243b33626363632289013b330501ff018a23233b4c414141414141414d"},{"ewatch your step5autumn330004.3011002.501140031132121020200300310551038181818184033014201ff3b33474443013b3301ff43ff3b332101ff273b4c414141414d","ccareful moves5willow518005.1677003.16774143142241231030430035055223541438181818181818403301ff01ff27423b33ff23ff0124433b4c3123014701394d4e33232227213b4e4e4c414141414d4e","cdiamond house3ashe509006.1677004.1844f154153252142141240330231221211301302003313114030540020254252541a4e4e381818404e4e381810232313184033ff012323ff013b332224242424223b33ff47ff0147013b33010701ff07213b4c4141414141414d","9conveyance3roxy528006.8344004.83446104103102101000010030040011353253541e38181818181818403301ff66ff01663b33ff664601ff663b330166060601663b33ff02030123223b33210303ff23233b4c4141414141414d","dunstable floor4riley417005.8344003.851040040140240340200400321551a381818181818403301ff0144443b33ff014244443b334343fe09fe3b334343ff89ff3b3321ff0109013b4c41414141414d","aforest maze5autumn531006.4677004.884440041140133230600400a5100a00519029f152539549f1f3818181818181840336589464646273b338a03ff8aff653b332cff010926023b33ff0404feff013b3321ff4709012c3b4c4141414141414d","bmisdirection3coco829007.7010005.501161030021122110010110700300280541715332255a2300a00239839f2238181818181818181818403325ff01ff06ff43ff223b33ff0144231924ff02ff3b33014442230c240404033b3321012501468aff032c3b4c4141414141414141414d"},{"dbring the heat3ashe416005.1677003.167732232131030202300741e714381818181818403301696969013b33ff0a0a0a283b33010a0a0a013b33ff012101ff3b4c41414141414d","acold circle5willow619006.1100004.501120031130300300a6360a60631c3818181818181818403301ff696969ff053b33ff6969696969ff3b33016969696969013b33210169696901053b4c414141414141414d","bfrozen water3mika624006.5011004.501112630406300811e8a1260a60121c3818181818181818403301ff696969ff053b33ff48acb5a401ff3b33010591968dff013b33ff0169696901213b4c414141414141414d","ahot diamond3mika523006.8344004.83445300301002012322030000025054724e71e381818181818184033210a7a8272223b33ff01578184723b3301ff017c86743b33ff0189575c543b3323ff28ff0a394d4c41414141414d4e","9lava coins3coco625006.5011004.51776103002112211001111060030041056730e74505626154433561c38181818181818184033016201280a620a3b33ff24ff017a72223b33016463558077523b332164236257540a3b4c414141414141414d","ahot springs3ashe810010.2677007.33442001111090010025054811e8761e7813e8a6320a2063a8404a04842d3818181818181818181840330166050606220606663b332148acb5b5a4285d693b3301ffaeb9b9a6235e693b33ff489196968d0551693b332555520a0aff01ff253b4c4141414141414141414d","ccool crossing3mika622007.9344005.68444002012122121090020042056831e8712e745256814e8a2562a622544656234e4e38181818404e4e4e4e3362ff013b4e4e381810ff48461318403321280a896962053b33ff4669896901ff3b3301488e928bff013b4c41310501ff39414d4e4e336363623b4e4e4e4e4c4141414d4e4e"},{"dfollow the gem3ashe714012.8344009.284453003010023123130c000005200755006352555720552300543035040120654526025460417653383818181818181818184033214aefff43cf44443b33ff4aff01430144443b33014a4a4a434201af3b33ff010f236f0403033b332fff0123230403033b33ff01ff232301ff013b3322ff4f238fff01023b4c41414141414141414d","boctogem maze3roxy613011.2010008.201061631622611513502510f06300200545300756000203545130613353553015640250505545045160334655a6606a06663138181818181818184033224a23ef01ff0f3b33ff0303030404ff3b33240303030404013b3322cf2302ff2f213b3301ff01ff43ff4f3b33af43ff018f01ff3b33056f44044204053b4c414141414141414d","bweaving path5willow821017.3440012.384441871862851751008700700e731255403569439f4735620554636e6837e815753a0834a3408818e842856a8882a82884a38181818181818181818403328ff434301ff7a720a3b33ff01ff01ff017c740a3b330142aca4010b5754453b33628e958d2c03ff628a3b3614140d2519ff6969013b332201ff011a01ff01ff3b33239769080cff2666013b33ff886948ff02ff01213b332548626301630163453b4c4141414141414141414d","bfour islands3ashef15030.3344023.734493b90ba2ca2ba0aa3ba3bb0bc2cc1c0b900210546c0e62e054a51b0ab0515a1055b30650404554031a453845e89199f549021aa53afaf4af4fa82ce873ce71ec5352d0123d545ad00a1e15a151eabe4ea4ebe5ee07834e3818181818404e4e4e4e3818181818404e38102201240113404e4e381045082422134033ff01ff24ff453b4e4e33af24240189233b3301ff012489243b4e4e330149012301ff3b338e8bff01ff013b4e4e3323cfff0104233b338fff0a0a236f3b4e4e330223010423653b4c3125ff0148394d4e4e4c3123ff0423394d4e4c414141414d4e4e4e4e4c414141414d4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e3818181818404e4e4e4e3818181818404e38102c23234f13404e4e381021ff034a1340337a75587d82723b4e4e3302ff010301653b33575449575c543b4e4e3303030303ff013b3301ff482801ff3b4e4e3301ff018902043b33ff8a2f2223013b4e4e330f016604ff013b4c312501ff05394d4e4e4c3105464aef394d4e4c414141414d4e4e4e4e4c414141414d4e"}}function fz(f)if(fe==f)return false
+holdframe()K(0,0,j[1][f],sget,sset)K(0,0,j[2][f],pget,pset)memcpy(12288,24576,255)fe=f end function G(f)if(fu==f)return false
+music(-1)holdframe()K(0,0,j[3][f],pget,pset)memcpy(12544,24576,128)memcpy(12800,24704,2176)fu=f end function fk(f,e,n)holdframe()K(e,n,j[4][f],mget,mset)end function fR(f)holdframe()K(0,0,j[5][f],pget,pset)memcpy(14976,24576,2176)end function e6(f)holdframe()K(32,72,j[6][f],sget,sset)end function K(i,e,f,r,t)local function l(f,o)local e,n=f[1],1while(e~=o)n+=1e,f[n]=f[n],e
+f[1]=o end local function a(e)local n=$f>>f%1*8<<32-e>>>16-e f+=e>>3return n end local function f(e)local f=0repeat f+=1local n=a(f)e+=n until n<(1<<f)-1return e end local b,u,s,n,c,o,d=f"0",f"0",f"1",{},{},0for f=1,f"1"do add(n,a(s))end for a=e,e+u do for i=i,i+b do o-=1if(o<1)o,d=f"1",not d
+local o=a>e and r(i,a-1)or 0local e=c[o]or{unpack(n)}c[o]=e local f=e[d and 1or f"2"]l(e,f)l(n,f)t(i,a,f)end end end function ei()local f={}f.obj_list=fG(h)f.player=fG(h[1])f.g_p_zap_turn,f.g_tile_count=k,Q f.playfield=el()add(I,f)if(count(I)>60)deli(I,1)
+end function ec()local e=count(I)if(e==0)return
 local f=I[e]if(e>1)deli(I)
-u=f.obj_list u[1]=f.player v,P=f.g_p_zap_turn,f.g_tile_count local e=u[1]e.nextdir,e.isdead,e.ismove,z,f1,K=-1,false,false,false,true,true eo(f.playfield)end function en()local f={}for e=0,34do f[e]={}for n=0,32do f[e][n]=mget(e,n)end end return f end function eo(n)for f=0,34do for e=0,32do mset(f,e,n[f][e])end end end function fj(e)local f={}for e,n in pairs(e)do f[e]=n end return f end function c(n,f,o,e)return tonum(sub(n,f,f+(e and e or 0)),o)end function E(d,f)local e,o,n={},#d\f for o=1,o do e[o]={}n=(o-1)*f for f=1,f do n+=1add(e[o],c(d,n,1,0))end end return e end function m(f,e,n)return f+(e-f)*n end function F(n,o,d,a)for f=0,1do for e=0,1do mset(d+f,a+e,mget(n+f,o+e))end end end function Q(o,d,f,e)local e,n,a,i,c,l,f=i.s_width<<1,i.s_height<<1,48+f\16<<1,f%16<<1,48+e\16<<1,e%16<<1for e=1,e,2do for n=1,n,2do f=mget(e+1,n)if f==o then F(c,l,e,n)elseif f==d then F(a,i,e,n)end end end end function R(f,e)local n=mget(f,e)if(n~=125and n~=127)return 0
-F(126,24,f-1,e)return 1+R(f-2,e)+R(f+2,e)+R(f,e-2)+R(f,e+2)end function fi(e,n,o,d,a)local f=#e for f=1,f do n=print(sub(e,f,f),n,o+sin(f2+f/10)*a,d)end end function w(f,e,n,o,d)?f,e+1,n+1,d
-return print(f,e,n,o)end function fq(f)return(f>=60and flr(f/60)..":"or"")..sub(flr(f%60)+100,2,3).."."..sub(flr(f%1*1000)+1000,2,4)end function e1()local f=j*k==1fe+=.075fe%=1f5+=.015f5%=1if(x==45and fo==false)music(h(5)and 0or-1,0,7)fo=true
-if x<=45and f then if(btn(6))poke(24368,1)
-if((_ and l or btn(6))and count(a)==0)e5()
-end O=mid(0,count(a)==0and(l or z)and O+.2or O-.2,1)if(f)for f in all(u)do f:onstep()end e6()
-local f,e,n=u[1],i.s_width<<4,i.s_height<<4local o=f.inportal and cos(1-f.anim>>2)or f.anim V=i.s_width>8and mid(0,(m(f.oldx,f.x,o)<<4)-48,e-112)or(e>>1)-56W=i.s_height>7and mid(-8,(m(f.oldy,f.y,o)<<4)-48,n-108)or(n>>1)-60end function e0()poke(24405,0)if(fn)ed()else ea()
-if(K)ei()
-if(f1)ec()
-el()poke(24405,96)palt(0)local f,e=-32+D,-D if(q>=3)f,e=-32+-V/2,-32+-W/2
-for f=f,128,32do for e=e,128,32do spr(148,f,e,4,2)spr(152,f,e+16,4,2)end end poke(24404,96)pal()if(q<=2)for f=0,127do sspr(0,f,128,1,sin(f5+(f>>4))*1.4,f)end
-poke(24404,0)camera(V,W)local f,e=i.s_width*2+2,i.s_height*2+2palt(256)map(0,0,0,0,f,e,1)fB()map(0,0,-7,0,f,e,128)fB()for f in all(fd[f4])do f:ondraw()end palt(16384)map(0,0,0,0,f,e,12)palt()map(0,0,0,0,f,e,2)for f in all(u)do f:ondraw()end et()camera(0,0)local o,d=h(1),count(a)local f,e=m(127,115,O),o and 0or 87poke(24404,96)pal(fh[1])if d>0then sspr(0,0,128,128,0,0)else sspr(e,0,128,9,e,0)if(O>0)sspr(0,f,128,16,0,f)
-end pal()poke(24404,0)local e=C<=i.s_goaltime and 7or 13if(l and C<=i.s_devtime)e=10
-local n=dget(i.s_saveslot)spr(n<599.995and 147or 146,88,0)if o then?fq(C),2,2,e
-if(fv)fi("new time!",32,2,e,1.3)
+h=f.obj_list h[1]=f.player k,Q=f.g_p_zap_turn,f.g_tile_count local e=h[1]e.nextdir,e.isdead,e.ismove,z,f0,M=-1,false,false,false,true,true er(f.playfield)end function el()local f={}for e=0,34do f[e]={}for n=0,32do f[e][n]=mget(e,n)end end return f end function er(n)for f=0,34do for e=0,32do mset(f,e,n[f][e])end end end function fG(e)local f={}for e,n in pairs(e)do f[e]=n end return f end function l(n,f,o,e)return tonum(sub(n,f,f+(e and e or 0)),o)end function D(d,f)local e,o,n={},#d\f for o=1,o do e[o]={}n=(o-1)*f for f=1,f do n+=1add(e[o],l(d,n,1,0))end end return e end function p(f,e,n)return f+(e-f)*n end function F(n,o,d,a)for f=0,1do for e=0,1do mset(d+f,a+e,mget(n+f,o+e))end end end function R(o,d,f,e)local e,n,a,i,l,c,f=i.s_width<<1,i.s_height<<1,48+f\16<<1,f%16<<1,48+e\16<<1,e%16<<1for e=1,e,2do for n=1,n,2do f=mget(e+1,n)if f==o then F(l,c,e,n)elseif f==d then F(a,i,e,n)end end end end function S(f,e)local n=mget(f,e)if(n~=125and n~=127)return 0
+F(126,24,f-1,e)return 1+S(f-2,e)+S(f+2,e)+S(f,e-2)+S(f,e+2)end function ft(e,n,o,d,a)local f=#e for f=1,f do n=print(sub(e,f,f),n,o+sin(fn+f/10)*a,d)end end function w(f,e,n,o,d)?f,e+1,n+1,d
+return print(f,e,n,o)end function fH(f)return(f>=60and flr(f/60)..":"or"")..sub(flr(f%60)+100,2,3).."."..sub(flr(f%1*1000)+1000,2,4)end function ef()local f=q*o==1fo+=.075fo%=1fa+=.015fa%=1if(m==45and f6==false)music(x(5)and 0or-1,0,7)f6=true
+if m<=45and f then if(btn(6))poke(24368,1)
+if((f1 and c or btn(6))and count(a)==0)et()
+end P=mid(0,count(a)==0and(c or z)and P+.2or P-.2,1)if(f)for f in all(h)do f:onstep()end e7()
+local f,e,n=h[1],i.s_width<<4,i.s_height<<4local o=f.inportal and cos(1-f.anim>>2)or f.anim V=i.s_width>8and mid(0,(p(f.oldx,f.x,o)<<4)-48,e-112)or(e>>1)-56W=i.s_height>7and mid(-8,(p(f.oldy,f.y,o)<<4)-48,n-108)or(n>>1)-60end function e2()poke(24405,0)if(f8)eb()else e9()
+if(M)eu()
+if(f0)es()
+eh()poke(24405,96)palt(0)local f,e=-32+C,-C if(N>=3)f,e=-32+-V/2,-32+-W/2
+for f=f,128,32do for e=e,128,32do spr(148,f,e,4,2)spr(152,f,e+16,4,2)end end poke(24404,96)pal()if(N<=2)for f=0,127do sspr(0,f,128,1,sin(fa+(f>>4))*1.4,f)end
+poke(24404,0)camera(V,W)local f,e=i.s_width*2+2,i.s_height*2+2palt(256)map(0,0,0,0,f,e,1)fI()map(0,0,-7,0,f,e,128)fI()for f in all(fl[f3])do f:ondraw()end palt(16384)map(0,0,0,0,f,e,12)palt()map(0,0,0,0,f,e,2)for f in all(h)do f:ondraw()end ex()camera(0,0)local o,d=x(1),count(a)local f,e=p(127,115,P),o and 0or 87poke(24404,96)pal(fd[1])if d>0then sspr(0,0,128,128,0,0)else sspr(e,0,128,9,e,0)if(P>0)sspr(0,f,128,16,0,f)
+end pal()poke(24404,0)local e=B<=i.s_goaltime and 7or 13if(c and B<=i.s_devtime)e=10
+local n=dget(i.s_saveslot)spr(n<599.995and 147or 146,88,0)if o then?fH(B),2,2,e
+if(fB)ft("new time!",32,2,e,1.3)
 if(n<=i.s_goaltime)?"⧗",81,2,9
 if(n<=i.s_devtime)?"♥",75,2,14
-end rect(96,1,126,7,7)fillp(f9[ceil(T)])rectfill(124-max(1,u[1].tilestouched/P*26),3,124,5,59)fillp()if(l or z)fi(l and"stage clear!"or"❎ undo",l and 42or 50,f+5,7,1.3)
-if(d==1)local f=sin(a[1].m_anim_factor>>2)*-32+-24local e=w("stage "..G,f,106,7,0)line(f-2,112,f+e,112,7)w(i.s_name,f,115,7,0)w(i.s_author,f,122,13,0)
-end function ed()sspr(12,56,1,15,0,56)sspr(4,56,8,15,5,56)sspr(0,56,1,15,4,56)sspr(17,59,15,1,112,127)sspr(17,60,15,8,17,59)sspr(112,127,15,1,17,67)sspr(36,56,1,15,0,56)sspr(37,56,8,15,36,56)sspr(0,56,1,15,44,56)sspr(49,67,15,1,112,127)sspr(49,59,15,8,49,60)sspr(112,127,15,1,49,59)line(112,127,127,127,7)line(0,56,0,71,0)end function ea()local d,e,f,n,o=fz,0,0,false,false for e=0,10do f,n,o=21+e,d&1<<e>0,d&8<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,92,n and 9or 4)sset(f,90,d&32<<e>0and 10or 9)sset(f,88,o and 10or 0)end for e=0,4do f,n,o=8+e,d&16<<e>0,d&64<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,90,n and 10or 9)sset(f,88,o and 10or 0)end for a=0,7do f,n,o=103-a,95-a,88+a e=d&1<<a>0and 7or 12sset(f,101,e)sset(50,103-a,e)sset(78,96+a,e)e=d&1<<a>0and 9or 4sset(f,91,e)sset(52,n,e)sset(76,o,e)e=d&4<<a>0and 9or 10sset(f,93,e)sset(50,n,e)sset(78,o,e)end fz>><=1end function el()local o=fe spr(224,80,104,6,2)local f,n=80for d=0,32,16do clip(f,104,16,16)for e=0,15do n=sin(o+e/8)+104sspr(d+e,112,1,16,f+e,n)sspr(f,104+e,16,1,f,n+e)end f+=16end local e=u[1]clip()palt(0,false)spr(208,24,104,3,1)palt()if(e.haskey)spr(144,32,104)spr(144,39,104,1,1,true)
+end rect(96,1,126,7,7)fillp(fs[ceil(U)])rectfill(124-max(1,h[1].tilestouched/Q*26),3,124,5,59)fillp()if(c or z)ft(c and"stage clear!"or"❎ undo",c and 42or 50,f+5,7,1.3)
+if(d==1)local f=sin(a[1].m_anim_factor>>2)*-32+-24local e=w("stage "..Y,f,106,7,0)line(f-2,112,f+e,112,7)w(i.s_name,f,115,7,0)w(i.s_author,f,122,13,0)
+end function eb()sspr(12,56,1,15,0,56)sspr(4,56,8,15,5,56)sspr(0,56,1,15,4,56)sspr(17,59,15,1,112,127)sspr(17,60,15,8,17,59)sspr(112,127,15,1,17,67)sspr(36,56,1,15,0,56)sspr(37,56,8,15,36,56)sspr(0,56,1,15,44,56)sspr(49,67,15,1,112,127)sspr(49,59,15,8,49,60)sspr(112,127,15,1,49,59)line(112,127,127,127,7)line(0,56,0,71,0)end function e9()local d,e,f,n,o=fA,0,0,false,false for e=0,10do f,n,o=21+e,d&1<<e>0,d&8<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,92,n and 9or 4)sset(f,90,d&32<<e>0and 10or 9)sset(f,88,o and 10or 0)end for e=0,4do f,n,o=8+e,d&16<<e>0,d&64<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,90,n and 10or 9)sset(f,88,o and 10or 0)end for a=0,7do f,n,o=103-a,95-a,88+a e=d&1<<a>0and 7or 12sset(f,101,e)sset(50,103-a,e)sset(78,96+a,e)e=d&1<<a>0and 9or 4sset(f,91,e)sset(52,n,e)sset(76,o,e)e=d&4<<a>0and 9or 10sset(f,93,e)sset(50,n,e)sset(78,o,e)end fA>><=1end function eh()local o=fo spr(224,80,104,6,2)local f,n=80for d=0,32,16do clip(f,104,16,16)for e=0,15do n=sin(o+e/8)+104sspr(d+e,112,1,16,f+e,n)sspr(f,104+e,16,1,f,n+e)end f+=16end local e=h[1]clip()palt(0,false)spr(208,24,104,3,1)palt()if(e.haskey)spr(144,32,104)spr(144,39,104,1,1,true)
 for n=0,16,8do f=24+n clip(f,104,8,8)for e=0,7do sspr(e+n,104,1,8,f+sin(o+e/8)+e,104)end end clip()if(e.haskey)spr(145,32,104)spr(145,39,104,1,1,true)
-local e,n,f=(btn(4)or e.sprint)and e.onconvey==false,e.blink<4or l f=215if(e)f=214
+local e,n,f=(btn(4)or e.sprint)and e.onconvey==false,e.blink<4or c f=215if(e)f=214
 if(n or z)f=216
-spr(f,l and 37or 36,104,1,1,l)f=251if(e)f=252
+spr(f,c and 37or 36,104,1,1,c)f=251if(e)f=252
 if(z)f=160
-if(l)f=250
-spr(f,40,104)for f=0,23do for e=0,7do sset(79-e,104+f,sget(24+f,104+e))end end end function ei()er={{1,13,5,12,13,12},{1,2,5,8,4,8},{1,4,5,9,4,9}}local f,n,o for e=1,3do o=0n,f=((e+v+2+o)%3<<1)+1,er[e]pal(f[3],f[n])pal(f[4],f[n+1])spr(155+e,96+(e<<3),8,1,2)end pal()K=false end function fB()poke(24405,0)camera(0,0)local f,e for n=0,34do f,e=(n<<3)%128,(n\16<<4)+8sspr(f,e,8,16,f,e,8,16,true)end camera(V,W)poke(24405,96)end function ec()local d,e,o,f=u[1].coins for n=0,1do e,o=4,5if(d>n)e,o=9,4
-f=17-n*3for n=0,8,8do line(72+n,f,76+n,f,e)line(72+n,f-1,75+n,f-1,e)f+=1e=o end end f1=false end function ef(e)local f={type=c(e,1,1),x=c(e,2,1),y=c(e,3,1),spr=c(e,4,1,1),anim=rnd(),spin=rnd()}f.poskey=f.x<<4|f.y if f.type==0then f.startx,f.starty,f.poskey,f.dir,f.anim,f.jiggle,f.sprint,f.pstate,f.ismove,f.oldx,f.oldy,f.startturnx,f.startturny,f.haskey,f.onconvey,f.inportal,f.blink,f.octogems,f.coins,f.nextdir,f.tilestouched,f.isdead,f.prevslimetrap,f.prevcrackedfloor=f.x,f.y,-1,3,1,0,false,0,false,f.x,f.y,f.x,f.y,false,false,false,10,0,0,-1,1,false,false,false f.onstep=e9 f.ondraw=eb else if(f.type==5)f.oct_ind=f.spr f.spr=87
-if(f.type==10)f.dst_x,f.dst_y=c(e,4,1),c(e,5,1)
+if(c)f=250
+spr(f,40,104)for f=0,23do for e=0,7do sset(79-e,104+f,sget(24+f,104+e))end end end function eu()em={{1,13,5,12,13,12},{1,2,5,8,4,8},{1,4,5,9,4,9}}local f,n,o for e=1,3do o=0n,f=((e+k+2+o)%3<<1)+1,em[e]pal(f[3],f[n])pal(f[4],f[n+1])spr(155+e,96+(e<<3),8,1,2)end pal()M=false end function fI()poke(24405,0)camera(0,0)local f,e for n=0,34do f,e=(n<<3)%128,(n\16<<4)+8sspr(f,e,8,16,f,e,8,16,true)end camera(V,W)poke(24405,96)end function es()local d,e,o,f=h[1].coins for n=0,1do e,o=4,5if(d>n)e,o=9,4
+f=17-n*3for n=0,8,8do line(72+n,f,76+n,f,e)line(72+n,f-1,75+n,f-1,e)f+=1e=o end end f0=false end function ed(e)local f={type=l(e,1,1),x=l(e,2,1),y=l(e,3,1),spr=l(e,4,1,1),anim=rnd(),spin=rnd()}f.poskey=f.x<<4|f.y if f.type==0then f.startx,f.starty,f.poskey,f.dir,f.anim,f.jiggle,f.sprint,f.pstate,f.ismove,f.oldx,f.oldy,f.startturnx,f.startturny,f.haskey,f.onconvey,f.inportal,f.blink,f.octogems,f.coins,f.nextdir,f.tilestouched,f.isdead,f.prevslimetrap,f.prevcrackedfloor=f.x,f.y,-1,3,1,0,false,0,false,f.x,f.y,f.x,f.y,false,false,false,10,0,0,-1,1,false,false,false f.onstep=ey f.ondraw=eg else if(f.type==5)f.oct_ind=f.spr f.spr=87
+if(f.type==10)f.dst_x,f.dst_y=l(e,4,1),l(e,5,1)
 function f:onstep()if(self.type<10)self.anim+=.02self.anim%=1self.spin+=.035self.spin%=1
-end function f:ondraw()local f,e=(self.x<<4)+8,self.y<<4if self.type<9then if self.oct_ind==nil or self.oct_ind==u[1].octogems then local e,o,d,n=e+sin(self.anim)*2,self.spr%16<<3,self.spr\16<<3,ceil(sin(self.spin*.5)*-8)if(n<=3)rectfill(f+7,e+1,f+9,e+14,7)
-sspr(o,d,8,16,f+9-n,e,n,16)sspr(o,d,8,16,f+8,e,n,16,true)end elseif self.type<10then spr(self.spr,f+4,e+sin(self.anim)*2,1,2)end end end return f end function e9(f)if(not h(6)or count(a)>0)return
+end function f:ondraw()local f,e=(self.x<<4)+8,self.y<<4if self.type<9then if self.oct_ind==nil or self.oct_ind==h[1].octogems then local e,o,d,n=e+sin(self.anim)*2,self.spr%16<<3,self.spr\16<<3,ceil(sin(self.spin*.5)*-8)if(n<=3)rectfill(f+7,e+1,f+9,e+14,7)
+sspr(o,d,8,16,f+9-n,e,n,16)sspr(o,d,8,16,f+8,e,n,16,true)end elseif self.type<10then spr(self.spr,f+4,e+sin(self.anim)*2,1,2)end end end return f end function ey(f)if(not x(6)or count(a)>0)return
 f.blink-=1if(f.blink<=1)f.blink=30+flr(rnd(60))
-_=btn(4)and f6==false f6=btn(4)f.jiggle=max(f.jiggle-.2,0)if(btnp(5)and not l)e8()
+f1=btn(4)and fi==false fi=btn(4)f.jiggle=max(f.jiggle-.2,0)if(btnp(5)and not c)ec()
 f.anim=min(f.anim+((f.sprint or f.onconvey or f.inportal)and.2or.1111),1)if f.anim>=.65then local n={2,0,1,3}for e=0,3do if(btn(e))f.nextdir=n[e+1]
-end end if f.anim+.001>=1and not l and not z then if(f.ismove)e7(f)
-if(_)f.jiggle=1
+end end if f.anim+.001>=1and not c and not z then if(f.ismove)ep(f)
+if(f1)f.jiggle=1
 f.sprint=false local e=f.nextdir if e~=-1or f.inportal then if(f.inportal)e=-1
-local o,d,a,i=f.inportal,16,f.x+cos(e>>2),f.y+sin(e>>2)if(f.onconvey or h(2))d=18
+local o,d,a,i=f.inportal,16,f.x+cos(e>>2),f.y+sin(e>>2)if(f.onconvey or x(2))d=18
 local n=mget((a<<1)+2,(i<<1)+1)if(n==121and f.pstate==1or n==51and f.haskey or fget(n)&d>0)o=true
-f.nextdir,f.dir=-1,e if o and not z then fF=true if(s==nil and(f7==g.p_move or stat(49)==-1))s=f.inportal and g.p_portal or g.p_move
-if(not f.inportal and not f.onconvey)f.startturnx,f.startturny=f.x,f.y ee()v+=1v%=3K=true
-f.anim,f.sprint,f.ismove=0,tonum(h(3))~tonum(btn(4))==1,true if(f.inportal==false)f.oldx,f.oldy=f.x,f.y
+f.nextdir,f.dir=-1,e if o and not z then fC=true if(f.inportal)b=u.p_portal
+if(b==nil and stat(49)==-1and not f.onconvey)b=u.p_move
+if(not f.inportal and not f.onconvey)f.startturnx,f.startturny=f.x,f.y ei()k+=1k%=3M=true
+f.anim,f.sprint,f.ismove=0,tonum(x(3))~tonum(btn(4))==1,true if(f.inportal==false)f.oldx,f.oldy=f.x,f.y
 if(e>=0)f.x,f.y=a,i
-end end end if l==false and f.tilestouched>=P then l=true s=g.p_win if(C<dget(i.s_saveslot))dset(i.s_saveslot,C)fv=true
-end if(l)f.dir=3
-if(fF and not l)C=min(C+(time()-f8),599.999)
-end function e7(f)f.ismove=false local o,d,a,i,l=f.x,f.y,(f.oldx<<1)+2,(f.oldy<<1)+1,true if(f.prevcrackedfloor)F(96,18,a-1,i)P-=R(a,i)f.tilestouched-=1
-local e,r,t,c,n=mget((o<<1)+2,(d<<1)+1),mget(a,i),o<<4|d if(e\16==12and f.pstate==2)e=123
-if(e==52)Q(19,20,3,4)s,n=g.t_switch,{7,8,14}
-if(e==53)Q(21,22,35,36)s,n=g.t_switch,{7,3,11}
-if(e==54)Q(23,24,67,68)s,n=g.t_switch,{7,13,12}
-if e==55then f.coins+=1s,n=g.t_coin,{4,9,10}if(f.coins==3)f.coins,s=0,g.t_switch Q(25,26,99,100)
-f1=true end for o=0,2do if(e==80+o)f.pstate,s,n=o,g.p_state[o+1],fm[o+1]
-end for n=0,7do if(e==56+n and f.octogems==n)f.octogems+=1s=g.octo[n+1]
-end if(f.octogems==8)Q(27,28,74,106)f.octogems=0
-if e==18then if(f.haskey)l=false else f.haskey=true
+end end end if c==false and f.tilestouched>=Q then c=true b=u.p_win if(B<dget(i.s_saveslot))dset(i.s_saveslot,B)fB=true
+end if(c)f.dir=3
+if(fC and not c)B=min(B+(time()-f5),599.999)
+end function ep(f)f.ismove=false local o,d,a,i,c=f.x,f.y,(f.oldx<<1)+2,(f.oldy<<1)+1,true if(f.prevcrackedfloor)F(96,18,a-1,i)Q-=S(a,i)f.tilestouched-=1b=u.pit_o f.prevcrackedfloor=false
+local e,t,r,l,n=mget((o<<1)+2,(d<<1)+1),mget(a,i),o<<4|d if(e\16==12and f.pstate==2)e=123
+if(e==52)R(19,20,3,4)b,n=u.t_switch,{7,8,14}
+if(e==53)R(21,22,35,36)b,n=u.t_switch,{7,3,11}
+if(e==54)R(23,24,67,68)b,n=u.t_switch,{7,13,12}
+if e==55then f.coins+=1b,n=u.t_coin,{4,9,10}if(f.coins==3)f.coins,b=0,u.t_switch R(25,26,99,100)
+f0=true end for o=0,2do if(e==80+o)f.pstate,b,n=o,u.p_state[o+1],fg[o+1]
+end for n=0,7do if(e==56+n and f.octogems==n)f.octogems+=1b=u.octo[n+1]
+end if(f.octogems==8)R(27,28,74,106)f.octogems=0
+if e==18then if(f.haskey)c=false else f.haskey=true
 end if(e==51)f.haskey=false
-if(f.prevslimetrap)F(126,26,a-1,i)
-f.prevslimetrap=e==48f.prevcrackedfloor=e==125or e==127local a=-1for f=0,3do if(e==113+(f<<1))a=f
+if(f.prevslimetrap)F(126,26,a-1,i)b=u.s_trap
+f.prevslimetrap=e==48if(e==125or e==127)f.prevcrackedfloor=true b=u.pit_t
+local a=-1for f=0,3do if(e==113+(f<<1))a=f
 end if(e==123)a=f.dir
 if(a~=-1)f.nextdir=a
-f.onconvey=a~=-1for e,f in pairs(u)do if f.poskey==t then c=f if(l)deli(u,e)
-break end end if f.inportal then f.inportal=false else for n=0,6,2do if(e==89+n)F(126,f.pstate<<1,(o<<1)+1,(d<<1)+1)f.oldx,f.oldy=o,d f.x,f.y=c.dst_x,c.dst_y f.inportal=true
-end end if(e>208)fC(f)
-if(e\16==11and f.pstate==0or e\16==12or e==50or e==29and v==0or e==30and v==1or e==31and v==2)fC(f,true)else f.tilestouched+=1F(126,f.pstate<<1,(o<<1)+1,(d<<1)+1)
-if(n~=nil)fD((o<<4)+12,(d<<4)+12,n)
-end function fC(f,e)z=true if(e)f.isdead=true fD((f.x<<4)+12,(f.y<<4)+12,fm[f.pstate+1])
-end function eb(f)if(f.isdead or f.inportal or not h(6))return
+f.onconvey=a~=-1for e,f in pairs(h)do if f.poskey==r then l=f if(c)deli(h,e)
+break end end if f.inportal then f.inportal=false else for n=0,6,2do if(e==89+n)F(126,f.pstate<<1,(o<<1)+1,(d<<1)+1)f.oldx,f.oldy=o,d f.x,f.y=l.dst_x,l.dst_y f.inportal=true
+end end if(e>208)fJ(f)
+if(e\16==11and f.pstate==0or e\16==12or e==50or e==29and k==0or e==30and k==1or e==31and k==2)fJ(f,true)else f.tilestouched+=1F(126,f.pstate<<1,(o<<1)+1,(d<<1)+1)
+if(n~=nil)fK((o<<4)+12,(d<<4)+12,n)
+end function fJ(f,e)z=true if(e)b=u.p_hurt f.isdead=true ew((f.x<<4)+12,(f.y<<4)+12,fg[f.pstate+1])
+end function eg(f)if(f.isdead or f.inportal or not x(6))return
 local a,e,n,o,d=f.dir,f.x<<4,f.y<<4,f.anim if(f.pstate==1)pal(3,8)pal(11,9)
 if(f.pstate==2)pal(3,13)pal(11,6)
-if(o<1)d=f.onconvey and o or.5+cos(o*.5*sgn(o-.5))*-.5e,n=m(f.oldx<<4,f.x<<4,d),m(f.oldy<<4,f.y<<4,d)
+if(o<1)d=f.onconvey and o or.5+cos(o*.5*sgn(o-.5))*-.5e,n=p(f.oldx<<4,f.x<<4,d),p(f.oldy<<4,f.y<<4,d)
 e+=(-1+rnd(3))*f.jiggle+8n+=(-1+rnd(3))*f.jiggle+8local o,d=cos(f.dir>>2)<0,sin(f.dir>>2)<0local a,i=o and e or e-8,d and n or n-8if(f.dir%2==0)spr(211,a,n+7,3,1,o)spr(211,a,n,3,1,o,true)else spr(217,e+1,i,1,3,false,d)spr(217,e+8,i,1,3,true,d)
-pal()end function fL()cartdata(e2)if(dget(63)==0)dset(63,117)for f=0,59do dset(f,599.999)end dset(62,0x1.12)dset(61,0)dset(60,0)
-end function h(f)return dget(63)&1<<f>0end function eu(f,n)local f,e=1<<f,dget(63)dset(63,n and e|f or e&~f)end function fk()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function e4(f,e)dset(62,dget(62)&~.9922|f>>7|e>>4)end function fc(e)local f=0for e in all(b[e])do if(dget(e.s_saveslot)<599.995)f+=1
-end return f end function fE(f)return fc(f)>=count(b[f])end function fl(f,e)for f in all(b[f])do if(dget(f.s_saveslot)>(e and f.s_devtime or f.s_goaltime))return false
-end return true end function es()for f=1,count(b)do if(not fE(f))return false
-end return true end function fG(f)for e=1,count(b)do if(not fl(e,f))return false
-end return true end function fV()cls(0)map(0,0,-24*d,32,19,2)map(0,2,d*2%1*-24,48,19,3)map(0,5,d*3%1*-24,72,19,7)palt(1024)local f=sin(d)*4map(19,0,12,8+f,13,7)if(not h(6))map(19,8,28,8+f,4,5)
+pal()end function fQ()cartdata(ea)if(dget(63)==0)dset(63,117)for f=0,59do dset(f,599.999)end dset(62,0x1.12)dset(61,0)dset(60,0)
+end function x(f)return dget(63)&1<<f>0end function ev(f,n)local f,e=1<<f,dget(63)dset(63,n and e|f or e&~f)end function fF()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function ee(f,e)dset(62,dget(62)&~.9922|f>>7|e>>4)end function ff(e)local f=0for e in all(s[e])do if(dget(e.s_saveslot)<599.995)f+=1
+end return f end function fL(f)return ff(f)>=count(s[f])end function fD()local f=count(s)return ff(f)>=L[f][1]end function f7(f,e)for f in all(s[f])do if(dget(f.s_saveslot)>(e and f.s_devtime or f.s_goaltime))return false
+end return true end function fc()for f=1,count(s)do if(not fL(f))return false
+end return true end function J(f)for e=1,count(s)do if(not f7(e,f))return false
+end return true end function e1()cls(0)map(0,0,-24*n,32,19,2)map(0,2,n*2%1*-24,48,19,3)map(0,5,n*3%1*-24,72,19,7)palt(1024)local f=sin(n)*4map(19,0,12,8+f,13,7)if(not x(6))map(19,8,28,8+f,4,5)
 ?"2025 cyansorcery",32,122,3
-palt()pal(7,1)if(es())spr(241,1,119)
-if h(1)then if(fG(false))?"⧗",113,122,7
-if(fG(true))?"♥",120,122,7
-end pal()if(count(a)==0and p==nil)fi("press 🅾️ to start!",28,96,1,1.4)
-end function fT()local e=j*k local f=e*8cls(1)rectfill(0,56,127,72,12)map(0,12,-24*d,56-f,19,1)map(0,13,-24+24*d,64+f,19,1)local f=f*.5?"presented by",39,60-f,1
-if(h(6))map(19,7,18,60+f,11,1)
-palt()fillp(fb[flr(m(1,4,e))])rectfill(0,56,127,72,12)fillp()end function fZ()if(j*k==1and btnp()&48>0)o(0)
-end function f_()for f=-32+D,128,32do for e=-D,128,32do spr(204,f,e,4,4)end end poke(24404,96)pal(fh[1])sspr(0,58,128,70,0,58)sspr(0,7,128,18,0,7)sspr(39,38,52,20,39,38)pal()poke(24404,0)palt(4096)map(48,0,0,0,16,16)local n={{"programming","bug fixes","general"},{"art, music","art, music","music"}}for f=1,2do for e=1,3do w(n[f][e],f*64-46,e*24+42,7,1)end end w("director",58,42,7,1)w("created by",44,1,7,1)w("a plural system",34,26,7,1)w("seven spirits, one body",18,32,7,1)end function fS()d+=.025d%=1if Z>0then Z-=1if(btnp()&48>0)Z=0
-if(Z==0)o(0)
-end end function fU()d+=.01d%=1if count(a)==0then local f=btn(6)if(f)poke(24368,1)
-if(btnp(4)or f)eh()
-if(btnp(5))o(3)
-end end function fW()B=mid(0,B+H,1)d+=.02d%=1local f=count(b)if B==1then if(btnp(0)and r>1)N=max(r-1,1)H=-.125
-if(btnp(1)and r<count(b)and fc(r)>=U[r][1])N=min(r+1,f)H=-.125
-end if(B==0)H=.125r=N N=nil
-local f,e=count(b[r]),btn(6)if(e)poke(24368,1)
-if(btnp(2))y-=1
-if(btnp(3))y+=1
-if(y<0)y=f
-if(y>f)y=0
-if btnp(5)or btnp(4)or e then if(y==0)o(0)else o(2,r,y)music(-1,500)
-end end function fX()local o,f=fY,20+sin(B>>3)*29for f=1,4do pal(o[1][f],o[r][f])end rectfill(0,0,127,127,1)map(0,14,-24+24*d,-2-f,19,3)map(0,17,-24*d,115+f,19,2)map(32,-2+r*2,0,1-f,16,2)local f,e=122+f,U[r][1]if(r>1)?"⬅️previous area",1,f,7
-local n=fc(r)?n>=e and(r<count(b)and"next area➡️"or"")or"▶solve "..e-n,84,f,7
-local e=count(b[r])local d=max(min(y-5,e-9),-1)local n,a,c,i,l,f=13-d*10,d+10,h(1)for e=0,e do i,fH=e==y,n+10if e>d and e<a then f=n+3local d=b[r][max(1,e)]local a=dget(d.s_saveslot)if(i)fI(4,n,90,fH)
+palt()pal(7,1)if(fc())spr(241,1,119)
+if x(1)then if(J(false))?"⧗",113,122,7
+if(J(true))?"♥",120,122,7
+end pal()if(count(a)==0and g==nil)ft("press 🅾️ to start!",28,96,1,1.4)
+end function fZ()local e=q*o local f=e*8cls(1)rectfill(0,56,127,72,12)map(0,12,-24*n,56-f,19,1)map(0,13,-24+24*n,64+f,19,1)local f=f*.5?"presented by",39,60-f,1
+if(x(6))map(19,7,18,60+f,11,1)
+palt()fillp(fh[flr(p(1,4,e))])rectfill(0,56,127,72,12)fillp()end function fj()if(q*o==1and btnp()&48>0)y(0)
+end function fq()for f=-32+C,128,32do for e=-C,128,32do spr(204,f,e,4,4)end end if(Z==nil)poke(24404,96)pal(fd[1])sspr(0,58,128,70,0,58)sspr(0,7,128,18,0,7)sspr(39,38,52,20,39,38)pal()poke(24404,0)palt(4096)map(48,0,0,0,16,16)local n={{"programming","bug fixes","general"},{"art, music","art, music","music"}}for f=1,2do for e=1,3do w(n[f][e],f*64-46,e*24+42,7,1)end end w("director",58,42,7,1)w("created by",44,1,7,1)w("a plural system",34,26,7,1)w("seven spirits, one body",18,32,7,1)else poke(24404,96)pal(fd[1])sspr(0,0,128,128,0,0)pal()poke(24404,0)palt(4096)map(32,8+Z*2,0,32,16,2)local f={[[ you've overcome many
+ challenges and are at
+the end of your journey!
+
+but many puzzles remain
+unsolved. can you solve
+      them all?]],[[you're very good! you've
+overcome every challenge
+ in your way, and have
+ solved all the puzzles.
+
+       good job!]],[[ wow, you're fast! not
+only did you solve every
+puzzle, but you've done
+ it super quick as well.
+
+    congratulations!]],[[ we have no more puzzles
+for you. you're too good
+  at the game! not many
+   people can do this.
+
+    you are amazing!]]}w(f[Z],16,56,7,0)
+end function fY()n+=.025n%=1if _>0then _-=1if(btnp()&48>0)_=0
+if(_==0)y(0)
+end end function f_()n+=.01n%=1if count(a)==0then local f=btn(6)if(f)poke(24368,1)
+if(btnp(4)or f)b=u.m_confirm ez()
+if(btnp(5))y(3)
+end end function e0()A=mid(0,A+H,1)n+=.02n%=1local f=count(s)if A==1then if(btnp(0)and r>1)b=u.m_sel O=max(r-1,1)H=-.125
+if(btnp(1)and r<count(s)and ff(r)>=L[r][1])b=u.m_sel O=min(r+1,f)H=-.125
+end if(A==0)H=.125r=O O=nil
+local f,e=count(s[r]),btn(6)if(e)poke(24368,1)
+if(btnp(2))v-=1b=u.m_sel
+if(btnp(3))v+=1b=u.m_sel
+if(v<0)v=f
+if(v>f)v=0
+if btnp(5)or btnp(4)or e then if(v==0)y(0)b=u.m_back else y(2,r,v)music(-1,500)b=u.m_confirm
+end end function e4()local o,f=e3,20+sin(A>>3)*29for f=1,4do pal(o[1][f],o[r][f])end rectfill(0,0,127,127,1)map(0,14,-24+24*n,-2-f,19,3)map(0,17,-24*n,115+f,19,2)map(32,-2+r*2,0,1-f,16,2)local f,e=122+f,L[r][1]if(r>1)?"⬅️previous area",1,f,7
+local n=ff(r)?n>=e and(r<count(s)and"next area➡️"or"")or"▶solve "..e-n,84,f,7
+local e=count(s[r])local d=max(min(v-5,e-9),-1)local n,a,l,i,c,f=13-d*10,d+10,x(1)for e=0,e do i,fM=e==v,n+10if e>d and e<a then f=n+3local d=s[r][max(1,e)]local a=dget(d.s_saveslot)if(i)fN(4,n,90,fM)
 pal(7,i and 7or o[r][2])if e>0then?(e>9and""or" ")..e.." "..d.s_name,15,f,7
-spr(a<=599.995and 241or 240,6,n+1)if c then if(a<=d.s_goaltime)?fq(a),96,f,7
+spr(a<=599.995and 241or 240,6,n+1)if l then if(a<=d.s_goaltime)?fH(a),96,f,7
 if(a<=d.s_devtime)?"♥",120,f,7
 end else?"back",27,f,7
-pal(7,10)if(fE(r))spr(241,6,n+1)
-if h(1)then if(fl(r,false))?"⧗",113,f,7
-if(fl(r,true))?"♥",120,f,7
-end end end n=fH end if B<1then palt()if(H<0)pal(1,o[N][1])
-fillp(fb[flr(m(1,4,B))])if(H>0)rectfill(0,22,127,112,1)else rectfill(0,0,127,127,1)
-fillp()end pal()end function ft(e,n,o,f)add(a,{m_x=e,m_y=n,m_w=o,m_h=count(f)*10+6,m_items=f,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(f,n)local e=count(a)local n,o,d=n==e,btn(6),count(f.m_items)if(o)poke(24368,1)
-if f.m_anim_factor==1then if(btnp(2))f.m_highlight-=1
-if(btnp(3))f.m_highlight+=1
+pal(7,10)if(fL(r))spr(241,6,n+1)
+if l then if(f7(r,false))?"⧗",113,f,7
+if(f7(r,true))?"♥",120,f,7
+end end end n=fM end if A<1then palt()if(H<0)pal(1,o[O][1])
+fillp(fh[flr(p(1,4,A))])if(H>0)rectfill(0,22,127,112,1)else rectfill(0,0,127,127,1)
+fillp()end pal()end function fb(e,n,o,f)add(a,{m_x=e,m_y=n,m_w=o,m_h=count(f)*10+6,m_items=f,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(f,n)local e=count(a)local n,o,d=n==e,btn(6),count(f.m_items)if(o)poke(24368,1)
+if f.m_anim_factor==1then if(btnp(2))f.m_highlight-=1b=u.m_sel
+if(btnp(3))f.m_highlight+=1b=u.m_sel
 if(f.m_highlight<1)f.m_highlight=d
 if(f.m_highlight>d)f.m_highlight=1
-if(btnp(5)or btnp(4)or o)f.m_items[f.m_highlight]:i_onclick()
+if(btnp(5)or btnp(4)or o)b=u.m_confirm f.m_items[f.m_highlight]:i_onclick()
 end local o=true if(n and e>1and a[e-1].m_anim_factor>0)o=false
 if(o)f.m_anim_factor=mid(0,f.m_anim_factor+(n and f.m_anim_incr or-.25),1)
 if(f.m_anim_factor==0and f.m_anim_incr<0)deli(a)
 end,m_draw=function(f,n)palt()local e=count(a)local n=n==e if(n and e>1and a[e-1].m_anim_factor>0)return false
-local e,b,o=count(f.m_items),count(u)>0and 147or 241,m(5,f.m_h,f.m_anim_factor)local n,e,d=f.m_x,f.m_y-(o>>1)local o,a,c,l,t,r=n+f.m_w,e+o rectfill(n,e,o,a,1)rect(n+1,e+1,o-1,a-1,13)local u,e=n+8,e+6for s,i in pairs(f.m_items)do if e<a-9then c,l,t,r=n+3,e-3,o-3,e+7d=s==f.m_highlight if(d)fI(c,l,t,r)
+local e,b,o=count(f.m_items),count(h)>0and 147or 241,p(5,f.m_h,f.m_anim_factor)local n,e,d=f.m_x,f.m_y-(o>>1)local o,a,l,c,r,t=n+f.m_w,e+o rectfill(n,e,o,a,1)rect(n+1,e+1,o-1,a-1,13)local u,e=n+8,e+6for s,i in pairs(f.m_items)do if e<a-9then l,c,r,t=n+3,e-3,o-3,e+7d=s==f.m_highlight if(d)fN(l,c,r,t)
 pal(7,d and 7or 13)?i.i_label,u,e,7
-if(i.i_setting~=nil)spr(b-(h(i.i_setting)and 0or 1),o-11,e-2)
-end e+=10end pal()end})end function Y()for f in all(a)do f.m_anim_incr=-.25end end function n(f,e)return{i_label=f,i_onclick=e,i_setting=nil}end function f(f,e)local f=n(f,function(f)eu(f.i_setting,h(f.i_setting)==false)if(f.i_setting==5)music(h(5)and 0or-1,0,7)
-end)f.i_setting=e return f end function e5()local f if(l)f={n("next puzzle",function()o(2,q,G+1)end),n("restart puzzle",function()o(2,q,G,true)end),n("stage select",function()o(1)end)}else f={n("back",Y),n("restart puzzle",function()o(2,q,G,true)end),n("skip puzzle",function()o(2,q,G+1)end),n((f4==2and"hide"or"show").." hints",function()f4=f4==2and 1or 2Y()end),n("stage select",function()o(1)end),n("options",fJ),n("go to title",function()o(0)end)}
-ft(16,64,96,f)_,f6=false,false end function eh()ft(24,96,80,{n("start game",function()o(1)end),n("continue",function()local f=fk()o(2,f.world,f.stage)end),n("options",fJ),n("credits",function()o(4)end),n("back",Y)})end function fJ()ft(16,count(u)>0and 64or 82,96,{n("back",function()a[count(a)].m_anim_incr=-.25end),f("show timers",1),f("slime overlap",2),f("sprint by default",3),f("sound effects",4),f("music",5),f("lesbians allowed",6),n("pico8 menu",ex)})end function ex()extcmd"pause"end function fI(f,e,n,o)rectfill(f,e,n,o,2)fillp(f9[ceil(T)])rect(f,e,n,o,154)fillp(0)end function f3(e,n,o,d,a,f)add(f0,{x=e,y=n,spd=o,dir=d,col=a,time_max=f,time=f})end function fD(a,i,d)local f,e,n for o=0,.9,.1do f,e,n=a+cos(o)*4,i+sin(o)*4,o*360f3(f,e,.9,n,rnd(d),12)f3(f,e,1.8,n,rnd(d),8)end end function ep(o,d,e,n)for f=0,.8,.2do f3(m(o,e,f),m(d,n,f),0,0,14,m(5,12,f))end em(e,n,{14,7})end function em(e,n,o)for f=0,.9,.1do f3(e+cos(f)*4,n+sin(f)*4,.8,f*360,rnd(o),8)end end function e6()for f in all(f0)do local e=f.dir/360f.x+=f.spd*cos(e)f.y+=f.spd*sin(e)f.time-=1if(f.time<=0)del(f0,f)
-end end function et()for f in all(f0)do pal(7,f.col)spr(flr(m(163,161,f.time/f.time_max)+.5),f.x,f.y)end pal()end
+if(i.i_setting~=nil)spr(b-(x(i.i_setting)and 0or 1),o-11,e-2)
+end e+=10end pal()end})end function fv()for f in all(a)do f.m_anim_incr=-.25end end function f9()b=u.m_back a[count(a)].m_anim_incr=-.25end function d(f,e)return{i_label=f,i_onclick=e,i_setting=nil}end function f(f,e)local f=d(f,function(f)ev(f.i_setting,x(f.i_setting)==false)if(f.i_setting==5)music(x(5)and 0or-1,0,7)
+end)f.i_setting=e return f end function et()f1,fi,b=false,false,u.m_confirm local f if(not en and fD())f=1
+if(not eo and fc())f=2
+if(not e8 and J(false))f=3
+if(not e5 and J(true))f=4
+if(f~=nil)y(5,f)return
+local e,n,o,f=d((c and"next"or"skip").." puzzle",function()y(2,N,Y+1)end),d("restart puzzle",function()y(2,N,Y,true)end),d("stage select",function()y(1)end)if(c)f={e,n,o}else f={d("back",f9),n,e,d((f3==2and"hide"or"show").." hints",function()f3=f3==2and 1or 2fv()end),o,d("options",fO),d("go to title",function()y(0)end)}
+fb(16,64,96,f)end function ez()fb(24,96,80,{d("start game",function()y(1)end),d("continue",function()local f=fF()y(2,f.world,f.stage)end),d("options",fO),d("credits",function()y(4)end),d("back",f9)})end function fO()fb(16,count(h)>0and 64or 82,96,{d("back",f9),f("show timers",1),f("slime overlap",2),f("sprint by default",3),f("sound effects",4),f("music",5),f("lesbians allowed",6),d("pico8 menu",ek)})end function ek()extcmd"pause"end function fN(f,e,n,o)rectfill(f,e,n,o,2)fillp(fs[ceil(U)])rect(f,e,n,o,154)fillp(0)end function f2(e,n,o,d,a,f)add(f4,{x=e,y=n,spd=o,dir=d,col=a,time_max=f,time=f})end function ew(a,i,d)local f,e,n for o=0,.9,.1do f,e,n=a+cos(o)*4,i+sin(o)*4,o*360f2(f,e,.9,n,rnd(d),12)f2(f,e,1.8,n,rnd(d),8)end end function ej(o,d,e,n)for f=0,.8,.2do f2(p(o,e,f),p(d,n,f),0,0,14,p(5,12,f))end fK(e,n,{14,7})end function fK(e,n,o)for f=0,.9,.1do f2(e+cos(f)*4,n+sin(f)*4,.8,f*360,rnd(o),8)end end function e7()for f in all(f4)do local e=f.dir/360f.x+=f.spd*cos(e)f.y+=f.spd*sin(e)f.time-=1if(f.time<=0)del(f4,f)
+end end function ex()for f in all(f4)do pal(7,f.col)spr(flr(p(163,161,f.time/f.time_max)+.5),f.x,f.y)end pal()end
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4
@@ -313,44 +343,44 @@ f823c7b21f9e1d5ed2fe81f607f43cf64bb7f923ba43691bec48c831d2c28efc4116a77890f37388
 7b2514af24597d72c6e331bb24d43ff3cf2c511db221a1208791fc20c72d7e48587e10f7540f3ff01c3f3cc7c3d9fb9ff53b3fb63fc20f077cb071ecfd837d2e1ec23b231cc45ef861bb61b0c0716023811fb63bb8997dc6b7dd66917cff9cfd5cbf70fbb6ba8eef3a98f34cc5e986fc22c72f7fbc3aeffc009541dc904347e6
 9df9f04b3c892aaf3cffa82349c4e08f4bb4ae07271c79f6bcb99ef3cc11f9e5399f274f3d0887002e274ee2825f6e9c3880097333214c0837e4e050d40936a1b03fce0b7c84ecfc615b92bbebb52d4f1712b10bfe0161fc32301fe685fd0027b84160bf6090a47081811bfc901a06cc2f2038d6c4f78ff63abf25895d59aece
 f74ffee03ad237bbe08ff920f927cec97ce09b139ccbbd4713bf242c4d5271cf97f9985f927c22cb24779347368ff3f575d7f9bcce3eff38f3f674eca4b05f820ff60425f68770c2068c13f640087f10eb0c870036ec6510c24df8010027c6f0ed7af2b9a6f926df9ee7bd5f9f7dd76ddf3fecc6fec13ee10758cd0a8733f20b
-77d8a03058b1409ca43c610f9ce01f50f0c26eec3cd81f43e0b4eb87c3f1cf6d7fe4b46f5d9cb5c3f5affdff237ec9edffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2003184ff7fe3cfefffff
+77d8a03058b1409ca43c610f9ce01f50f0c26eec3cd81f43e0b4eb87c3f1cf6d7fe4b46f5d9cb5c3f5affdff237ec9edffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c200e084ff7fe3cfefffff
 __gff__
-07edeef0000406080a8e8d21757d5d5b597b898b91212426282a924d557781716979953365e7e8ea40424446484a4c4e5052545658466f6b85376d0360626466686a6c6e70727476783081828486888a8c8e90929496984461e1e2e4a0a2a4a6a8aaacaeb0b2b4b6b82a111222c2c4c6c8ccced0d2d4d6d838313262dddade5a
-9a7afeba227301191a0c0e0205092d7f393a42832d2e0a111315171d1e5c5ef2f4f6181b1d3d3e247d7ef8fafc14169c9e3436bcbec0c3c5a1a3a5fd2749922449922473f478ae3e3f7ce77bfff0c72ff9e7a7bf7e5bfefbe11f3ffed83f7ffdf7e72b7f7f7efbebf7ffc11f3ffd1ffe17ff8ffc4ffe2ffffd6f7ef8e1ff73ff
+23edeef0000406080a8e8d21757d5d5b597b898b91212426282a924d557781716979953365e7e8ea40424446484a4c4e5052545658466f6b85376d0360626466686a6c6e70727476783081828486888a8c8e90929496984461e1e2e4a0a2a4a6a8aaacaeb0b2b4b6b82a111222c2c4c6c8ccced0d2d4d6d838313262dddade5a
+9a7afeba227301191a0c0e0205092d7f393a42832d2e0a11291315171d1e5c5ef2f4f6181b1d3f873d3e247d7ef8fafc14169c9e3436bcbec0c3c53d3551a1a3a53bfd2749922449922473f478ae3e3f7ce77bfff0c72ff9e7a7bf7e5bfefbe11f3ffed83f7ffdf7e72b7f7f7efbebf7ffc11f3ffd1ffe17ff8ffc4ffe2ffffd
 __sfx__
-fffff3ff39f7707d773ff463f7753df772fe773f9373ff75128701ce763ff753df713f7713e7743ff512fb472bf453ff773df7703f473cf7723f753eb073ff313ff7733f771fa773ff353df771bf773ff573ff70
-ff88e7ff3fa773ff753ff773c977388773ff673fc743fb5727f770314335f433ef773ef773f7303c7703ef573ff77016731bd7707e753e9473ff7702e773f77338f773fb203ff771f9473ff7706e773f77738f77
-d1ffffdf3f73232d61039743ff772fa073df773ff243ff770f8673077338e7739470224733e34726f763d3473cf773f9243ff77079673f77706f773f7341cc0118d743377731f543fb323ff7734f773077338111
-1b75fdff38f773fb703df053df773ff343ff7707222291772cf773ff703cf773fd443ff77379673ff7709f5105f5433f773f7423f2733ff773f2173ed5435f773f7623ff773fb173ff7731c771ff773ff7139f77
-ff87feff3fd643ff771fb673ff7702f7724f773d77329f703df773fb613fe7707c773ff73331340ba263f332249773bf703ff201c57334d353fb123cb071ff073ff753ff773fe363ff773f9773f773284732ff77
-feffffeb3fa4431e773f7733af773fb221cc773df773fb153ff7737c673ff7713911244441222209e673f77714f773f7743df773fd251ff673ff772be773ff743af773ff62177723ff771f8171bf773cf773ff53
-fdff7fdc17f7719f770cf773fd473f7323ff771f8373ff7723d773f77536f11279751fe173f9573f466074123be7717c773ff73307731df773ff713df773f95123d773ff7336f773f766398663f95707f773ff73
-ff81ffff3f5733df7715e373fe163ff7727b773ff732ef770f061076753fd473f7303ff773fd373ff7739d773ff73172220991124444329673f87024f771f8473f730337771af063fb373ff773dd773ff7737f77
-340b3507017773ff7702f273ff770d000198203ff313ff5437f773f746004400681331e3339e7306f5407f140f8551b360084600e82338a733da0304b640ef6400b562bf67100100340036e741cf65200202cf66
-1d1fc22e36c13378751f324051343c6342ef7613421174413b6122543229021160411ac04240322805209345191551b1651d1751f146291562b1662d1762f1073111733127351373790001a1003a2005a3007271
-3b5f373f2d472083051111520506221673d1573b1030ce600ae5000147395511c41308e402b062031113201202503011773f9700f243390533b0633d0733f401085440a5540c5640e57421c51246772ce3423b16
-f13cffaf1cc5723f311f86730f740fd773cf271bc572ff343f477237351ff733fc773df573fb043ff063fe163d7753c7733e7323ff313ff643ff36387533f7123df773cf713ef573f26139f733cf722cf7732f73
-c7ff67fb3ff450fd7737e771df7729c473fa672fb153f7640231232f7339f7304f7721f443ff763f9461fe7723f772c77739f743ff173f95713b772fe771bf770ff473ff671fb773f9663fd573fb471f24017977
-ff23b2ff1fd772fb770f9173fb771f4223ff173f75736f733f7733e7223ff5125c771b4353ef7700f773f8063f77230f513cf77076123bf7713c773ff003df770b67119f771fb471fb672f11139c673f7703ec47
-ffa796ef3f9173fd703df7715e7318f77039603ff6439e773fb173fd471fc453ff71398773f8173f7763e1543ef770ef703b8363fb173f77732b363f77009b773ff013ff703df7725e773bc573f77404b273fd27
-8fff7f3227f773fd273ff333ef323bf771fd773f966387753ef7733e773fa373f7323ef333ff772df770ff673fd773f65432f763f97737c753ef771df771ff5127f773ff673f7043ff753f77738f771746139f77
-ffaf24243f7122de672f2121ff273f7723ff7726b673ff743f7731ac363f7733df772ba773fb343f7773df7733a773fb34267360997337f771fb773ff6539f773fe773f9413f7773cf7717e6639f770ff773f951
-fcfffda53cd763f77138f7717f443ef77361771df773fb353cf713ff731cd773f9673ff773cf7731f773f8273fb573f3431bf773f17236f77177673cf77375433e77404f173f7763ff773cf771fa3237e773fd73
-ff28f7fe3ff771f8063ff171be7231f743f131329363ff77078113df773fd0008f773f77124e3425f770f714287373cf773f9143ff772f8273fd2707e671fa701f8651df773f7333cf773f7141cf773f77131f35
-92fc7fc23f77722f773f7523e77325c263ff772f8773f77303d663ff77370553ee163ff773b8773ff7723877175433ff323f9773f77708b663ff77071773f7713ba773ff73248513fe773ab173ff7727c773ff71
-ff1fdfff3f3443ef773fd2608e773f776219173ff772f40127f571ff7732f77397733a7713d77423d77277223fc013ff653f7033cc372377705f77179140c51527a441bc771fc3127f773f7163c0113f7751fa64
-1853d9ff3fc771f3671ff7724f773f736328373ff773501110e7711b660ab40344753ff773fb343fb460f5773cf713e77031b223ff123ff742c112247533cf773f9743ce041061211e331ce763ff772fb6433c54
-ffff94ff01a012fb673ff771ee773ff77091620fb441c641218611ff473ff7701d773f77334d673f777119133ff773f8502bb673ff77244772ef773ff3112e163ff771ba263f9173ff770f5453ef773f0521ea67
-7f23fcff3ff7232f773f73520f773ff1308a673ff7716a473ff772ee663ff773f23339f773fb0304f773ff700df773ff3131f773f7360000621e773ff7730f772977410c72051163bc301ee643ff771f5013ef77
-fcffff463f33438f773ff6030f773f75121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771bc063ff77378143ff772f9203ff771f3403ff773f6013ef773f512
-96f3d8d338f773ff6030f773f75121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771b4063ff773fb012c21207f131dc34365611bf132df55361663ba331d453
-ed8fbe1c23d7633b6618f0323d370ee613b833359152d5733cb07396673f0633b23232d6632f3034f4535656127660fb711dd5316c7033c021e8373cb051f8731ce000870724525092613f0672f37721f2323343
-9efc70fe1cb6700d431d57318c4338f041e6710af563e3650ff05277671c8702bb4727b6701f072e9742d70733b103b97539e313b7133fa07396223f1220ee563965733f451b7143ed43237303d457303472f264
-0000000020b711b3712c7303f2431e4520e36307b75388233956422b453336732173095712f3633f843367140e36329b17033063f9660fc4304726278740f97327d3619d5732f000300000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+ffdbffff3f7753ef770df773ff473f7343ff7729f771fd673ff723f77736f771f3110ea612ff771ff671fe771f8770fd771be7638f5619f773ff673ff1439b673ff161fb7730f7717e773ff173ff713ef7717f67
+ff86ffff3bf770fe773ff173ff733ef771ff773f3673e3433ef773d7730ff773af363f71438c2739a773fb773ff77078670f8773bf773ff003f4553ff301f37738f773fb103ff773f8473ff7704e773f77538f77
+fff4fff03f9473ff7708e363ff77270171d6140ef773ff7230f673ff7705f773f7703cb073f8433f7430f0123f877389362ff67389673f77704f773f7343cf773f9343ff7707161112450ff173fd070bf7726e77
+ffdfffff3f04712c053ff771fb473ff770ee6711f673ff7707f773ff30244463e9663ff770fa673f77709f773f7373cf773ff441be240bf173ff7729c733ec773ff73321770bf273ff772dc773ff7732f773f703
+0fddf5bf1fe473f75135d673f7770df773ff753cf773fb143fb263ff673fc460fe673ff771ce733f7303ff773fe173eb173df773fd743ff7717b672f9713ff773fa471ff273f9273fc553fb67391222177721c35
+a8244992284733c7373cf773bf773ff7739f773fb023ff771f854099762bb473ff771ee773ff7139f773ff5007f272ff443ef773fa463ff770fa7423d773ff7134f773f75429f7039f773fb323ff773f9573ff77
+cffcff972444412c573ff7729e773ff723af773ff5217f0639d773f7732bd773ff7335f773f7553f7770e37021b053ff772fb573ff772fe773f7703bd6732f773f7023fe670ff773f7772cf773ff543ed671fe67
+fbffffb73f77732f773f7363ff771fa373ff772b573399363dc2024f573fe671fb773ff7722f723c7723e22209c010bd101df770be773ff7238f753cb051fe773f77325f723fb773fe7727f163af0532e773f776
+ff3ff8ff2fb453ff7707f673ff771c9512df7712a343df673f77718f773f731347773ff773f7313f4713ff7725b603f8773ff732ef773ff763ef5729f772fa633f7613ff771fe373ff773bd773f906388673af54
+ff8bffff3fb733ff773ff573ff7700322099112444412e160f6750ef773f7713cf773fb143f77730f773ff3037f7731f373f6173e7753e7613f3433e9553f77538a773ff043cf71369671fb772fd773ff7138f77
+b7b9bfc61fb473fb4725f743ff771fb573fd671f97739f773fb213ff343fb461fe773fa073ff770fe771b6713af3127777329553fb730ef761ab010ff773ff730044104e7717e770bf373ff77291000903032e03
+c12426280bf34037701af550c0400d07034a433ee6330a240cb740db042af563d30102410018330fb651d302048662d3230b42307033336331ef750452406963079762f7111543119c5323422274421403118051
+892b2c432ac44185451a5551c5651e575285462a5562c5662e5763050732517345273653700e0002e1004e2006e301e4611f8142e4622f8441050512106211163c5673a557308600da500b204385471b06133840
+fbffc0ff1201322014314043e5770ee70384433a4533c4633e47311044091540b1640d1740f5021ba223f96207f16227531f5333f0613bf16176713cb070f7743fb67357513bf76077733fd1617d753f6733ff67
+c9ffef7f21f7323f671f9673f87727c7717e770df7727b473bc7723c673fb671fa773bf731cc473fa672fa663fb173fe073cc772fe77197743ff333ff653f74239f733cf7612f770d914228173fe473fa243ff06
+57feffc028f713ff163fb663fd470ff77337773af153ef723ff553ff7439f773df753e7772c7773bf7738f71084353ef343f7363b7753ff763e77432f773e77125c7733f773b9373fe773f87725c771b6223f751
+fe3ff2ff3f77320f772f8071ba673ff3023c573f7113ff7701e673ff501fc453ff7538f753c776124433df770f07339f77238133f777327770fe673ff213fa453f7140ce770df433ff77327773977119f771f643
+b7ffffed2f1770a9773fb740f65326f7732f773f91726f770fc443ef7711e770fe673ff223f7533bf770f9243477735f7727a312ff363f77735f7737a7727e573f7753f7772cb471f9773ff133ff7336f7727877
+feffc6ff3ff743d7773ff730b9172f7773e7331fb773ff653ff751be363ff773df7701d771ff773f9473f7311dc473ff703f77732c7723c623df7222c7535f772fc773fb363cf770ff773f05127f773fc673ff52
+fffcfff13fd673ff133ef7706b36275443ee373ff753ef771df473ff733f77718e773f9673ff312df473ff743f7771ae772f222240672ff771f8473ff3509b773f3373ed653ff7716b671fe773f2653f7773cf77
+1fa4c7e53f77334f773af7738c553f7772e8373ff353d9673f737398770f92433f772fd773fb673ff7126e333f7773fa673ff6725e773f77120f7733f512fe070f7771601726f773f73012e673f77701a443ff77
+ff3bfeff3ff7403946379673f77702f773f7723477735f303df710e6711cf653ff77378673ff77039653ff771fc0717f7728c373ef773f9163ff772b8773f42225f773f7723ef773f4142df773f7331a97323f77
+1ffd4f633f7123e73539c77276773ef773f9442cf773f7343ed771fc533ef773f2221ae733fb5732f773f7323ff771fa113c77702f77089773f77725b403ff772f50632f773f77211c363bf753fb173ff473f857
+ffffc6ff3ff362547311e771df773106337f163fd243f7350236413d32087513f77117e363ff772316312c771fd710cf771fc753f7733ff753cd753fb263ff772711336f773f723128013ff052cb54082231fd77
+3f74fdff287743f9671fa770fc0724e7723e770f366228263b8673f7770eb6301b0123c0137a612ff773ff760c7130b34113d453ff0010e763cf773fb713ff773f7442cc7408b61194021ce7539f773f7043ff77
+ffffb0c43f50532e773f7730ae563cf773f3223f9763ff7717a1123f773ff512477732f773f774199773f7732a8713cf773fb213ff772fa173ff77179063ff7733a403cf773fb3138f773fb722df773ff7336c47
+bf11feff3ff770fe643ff7717e073ff772710002f023ff773fb073ff460f101272753ce600691739c773f775118773f777238673ff77069473ff770da073ff771bc063ff77378143ff772f9203ff771f3403ff77
+feff7f233f5123cf773f33438f773ff6030f773f75121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771bc063ff77378143ff772f9203ff771f3403ff773f601
+cbe6971f3cf773f33438f773ff6030e773fb1135d341ee3639a573cc5531f263c9733de7437e57116710ee150e67336f3038e533dd11235772c7303fa473cb1633b473ea473b8732dd5535f340fc733c3073cf17
+479e1fbe167673e1750ea4207967313763b7063bc702fd723bb453f4721ff471ec761ec353eb4413273177733367633e54389413db17071433477017243382261bf060a77131f4707c323f065319363d5763ef07
+47ee37fb03f432fc343d7143ad7731b612ee360db67307433e7473e70307c530fd7724f503e7023bb721cd132ea703806311b7509e701797433c570c13217b763be7539f302bb533fd4527b16178772003739165
+f27d567f036772c37331b5727077393753a5431e6773a1053907710d3303b721d317049572e47730f5303f06351530977039704329601f1631c3373ec7138c1607c6003e353b1473ce650f8370bf1731d070fe67
+00000000380733fa61374073d31734f7138f041ea6701d113d1611c1713fb44375223f3651ef433f9070bf411c643327143371437b76326513eb061783423b54117653fb252ea670303000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -383,70 +413,70 @@ ed8fbe1c23d7633b6618f0323d370ee613b833359152d5733cb07396673f0633b23232d6632f3034
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __music__
-0c 6f1c7f23
-0b 7b7f715f
-0f 7d5f5e7f
-0f 277f557f
-04 2b491224
-06 4912647f
-0d 767f7b5f
-0f 7d7f7e07
-0f 7f477f65
-0b 7f737f7a
-0e 7f7d5f7e
-0e 7f7f473f
-0f 3f7f677f
-0f 433f7f6b
-06 1f7f793f
-0f 7c3f7d1f
-0f 7e677f0f
-03 6f7f013f
-0f 747e3f3f
-0f 7f7b5f7f
-0f 576f7f69
-0c 7a1f7e7f
-09 406f7f7c
-0f 7f037f3f
-0b 707f1f7e
-0f 7f447f3f
-0b 787f1b7f
-0f 7f637f0f
-0f 7c7f137f
-07 3f727f5f
-0f 7e7f4c7f
-05 3f597e07
-0e 3f677a7f
-0e 3b7f1f7f
-0d 4b2f7f6b
-0f 7f3f713f
-0a 497e477f
-0d 44786c7f
-07 773f7f5f
-0a 397e674f
-0e 0f7f3b3f
-0e 7f7b6d7f
-0f 7f7c7f21
-0d 7f7f747f
-0f 177e7f53
-0f 7f1f7a7f
-0a 577f7f6b
-0d 7f7f7d7f
-0b 317f7f76
-0f 7f577e7f
-0f 1b6b7f4f
-0f 7d7c7f6f
-0f 5c797d7c
-05 7f1b793f
-0b 7f713f19
-0e 1f7f793f
-0f 7c7f3d7f
-07 7f777f07
-09 13244912
-0c 24497e7f
-0b 617f5f7c
-07 7f0f7f7f
+0c 6f7e7861
+05 7f737f6f
+0e 1c7f237b
+0d 7f715f7d
+0f 5f5e7f27
+07 7f557f2b
+02 49122449
+0b 12647f76
+0e 7f7b5f7d
+0f 7f7e077f
+0f 477f657f
+05 737f7a7f
+07 7d5f7e7f
+0f 7f473f3f
+0f 7f677f43
+07 3f7f6b1f
+0b 7f793f7c
+0f 3f7d1f7e
+0f 677f0f6f
+09 7f013f74
+0f 7e3f3f7f
+0f 7b5f7f57
+07 6f7f697a
+0e 1f7e7f40
+0c 6f7f7c7f
+0f 037f3f70
+0d 7f1f7e7f
+0f 447f3f78
+0d 7f1b7f7f
+0f 637f0f7c
+0f 7f137f3f
 0b 727f5f7e
-0f 7f4d7f7f
+0f 7f4c7f3f
+02 597e073f
+07 677a7f3b
+0f 7f1f7f4b
+0e 2f7f6b7f
+07 3f713f49
+0d 7e477f44
+0e 786c7f77
+03 3f7f5f39
+05 7e674f0f
+07 7f3b3f7f
+0f 7b6d7f7f
+0f 7c7f217f
+0e 7f747f17
+0f 7e7f537f
+07 1f7a7f57
+0d 7f7f6b7f
+0e 7f7d7f31
+0d 7f7f767f
+0f 577e7f1b
+0f 6b7f4f7d
+0f 7c7f6f5c
+0f 797d7c7f
+0a 1b793f7f
+05 713f191f
+0f 7f793f7c
+0f 7f3d7f7f
+0b 777f0713
+04 24491224
+0e 497e7f61
+0d 7f5f7c7f
+0b 0f7f7f72
 __label__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

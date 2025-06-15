@@ -15,8 +15,15 @@ g_sfx_lut = {
  t_coin = -2042,
  p_state = {-1396, -1850, -1656},
  p_win = -3053,
- p_move = -2428,
- p_portal = -2327
+ p_portal = -2394,
+ p_hurt = -4088,
+ p_move = -3580,
+ m_sel = -3836,
+ m_back = -2203,
+ m_confirm = -3708,
+ s_trap = -3452,
+ pit_t = -3326,
+ pit_o = -3258
 }
 
 function compress_sfx(_pattern, _offset, _len)

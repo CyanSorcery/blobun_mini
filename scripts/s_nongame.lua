@@ -135,7 +135,7 @@ function update_title()
   if (_pb) poke(0x5f30,1)
 
   -- create title menu?
-  if (btnp(4) or _pb) menu_create_title()
+  if (btnp(4) or _pb) g_play_sfx = g_sfx_lut.m_confirm menu_create_title()
   -- back button to go back to title screen?
   if (btnp(5)) set_game_mode(3)
  end
@@ -152,9 +152,9 @@ function update_stage_select()
  
  -- pick the world
  if g_sss_anim_factor == 1 then
-  if (btnp(0) and g_sss_menu_world > 1) g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -.125
+  if (btnp(0) and g_sss_menu_world > 1) g_play_sfx = g_sfx_lut.m_sel g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -.125
   -- roxy note: check for player worlds unlocked
-  if (btnp(1) and g_sss_menu_world < count(g_levels) and stages_beat_in_world(g_sss_menu_world) >= g_w_req[g_sss_menu_world][1]) g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
+  if (btnp(1) and g_sss_menu_world < count(g_levels) and stages_beat_in_world(g_sss_menu_world) >= g_w_req[g_sss_menu_world][1]) g_play_sfx = g_sfx_lut.m_sel g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
  end
 
  -- show the next world panel?
@@ -167,8 +167,8 @@ function update_stage_select()
  if (_pause_press) poke(0x5f30,1) 
 
  -- pick the stage
- if (btnp(2)) g_sss_menu_stage -= 1
- if (btnp(3)) g_sss_menu_stage += 1
+ if (btnp(2)) g_sss_menu_stage -= 1 g_play_sfx = g_sfx_lut.m_sel
+ if (btnp(3)) g_sss_menu_stage += 1 g_play_sfx = g_sfx_lut.m_sel
  if (g_sss_menu_stage < 0) g_sss_menu_stage = _stages
  if (g_sss_menu_stage > _stages) g_sss_menu_stage = 0;
  
@@ -177,8 +177,10 @@ function update_stage_select()
   if g_sss_menu_stage == 0 then
    -- this is the back button
    set_game_mode(0)
+   g_play_sfx = g_sfx_lut.m_back
   else
    set_game_mode(2, g_sss_menu_world, g_sss_menu_stage) music(-1, 500)
+   g_play_sfx = g_sfx_lut.m_confirm
   end
  end
 end

@@ -15,14 +15,14 @@ function menu_create(_x, _y, _w, _items)
    local _i_count = count(self.m_items)
    if (_pause_press) poke(0x5f30,1) 
    if self.m_anim_factor == 1 then
-    if (btnp(2)) self.m_highlight -= 1
-    if (btnp(3)) self.m_highlight += 1
+    if (btnp(2)) self.m_highlight -= 1 g_play_sfx = g_sfx_lut.m_sel
+    if (btnp(3)) self.m_highlight += 1 g_play_sfx = g_sfx_lut.m_sel
     -- allow wraparound
     if (self.m_highlight < 1) self.m_highlight = _i_count
     if (self.m_highlight > _i_count) self.m_highlight = 1
 
     -- confirm
-    if (btnp(5) or btnp(4) or _pause_press) self.m_items[self.m_highlight]:i_onclick()
+    if (btnp(5) or btnp(4) or _pause_press) g_play_sfx = g_sfx_lut.m_confirm self.m_items[self.m_highlight]:i_onclick()
    end
    
    -- only increment if a menu below is done with its animation
@@ -74,6 +74,10 @@ function menus_remove()
   _pane.m_anim_incr = -.25
  end
 end
+function menu_goback()
+   g_play_sfx = g_sfx_lut.m_back
+   g_menu[count(g_menu)].m_anim_incr = -.25
+end
 function menu_item_base(_str, _func)
  return {
 	i_label = _str,
@@ -93,7 +97,7 @@ function menu_item_setting(_str, _setting)
 end
 
 function menu_create_puzz()
- g_btn4_press, g_btn4_held = false, false
+ g_btn4_press, g_btn4_held, g_play_sfx = false, false, g_sfx_lut.m_confirm
  -- if the player has met one of these conditions, bring them to the victory screen
  local _dest
  if (not g_final_world_clr and achv_beat_last_world()) _dest = 1
@@ -117,7 +121,7 @@ function menu_create_puzz()
   }
  else
   _t = {
-   menu_item_base("back", menus_remove),
+   menu_item_base("back", menu_goback),
    _mi_rp,
    _mi_np,
    menu_item_base((g_arrow_index == 2 and "hide" or "show").." hints", function() g_arrow_index = g_arrow_index == 2 and 1 or 2 menus_remove() end),
@@ -140,12 +144,12 @@ function menu_create_title()
   ),
   menu_item_base("options", menu_create_options),
   menu_item_base("credits", function() set_game_mode(4) end),
-  menu_item_base("back", menus_remove)
+  menu_item_base("back", menu_goback)
  })
 end
 function menu_create_options()
  menu_create(16, count(g_list_obj) > 0 and 64 or 82, 96, {
-  menu_item_base("back", function() g_menu[count(g_menu)].m_anim_incr = -.25 end),
+  menu_item_base("back", menu_goback),
   menu_item_setting("show timers", 1),
   menu_item_setting("slime overlap", 2),
   menu_item_setting("sprint by default", 3),

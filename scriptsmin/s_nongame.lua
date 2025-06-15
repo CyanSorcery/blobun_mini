@@ -32,17 +32,17 @@ for you. you're too good
 end function update_intro()g_title_scroll+=.025g_title_scroll%=1if g_intro_countdown>0then g_intro_countdown-=1if(btnp()&48>0)g_intro_countdown=0
 if(g_intro_countdown==0)set_game_mode(0)
 end end function update_title()g_title_scroll+=.01g_title_scroll%=1if count(g_menu)==0then local _pb=btn(6)if(_pb)poke(24368,1)
-if(btnp(4)or _pb)menu_create_title()
+if(btnp(4)or _pb)g_play_sfx=g_sfx_lut.m_confirm menu_create_title()
 if(btnp(5))set_game_mode(3)
-end end function update_stage_select()g_sss_anim_factor=mid(0,g_sss_anim_factor+g_sss_anim_incr,1)g_title_scroll+=.02g_title_scroll%=1local _worlds=count(g_levels)if g_sss_anim_factor==1then if(btnp(0)and g_sss_menu_world>1)g_sss_menu_world_tgt=max(g_sss_menu_world-1,1)g_sss_anim_incr=-.125
-if(btnp(1)and g_sss_menu_world<count(g_levels)and stages_beat_in_world(g_sss_menu_world)>=g_w_req[g_sss_menu_world][1])g_sss_menu_world_tgt=min(g_sss_menu_world+1,_worlds)g_sss_anim_incr=-.125
+end end function update_stage_select()g_sss_anim_factor=mid(0,g_sss_anim_factor+g_sss_anim_incr,1)g_title_scroll+=.02g_title_scroll%=1local _worlds=count(g_levels)if g_sss_anim_factor==1then if(btnp(0)and g_sss_menu_world>1)g_play_sfx=g_sfx_lut.m_sel g_sss_menu_world_tgt=max(g_sss_menu_world-1,1)g_sss_anim_incr=-.125
+if(btnp(1)and g_sss_menu_world<count(g_levels)and stages_beat_in_world(g_sss_menu_world)>=g_w_req[g_sss_menu_world][1])g_play_sfx=g_sfx_lut.m_sel g_sss_menu_world_tgt=min(g_sss_menu_world+1,_worlds)g_sss_anim_incr=-.125
 end if(g_sss_anim_factor==0)g_sss_anim_incr=.125g_sss_menu_world=g_sss_menu_world_tgt g_sss_menu_world_tgt=nil
 local _stages,_pause_press=count(g_levels[g_sss_menu_world]),btn(6)if(_pause_press)poke(24368,1)
-if(btnp(2))g_sss_menu_stage-=1
-if(btnp(3))g_sss_menu_stage+=1
+if(btnp(2))g_sss_menu_stage-=1g_play_sfx=g_sfx_lut.m_sel
+if(btnp(3))g_sss_menu_stage+=1g_play_sfx=g_sfx_lut.m_sel
 if(g_sss_menu_stage<0)g_sss_menu_stage=_stages
 if(g_sss_menu_stage>_stages)g_sss_menu_stage=0
-if btnp(5)or btnp(4)or _pause_press then if(g_sss_menu_stage==0)set_game_mode(0)else set_game_mode(2,g_sss_menu_world,g_sss_menu_stage)music(-1,500)
+if btnp(5)or btnp(4)or _pause_press then if(g_sss_menu_stage==0)set_game_mode(0)g_play_sfx=g_sfx_lut.m_back else set_game_mode(2,g_sss_menu_world,g_sss_menu_stage)music(-1,500)g_play_sfx=g_sfx_lut.m_confirm
 end end function draw_stage_select()local _t,_y_offset=g_sss_colors,20+sin(g_sss_anim_factor>>3)*29for i=1,4do pal(_t[1][i],_t[g_sss_menu_world][i])end rectfill(0,0,127,127,1)map(0,14,-24+24*g_title_scroll,-2-_y_offset,19,3)map(0,17,-24*g_title_scroll,115+_y_offset,19,2)map(32,-2+g_sss_menu_world*2,0,1-_y_offset,16,2)local _bott,_req=122+_y_offset,g_w_req[g_sss_menu_world][1]if(g_sss_menu_world>1)?"⬅️previous area",1,_bott,7
 local _p_beat=stages_beat_in_world(g_sss_menu_world)?_p_beat>=_req and(g_sss_menu_world<count(g_levels)and"next area➡️"or"")or"▶solve ".._req-_p_beat,84,_bott,7
 local _stages=count(g_levels[g_sss_menu_world])local _start=max(min(g_sss_menu_stage-5,_stages-9),-1)local _sy1,_end,_show_timers,_is_hilite,_stagetime,_syt=13-_start*10,_start+10,setting_get(1)for _y=0,_stages do _is_hilite,_sy2=_y==g_sss_menu_stage,_sy1+10if _y>_start and _y<_end then _syt=_sy1+3local _st=g_levels[g_sss_menu_world][max(1,_y)]local _stagetime=dget(_st.s_saveslot)if(_is_hilite)menu_draw_select(4,_sy1,90,_sy2)
