@@ -111,7 +111,7 @@ function player_end_move(self)
  -- if the previous tile was a cracked floor, process it
  if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy) self.tilestouched -= 1 g_play_sfx = g_sfx_lut.pit_o self.prevcrackedfloor = false
  
- local _tile, _prevtile, _poskey, _collision_obj, _partcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y
+ local _tile, _prevtile, _poskey, _tcp_dx, _tcp_dy, _collision_obj, _partcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y, (_x << 1) + 1, (_y << 1) + 1
 
  -- if we're on a water tile and are in the ice state, treat as ice floor
  if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
@@ -133,9 +133,15 @@ function player_end_move(self)
   g_p_updt_coin = true;
  end
 
+ -- was the previous tile a slime trap?
+ if (self.prevslimetrap) tile_copy(126, 26, _oldx - 1, _oldy) g_play_sfx = g_sfx_lut.s_trap
+
+ -- are we on a slime trap right now?
+ self.prevslimetrap = _tile == 48
+
  -- states: 0 normal, 1 fire, 2 ice
  for i=0,2 do
-  if (_tile == 80 + i) self.pstate, g_play_sfx, _partcol = i, g_sfx_lut.p_state[i + 1], g_pal_state_part[i + 1]
+  if (_tile == 80 + i) part_create_slime_explode((_x << 4) + 12, (_y << 4) + 12, g_pal_state_part[i + 1]) self.pstate, g_play_sfx = i, g_sfx_lut.p_state[i + 1]
  end
 
  -- octogems
@@ -158,12 +164,6 @@ function player_end_move(self)
 
  -- if this is a key block, take their key away (passage into this block is checked elsewhere)
  if (_tile == 51) self.haskey = false
-
- -- was the previous tile a slime trap?
- if (self.prevslimetrap) tile_copy(126, 26, _oldx - 1, _oldy) g_play_sfx = g_sfx_lut.s_trap
-
- -- are we on a slime trap right now?
- self.prevslimetrap = _tile == 48
 
  -- are we on a cracked floor right now?
  if (_tile == 125 or _tile == 127) self.prevcrackedfloor = true g_play_sfx = g_sfx_lut.pit_t
@@ -195,7 +195,7 @@ function player_end_move(self)
   for i=0,6,2 do
    if _tile == 89 + i then
     -- slime this tile
-    tile_copy(126, self.pstate << 1, (_x << 1) + 1, (_y << 1) + 1)
+    tile_copy(126, self.pstate << 1, _tcp_dx, _tcp_dy)
     -- set our new position
     self.oldx, self.oldy = _x, _y
     self.x, self.y = _collision_obj.dst_x, _collision_obj.dst_y
@@ -204,10 +204,11 @@ function player_end_move(self)
   end
  end
 
- -- put collectible particles code here
+ -- did we step on an ice tile in the fire state
+ if (_tile == 123 and self.pstate == 1) _tile = 192 tile_copy(104, 18, _tcp_dx, _tcp_dy)
 
  -- did we overlap our own trail? this (vaguely) captures all slime tiles
- if (_tile > 208) player_destroy(self)
+ if (_tile > 208) player_destroy(self) _doslime = false
 
  -- process stuff that destroys stephanie
  if  
@@ -225,11 +226,11 @@ function player_end_move(self)
   player_destroy(self, true)
  elseif _doslime then
   self.tilestouched += 1
-  tile_copy(126, self.pstate << 1, (_x << 1) + 1, (_y << 1) + 1)
+  tile_copy(126, self.pstate << 1, _tcp_dx, _tcp_dy)
  end
 
  -- make particles?
- if (_partcol != nil) part_create_item_grab((_x << 4) + 12, (_y << 4) + 12, _partcol)
+ if (_partcol != nil) part_create_item_grab((_x << 4) + 12, (_y << 4) + 8, _partcol)
 
 end
 

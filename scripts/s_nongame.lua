@@ -51,19 +51,24 @@ function draw_credits()
    spr(204, _x, _y, 4, 4)
   end
  end
-
- -- if this isn't a victory screen, draw the credits
+ 
+ -- darken behind screen
+ poke(0x5F54, 0x60)
+ pal(g_pal_dark[1])
  if (g_victory_mode == nil) then
-  -- darken behind text
-  poke(0x5F54, 0x60)
-  pal(g_pal_dark[1])
   sspr(0, 58, 128, 70, 0, 58)
   sspr(0, 7, 128, 18, 0, 7)
   sspr(39, 38, 52, 20, 39, 38)
-  pal()
-  poke(0x5F54, 0x00)
-  palt(0b0001000000000000)
+ else
+  sspr(0, 0, 128, 128, 0, 0)
+ end
+ pal()
+ poke(0x5F54, 0x00)
+ -- draw header and text
+ palt(0b0001000000000000)
+ if (g_victory_mode == nil) then
   map(48, 0, 0, 0, 16, 16)
+  -- darken behind text
   local _t = {{"programming", "bug fixes", "general"}, {"art, music", "art, music", "music"}}
   for _x=1,2 do
   for _y=1,3 do
@@ -75,13 +80,6 @@ function draw_credits()
   print_shd("a plural system", 34, 26, 7, 1)
   print_shd("seven spirits, one body", 18, 32, 7, 1)
  else
-  -- darken behind text
-  poke(0x5F54, 0x60)
-  pal(g_pal_dark[1])
-  sspr(0, 0, 128, 128, 0, 0)
-  pal()
-  poke(0x5F54, 0x00)
-  palt(0b0001000000000000)
   map(32, 8 + g_victory_mode * 2, 0, 32, 16, 2)
   local _str = {
 [[ you've overcome many
@@ -135,9 +133,7 @@ function update_title()
   if (_pb) poke(0x5f30,1)
 
   -- create title menu?
-  if (btnp(4) or _pb) g_play_sfx = g_sfx_lut.m_confirm menu_create_title()
-  -- back button to go back to title screen?
-  if (btnp(5)) set_game_mode(3)
+  if (btnp() & 0x30 > 0 or _pb) g_play_sfx = g_sfx_lut.m_confirm menu_create_title()
  end
  
 end
@@ -173,13 +169,14 @@ function update_stage_select()
  if (g_sss_menu_stage > _stages) g_sss_menu_stage = 0;
  
  -- select the stage?
- if btnp(5) or btnp(4) or _pause_press then
+ if btnp() & 0x30 > 0 or _pause_press then
   if g_sss_menu_stage == 0 then
    -- this is the back button
    set_game_mode(0)
    g_play_sfx = g_sfx_lut.m_back
   else
-   set_game_mode(2, g_sss_menu_world, g_sss_menu_stage) music(-1, 500)
+   set_game_mode(2, g_sss_menu_world, g_sss_menu_stage)
+   music(-1, 500)
    g_play_sfx = g_sfx_lut.m_confirm
   end
  end

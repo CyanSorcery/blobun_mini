@@ -22,7 +22,7 @@ function gameplay_update()
  if _is_go then
   for _obj in all(g_list_obj) do _obj:onstep() end
   proc_particles()
-end
+ end
 
  -- move camera while binding it to the stage edges/centering it
  local _obj, _lw, _lh = g_list_obj[1], g_p_sst.s_width << 4, g_p_sst.s_height << 4
@@ -45,7 +45,7 @@ function gameplay_draw()
 	2: slime trail
 	4: lava/water tiles
 	8: ice tiles
-    16: player can step on
+ 16: player can step on
 
 	128: drawn in tilemap flip mode
  ]]
@@ -77,10 +77,6 @@ function gameplay_draw()
  end
  
  poke(0x5f54, 0x60)
- -- apply gradient
- -- tmp
- --g_pal_grad = {{0,0,1,1,1,5,5,2,5,5,1,1,1,2,5}, {1,2,1,2,1,13,13,2,4,13,3,3,5,4,13}, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},{5,4,12,14,13,7,7,8,15,10,11,12,13,14,7},{13,14,11,6,6,7,7,14,10,7,11,6,15,15,7}}
- --for _y=0,127,8 do pal(g_pal_grad[_y\26+1]) sspr(0, _y, 128, 8, 0, _y) end
  pal()
  -- apply funky animation to background to worlds 1 and 2
  if (g_p_i_world <= 2) for _y=0,127 do sspr(0, _y, 128, 1, sin(g_stage_bg_anim + (_y >> 4)) * 1.4, _y) end
@@ -88,8 +84,6 @@ function gameplay_draw()
  poke(0x5f54, 0x00)
 
  camera(g_cam_x, g_cam_y)
- -- (debug) draw the whole map
- --map(0,0,0,0,128,32)
 
  local _s_w, _s_h = g_p_sst.s_width * 2 + 2, g_p_sst.s_height * 2 + 2
 -- get ready to draw the map, using white as the transparent color
@@ -116,7 +110,6 @@ function gameplay_draw()
  -- get ready to draw UI stuff
  camera(0, 0)
 
- 
  local _show_timers, _menus_open = setting_get(1), count(g_menu)
  local _bott_msg_y, _left_top_bar = lerp(127, 115, g_bottom_msg_anim), _show_timers and 0 or 87
  
@@ -167,8 +160,6 @@ function gameplay_draw()
   print_shd(g_p_sst.s_name, _offset, 115, 7, 0)
   print_shd(g_p_sst.s_author, _offset, 122, 13, 0)
  end
- 
- --?g_list_obj[1].tilestouched.."/"..g_tile_count,8,32,7
 
 end
 
@@ -288,13 +279,11 @@ function redraw_slimetrail()
  local _eye_determined, _eye_blink, _spr = (btn(4) or _obj.sprint) and _obj.onconvey == false, _obj.blink < 4 or g_stage_win
 
  -- eyes
-  _spr = 215
- if (_eye_determined) _spr = 214
+  _spr = _eye_determined and 214 or 215
  if (_eye_blink or g_stage_lose) _spr = 216
  spr(_spr, g_stage_win and 37 or 36, 104, 1, 1, g_stage_win)
  -- mouth
- _spr = 251
- if (_eye_determined) _spr = 252
+ _spr = _eye_determined and 252 or 251
  if (g_stage_lose) _spr = 160
  if (g_stage_win) _spr = 250
  spr(_spr, 40, 104)

@@ -74,9 +74,6 @@ function obj_create(_str)
    elseif self.type < 10 then
     spr(self.spr, _w_x + 4, _w_y + (sin(self.anim) * 2), 1, 2)
    -- if it's not the above, it's invisible so don't draw it
-   --[[else
-    -- tmp, draw the type
-    ?self.type, (self.x << 4) + 8, (self.y << 4) + 8, 7]]
    end
   end
  end

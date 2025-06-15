@@ -10,9 +10,7 @@ function menu_create(_x, _y, _w, _items)
   m_anim_factor = 0,
   m_step = function(self, _index)
    local _m_count = count(g_menu)
-   local _is_top_pane = _index == _m_count
-   local _pause_press = btn(6)
-   local _i_count = count(self.m_items)
+   local _is_top_pane, _pause_press, _i_count = _index == _m_count, btn(6), count(self.m_items)
    if (_pause_press) poke(0x5f30,1) 
    if self.m_anim_factor == 1 then
     if (btnp(2)) self.m_highlight -= 1 g_play_sfx = g_sfx_lut.m_sel
@@ -44,8 +42,7 @@ function menu_create(_x, _y, _w, _items)
    -- draw background
    local _b_h = lerp(5, self.m_h, self.m_anim_factor)
    local _x1, _y1, _is_hilite = self.m_x, self.m_y - (_b_h >> 1)
-   local _x2, _y2 = _x1 + self.m_w, _y1 + _b_h
-   local _sx1, _sy1, _sx2, _sy2
+   local _x2, _y2, _sx1, _sy1, _sx2, _sy2 = _x1 + self.m_w, _y1 + _b_h
    
    rectfill(_x1, _y1, _x2, _y2, 1)
    rect(_x1 + 1, _y1 + 1, _x2 - 1, _y2 - 1, 13)
@@ -106,9 +103,17 @@ function menu_create_puzz()
  if (not g_game_dev_clear and achv_beat_game_times(true)) _dest = 4
  -- if we're sending them away, dont make a menu
  if (_dest != nil) set_game_mode(5, _dest) return
+ 
 
  local _mi_np, _mi_rp, _mi_ss, _t =
-  menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
+  menu_item_base((g_stage_win and "next" or "skip").." puzzle", function()
+    -- different function depending on if this is the last stage in this world or not
+    if g_p_i_stage + 1 > count(g_levels[g_p_i_world]) then
+     set_game_mode(1)
+    else
+     set_game_mode(2, g_p_i_world, g_p_i_stage + 1)
+    end
+  end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
   menu_item_base("stage select", function() set_game_mode(1) end)
 
@@ -144,7 +149,7 @@ function menu_create_title()
   ),
   menu_item_base("options", menu_create_options),
   menu_item_base("credits", function() set_game_mode(4) end),
-  menu_item_base("back", menu_goback)
+  menu_item_base("back", function() set_game_mode(3) end)
  })
 end
 function menu_create_options()

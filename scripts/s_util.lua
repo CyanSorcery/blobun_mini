@@ -1,13 +1,7 @@
 function add_undo()
  local _undo = {}
- -- copy all object references
- _undo.obj_list = tbl_copy(g_list_obj)
- -- copy the player object
- _undo.player = tbl_copy(g_list_obj[1])
- -- store additional parameters
- _undo.g_p_zap_turn, _undo.g_tile_count = g_p_zap_turn, g_tile_count
- -- copy the playfield
- _undo.playfield = pack_undo_tiles()
+ -- copy all references
+ _undo.obj_list, _undo.player, _undo.g_p_zap_turn, _undo.g_tile_count, _undo.playfield = tbl_copy(g_list_obj), tbl_copy(g_list_obj[1]),g_p_zap_turn, g_tile_count,pack_undo_tiles()
  -- add this to the undo queue
  add(g_list_undo, _undo)
  -- if there's too many undos, remove one

@@ -42,5 +42,4 @@ function draw_particles()
   pal(7, _part.col)
   spr(flr(lerp(163, 161, _part.time/_part.time_max) + .5), _part.x, _part.y)
  end
- pal()
 end

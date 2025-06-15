@@ -279,9 +279,8 @@ function unpack_stage(_world, _stage)
  g_final_world_clr, -- if they've cleared the final world
  g_game_clear, -- they've beaten every puzzle
  g_game_fast_clear, -- they've beaten every puzzle fast
- g_game_dev_clear, -- they've beaten every dev time
+ g_game_dev_clear -- they've beaten every dev time
  ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{},{{},{}},1,g_p_sst.s_tiles,achv_beat_last_world(),achv_beat_game_stages(),achv_beat_game_times(false),achv_beat_game_times(true)
-
 
  -- decompress sprites and music (if needed)
  decompress_sprites(2)
