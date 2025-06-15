@@ -51,26 +51,67 @@ function draw_credits()
    spr(204, _x, _y, 4, 4)
   end
  end
- -- darken behind text
- poke(0x5F54, 0x60)
- pal(g_pal_dark[1])
- sspr(0, 58, 128, 70, 0, 58)
- sspr(0, 7, 128, 18, 0, 7)
- sspr(39, 38, 52, 20, 39, 38)
- pal()
- poke(0x5F54, 0x00)
- palt(0b0001000000000000)
- map(48, 0, 0, 0, 16, 16)
- local _t = {{"programming", "bug fixes", "general"}, {"art, music", "art, music", "music"}}
- for _x=1,2 do
+
+ -- if this isn't a victory screen, draw the credits
+ if (g_victory_mode == nil) then
+  -- darken behind text
+  poke(0x5F54, 0x60)
+  pal(g_pal_dark[1])
+  sspr(0, 58, 128, 70, 0, 58)
+  sspr(0, 7, 128, 18, 0, 7)
+  sspr(39, 38, 52, 20, 39, 38)
+  pal()
+  poke(0x5F54, 0x00)
+  palt(0b0001000000000000)
+  map(48, 0, 0, 0, 16, 16)
+  local _t = {{"programming", "bug fixes", "general"}, {"art, music", "art, music", "music"}}
+  for _x=1,2 do
   for _y=1,3 do
-   print_shd(_t[_x][_y], _x*64-46, _y*24+42, 7, 1)
+  print_shd(_t[_x][_y], _x*64-46, _y*24+42, 7, 1)
   end
+  end
+  print_shd("director", 58, 42, 7, 1)
+  print_shd("created by", 44, 1, 7, 1)
+  print_shd("a plural system", 34, 26, 7, 1)
+  print_shd("seven spirits, one body", 18, 32, 7, 1)
+ else
+  -- darken behind text
+  poke(0x5F54, 0x60)
+  pal(g_pal_dark[1])
+  sspr(0, 0, 128, 128, 0, 0)
+  pal()
+  poke(0x5F54, 0x00)
+  palt(0b0001000000000000)
+  map(32, 8 + g_victory_mode * 2, 0, 32, 16, 2)
+  local _str = {
+[[ you've overcome many
+ challenges and are at
+the end of your journey!
+
+but many puzzles remain
+unsolved. can you solve
+      them all?]],
+[[you're very good! you've
+overcome every challenge
+ in your way, and have
+ solved all the puzzles.
+
+       good job!]],
+[[ wow, you're fast! not
+only did you solve every
+puzzle, but you've done
+ it super quick as well.
+
+    congratulations!]],
+[[ we have no more puzzles
+for you. you're too good
+  at the game! not many
+   people can do this.
+
+    you are amazing!]]
+  }
+  print_shd(_str[g_victory_mode], 16, 56, 7, 0)
  end
- print_shd("director", 58, 42, 7, 1)
- print_shd("created by", 44, 1, 7, 1)
- print_shd("a plural system", 34, 26, 7, 1)
- print_shd("seven spirits, one body", 18, 32, 7, 1)
 end
 
 function update_intro()

@@ -63,6 +63,11 @@ function achv_beat_stages(_world)
  return stages_beat_in_world(_world) >= count(g_levels[_world])
 end
 
+function achv_beat_last_world()
+ local _finworld = count(g_levels)
+ return stages_beat_in_world(_finworld) >= g_w_req[_finworld][1]
+end
+
 function achv_beat_times(_world, _dev)
  -- if any of the stages aren't beaten, do an early return false
  for _st in all(g_levels[_world]) do

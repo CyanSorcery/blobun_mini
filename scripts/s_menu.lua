@@ -93,6 +93,16 @@ function menu_item_setting(_str, _setting)
 end
 
 function menu_create_puzz()
+ g_btn4_press, g_btn4_held = false, false
+ -- if the player has met one of these conditions, bring them to the victory screen
+ local _dest
+ if (not g_final_world_clr and achv_beat_last_world()) _dest = 1
+ if (not g_game_clear and achv_beat_game_stages()) _dest = 2
+ if (not g_game_fast_clear and achv_beat_game_times(false)) _dest = 3
+ if (not g_game_dev_clear and achv_beat_game_times(true)) _dest = 4
+ -- if we're sending them away, dont make a menu
+ if (_dest != nil) set_game_mode(5, _dest) return
+
  local _mi_np, _mi_rp, _mi_ss, _t =
   menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
@@ -117,7 +127,6 @@ function menu_create_puzz()
  }
  end
  menu_create(16, 64, 96, _t)
- g_btn4_press, g_btn4_held = false, false
 end
 function menu_create_title()
  menu_create(24, 96, 80, {
