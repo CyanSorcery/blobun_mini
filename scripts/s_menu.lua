@@ -95,17 +95,25 @@ function menu_item_setting(_str, _setting)
 end
 
 function menu_create_puzz()
- local _t = {
-  menu_item_base("back", menus_remove),
-  menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
-  menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
-  menu_item_base((g_arrow_index == 2 and "hide" or "show").." hints", function() g_arrow_index = g_arrow_index == 2 and 1 or 2 menus_remove() end),
-  menu_item_base("stage select", function() set_game_mode(1) end),
-  menu_item_base("options", menu_create_options),
-  menu_item_base("go to title", function() set_game_mode(0) end)
+ local _t
+ -- if the player has won, do this menu instead
+ if g_stage_win then
+  _t = {
+    menu_item_base("next puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
+    menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
+    menu_item_base("stage select", function() set_game_mode(1) end)
+  }
+ else
+  _t = {
+   menu_item_base("back", menus_remove),
+   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
+   menu_item_base("skip puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
+   menu_item_base((g_arrow_index == 2 and "hide" or "show").." hints", function() g_arrow_index = g_arrow_index == 2 and 1 or 2 menus_remove() end),
+   menu_item_base("stage select", function() set_game_mode(1) end),
+   menu_item_base("options", menu_create_options),
+   menu_item_base("go to title", function() set_game_mode(0) end)
  }
- -- if the player has won, take the "back" button off this menu
- if (g_stage_win) deli(_t, 1)
+ end
  menu_create(16, 64, 96, _t)
  g_btn4_press, g_btn4_held = false, false
 end

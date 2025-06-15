@@ -12,6 +12,15 @@ function draw_title()
 
  ?"2025 cyansorcery", 32, 122, 3
  
+ palt()
+ pal(7, 1)
+ if (achv_beat_game_stages()) spr(241, 1, 119)
+ if setting_get(1) then
+  if (achv_beat_game_times(false)) ?"⧗", 113, 122, 7
+  if (achv_beat_game_times(true)) ?"♥", 120, 122, 7
+ end
+ pal()
+ 
  if (count(g_menu) == 0 and g_game_mode_target == nil) draw_wavy_text("press 🅾️ to start!", 28, 96, 1, 1.4)
 end
 
@@ -177,6 +186,12 @@ function draw_stage_select()
     end
    else
     ?"back", 27, _syt, 7
+    pal(7, 10)
+    if (achv_beat_stages(g_sss_menu_world)) spr(241, 6, _sy1 + 1)
+    if setting_get(1) then
+     if (achv_beat_times(g_sss_menu_world, false)) ?"⧗", 113, _syt, 7
+     if (achv_beat_times(g_sss_menu_world, true)) ?"♥", 120, _syt, 7
+    end
    end
   end
   _sy1 = _sy2
