@@ -140,8 +140,6 @@ function update_stage_select()
    set_game_mode(2, g_sss_menu_world, g_sss_menu_stage) music(-1, 500)
   end
  end
- -- go back to the title?
- --if (btnp(5)) set_game_mode(0)
 end
 
 function draw_stage_select()

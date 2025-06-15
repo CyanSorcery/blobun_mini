@@ -4,8 +4,8 @@ function init_config()
 
  --[[
 	slot 63:
-	1: save initialized
-	2: show timers (off)
+	1: save init
+	2: timers (off)
 	3: slime overlap (on)
 	4: sprint by default (off)
 	5: music (on)
@@ -20,7 +20,6 @@ function init_config()
 	3 bits after: last world
 
 	levels (0-59)
-	no mapping yet
  ]]
 
  -- if the first bit isn't set in the last slot, we need to initialize this
