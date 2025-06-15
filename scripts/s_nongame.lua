@@ -180,7 +180,7 @@ function draw_stage_select()
    if _y > 0 then
     ?(_y > 9 and "" or " ").._y.." ".._st.s_name, 15, _syt, 7
     spr(_stagetime <= 599.995 and 241 or 240, 6, _sy1 + 1)
-    if (_show_timers) then
+    if _show_timers then
      if (_stagetime <= _st.s_goaltime) ?format_time(_stagetime), 96, _syt, 7
      if (_stagetime <= _st.s_devtime) ?"♥", 120, _syt, 7
     end
@@ -188,7 +188,7 @@ function draw_stage_select()
     ?"back", 27, _syt, 7
     pal(7, 10)
     if (achv_beat_stages(g_sss_menu_world)) spr(241, 6, _sy1 + 1)
-    if setting_get(1) then
+    if _show_timers then
      if (achv_beat_times(g_sss_menu_world, false)) ?"⧗", 113, _syt, 7
      if (achv_beat_times(g_sss_menu_world, true)) ?"♥", 120, _syt, 7
     end

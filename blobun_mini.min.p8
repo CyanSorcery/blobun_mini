@@ -2,136 +2,156 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()cls(1)?"loading...",1,122,13
-flip()memcpy(32768,0,17152)w={{},{},{},{},{},{}}X,fa=0,0local e,f=32768,%32768while(f~=0)add(w[f>>13&7],e+2)e+=2+(f&8191)f=%e
-fi,f5={51510,27795,14025,37740},{32769.5,42405.5,60855.5,-.5}Z,f1,A,L,M,f0,ff,z,m,a=0,0,0,0,0,true,time(),0,1,{}fl,f6=nil fc,fr,ft=D("1c0d237164",5),D("0001115525511125",16),D("3c26915154",5)f_()fj()fA(1)fu(1,1)N,O=0,0end function _update()if(count(a)>0and btn(6))poke(24368,1)f4()
-f0=f0==false M+=.2M%=4Z+=.035Z%=1A+=.15A%=32L-=1if L<=0then L=14elseif L%7==1then E=true end fl()if(btnp()&48>0and c>45)c=45
-c=max(c-1)if(c<=45)z=min(z+.1,1)
-if x~=nil then m=max(m-.1)if(m==0)if x==0then fq()elseif x==1then fB()elseif x==2then fu(P,fb)elseif x==3then fC()elseif x==4then fD()end z,m,x,P,fb=0,1
-end for f,e in pairs(a)do e:m_step(f)end if(f~=nil)sfx(f>>10&63,3,f>>5&31,f&31)f=nil
-ff=time()if(ff<0)stop"game has been running for too long. take a break!"
-end function _draw()f6()for f,e in pairs(a)do e:m_draw(f)end local f=x==2or x==nil and count(u)>0local e=f and P~=nil and P or y or 1local n,f,e=f and ft[1][e]or 1,ft[2][e],64*cos(z*m>>2)if(e>0)rectfill(0,0,e,127,n)rectfill(127-e,0,127,127,n)
-if c>0then local a,o="stage "..f3,cos(abs(max(abs(c-45),35)-35)/40)*64-64local n,d,o=o+8,o+9,v(a,o+12,97,7,f)line(d,105,d+o,105,f)line(n,104,n+o,104,7)v(i.s_name,n,107,7,f)if(e>0)?i.s_author,n,115,f
-end camera(0,0)?flr(stat(1)*100).."%",0,122,7
-?flr(stat(0)).."/2048kb",18,122,7
-end function e(f,e,n,o)x,P,fb,fE,c=f,e,n,o,0f4()music(-1)end function G(f,e)fl,f6,c,u=f,e,0,{}pal()end function Q(f)f9(1)f7(1,0,0)music(f)o=0end function fC()Q(-1)G(fG,fH)R=90end function fq()Q(-1)G(fI,fJ)end function fB()Q(-1)G(fK,fL)local f=fs()r,H=mid(1,f.world,count(b))F=mid(1,f.stage,count(b[r]))o,_,q,fM=0,0,.125,D("13b224cd02415d6d2494",4)end function fD()Q(-1)G(fN,fO)end function fu(f,e)G(fP,fQ)local n=X~=2fe,fx=0,61936.8827u,p,d,S,fn,g,E,T,I,fh,c,j,fp,U,B,f2,V={},false,false,false,false,0,true,false,0,false,fE==true and 0or 90,0,false,{},{},{{},{}},1f=mid(1,f,count(b))e=mid(1,e,count(b[f]))y,f3,i=f,e,b[f][e]fR(f,e)f9(2)if(n)poke(24405,0)local e=D("2854ef234924d6d54924",4)for n=1,4do pal(e[1][n],e[f][n])end spr(1,8,0,14,1)spr(16,0,8,2,2)poke(24405,96)fS(f)f7(2,96,0)
-local n,o,f=i.s_data,i.s_width+2for e=1,#n,2do f=l(n,e,1,1)k(96+f\16*2,f%16*2,(e-1)\2%o*2-1,(e-1)\2\o*2-1)end local e,f=i.s_obj_count-1for e=0,e do f=fT(sub(i.s_obj_str,e*5+1,e*5+6))if(f.type==11)add(f2[1],fm(f.spr,f.x,f.y))else add(u,f)
-end for f in all(i.s_hints)do add(f2[2],fm(f))end end function fm(f,e,n)local f={dir=type(f)=="number"and f or l(f,1,1),x=((e and e or l(f,2,1))<<4)+12,y=((n and n or l(f,3,1))<<4)+12}function f:ondraw()fo=self.dir spr(fo%2==0and 254or 255,self.x,self.y,1,1,cos(fo>>2)<0,sin(fo>>2)>=0)end return f end function f_()local n,a,e,f,o,d=b b={}for n in all(n)do a={}for n in all(n)do e={}f=2o=l(n,1,1)e.s_name=sub(n,f,f+o)f+=o+2o=l(n,f-1,1)e.s_author=sub(n,f,f+o)f+=o+1e.s_width=l(n,f,1)+1e.s_saveslot=l(n,f+1,0,1)e.s_goaltime=l(n,f+3,0,7)e.s_devtime=l(n,f+11,0,7)f+=19o=l(n,f,1)*3e.s_hints={}for o=1,o,3do add(e.s_hints,sub(n,f+o,f+o+2))end f+=o+1o=l(n,f,1,1)d=f+2+o*5e.s_obj_count=o e.s_obj_str=sub(n,f+2,d-1)e.s_tiles=l(n,d,1,1)e.s_data=sub(n,d+2)e.s_height=#e.s_data\2\(e.s_width+2)-2add(a,e)end add(b,a)end end fU="cyansorcery_blobun_wp_pico8"b={{"afill it out9mika, roxy601004.3344002.417793003010020121221210200303400400000b2000b0200b22010f38183018181830184033211a01ff011a013b33ff0cff19ff0cff3b3301ff011a01ff013b4c4141414b4141414d","cdon't overlap9mika, roxy402004.3344002.984480211313300312413312322220402100b2000b4003b42020f4e4e38181818404e4e3301ff013b381810210bff3b3301ff01ff013b33ff0bff39414d3301ff013b4e4e4c4141414d4e4e","6zigzags3mika603004.3344002.734491020013110121220210311413400500200b4003b2103b1201b32010f4e4e4e3818181818404e381810ff01ff013b381001ff01ff01394d3321ff01ff01ff3b4e4c4141414141414d4e","9capacitory9mika, roxy604007.1100005.4677916626515515415315225114134001066001f4e381818181818404e4e33ff01ff01ff3b4e4e33011901ff013b4e4e33ff1aff01ff3b4e4e33010c01ff013b4e4e33ff01ff01ff3b4e381001ff01ff0113403301ff394131ff213b4c41414d4e4c41414d","9full boxes5autumn605600.1000000.110000100600283818181818181818403301ff01ff01ff013b33ff01ff19ff01ff3b3301ff011a01ff013b33ff11142b140dff3b3301ff011a01ff013b33ff01ff0cff01ff3b3321ff01ff01ff013b4c414141414141414d","cpopping about3ashe506600.1000000.110000505400a0220a2002a0442a4204194e4e38181818184038181045ff01ff3b33ff01ff01ff013b3345ff011925ff3b361414142b14143f3325ff010c01213b33ff01ff01ff394d4c41414141414d4e","8hop to it4unseta07600.1000000.110000100700354e4e4e381818181818404e4e4e4e4e4e33ff01ff01ff13404e4e4e4e4e3301ff01ff01ff1318404e4e4e4c34140d010b01ff013b4e4e4e3810ff01ff01ff01ff3b4e4e3810ff01ff01ff01ff394d381810ff01ff01ff01ff394d4e3301ff01ff01ff01ff013b4e4e332101ff01ff01ff01394d4e4e4c41414141414141414d4e4e4e","8superstar3roxy908600.1000000.110000104700404e4e4e4e381818404e4e4e4e4e4e4e4e3301ff3b4e4e4e4e4e4e4e3810ff0113404e4e4e38181810ff01ff011318184033ff01ff01ff01ff01ff013b3301ff01ff01ff01ff01ff3b4c3101ff01ff01ff01ff394d4e360d01ff01ff01ff113f4e381001ff012101ff01ff13403301ff01ff393101ff01ff3b33ff01ff394d4c3101ff013b4c4141414d4e4e4c4141414d","amorning joe3roxy909600.1000000.110000107700424e381818181818404e4e4e4e3810ff01ff01ff1318404e4e33ff01112a0d01ff0113404e3301ff010c01ff01ff01134033ff01ff01ff01ff19ff013b3301ff01ff01ff011f0dff3b33ff01ff01ff01ff0cff013b3301ff01ff01ff01ff01394d33ff01ff01ff01ff21394d4e4c31ff01ff01ff39414d4e4e4e4c41414141414d4e4e4e4e","9lost media3roxy810600.1000000.110000300000a8060a608038381830181818181830184033211a01ff01ff451a453b33ff1aff19ff01ff1aff3b33011a011a01ff011a013b33ff1214151414140eff3b3301ff01ff01ff01ff013b33ff01ff01ff01ff01ff3b3301ff01ff01ff01ff013b4c3101ff01ff01ff01ff3b4e4c41414141414141414d","ccareful plans3roxy549600.1000000.110000203000210541b3818181818181840330122012101ff3b33ff01ff111b013b3301ff01ff0cff3b33ff23232323013b330124242424ff3b4c4141414141414d","etangy transport5willow350600.1000000.11000050020011153a3212a123211453143818181818403301ff01ff3b33ff0203043b33210501053b33030103043b33010201ff3b4c414141414d","espace satellite5autumn651600.1000000.110000506300a4222a224221354253541c38181818181818184033242401230124243b332424ff23ff24243b33242405230524243b332422ff23ff22213b4c414141414141414d"},{"atest stage!4mouse945600.1000000.110001607400890e8783e7693e64045641456424563345514453254545050050601866e8a7694a94765070251703527045370554706557079679f5038181818181818181818184033974727440424074701483b3388472744042466465d973b33646464430323662651883b33636363430323662628083b33626262420222012101053b330f0146464646ff0109013b332f4a4a6a6aff4805fe093b334f6f8fafcfef2c018afe3b4c414141414141414141414d","dlocks'n'blocks3roxy546600.1000000.11000020030013053104e4e381818404e4e381810010213184033ff01ff0303033b3301ff010303033b332139414131033b4c414d4e4e4c414d","clocks'n'locks3roxy447600.1000000.110000204100344551c381818181818403301ff01ff013b33ff394131213b3301131816143f33ff434343433b3301ff01ff423b33ff01ff01ff3b3301ff01ff013b4c41414141414d","dtoggled hearts3ashe448600.1000000.1100002042001205319381818181818403301ff02ff013b33ff01ff01ff3b3303030104213b330303ff04043b3303030104043b4c41414141414d"},{"ccup of hearts3ashe652600.1000000.1100005063001205312353a1500a001523381818181818404e4e3325ff02ff03131840330301ff010304043b33010404ff04ff013b33ff0402030b01213b3301ff030301ff394d4c3125ff01ff394d4e4e4c414141414d4e4e","dcoin conundrum3ashe553600.1000000.1100004014004115644156444562438181818181818403364ff01ff01643b33ff62ff0162013b3301ff016401ff3b33ff016401ff013b33012101ff62ff3b336401ff01ff633b4c4141414141414d","ccoins of loveccoins of love454600.1000000.110000502500131534125644356434561e3818181818184033040404ff013b330401ff02ff3b33046201ff013b33ff010303623b3301ff0362013b3363032101ff3b4c41414141414d"},{"ckey collector5autumn755600.1000000.110000a00300470564015613153341552715417253a1300a00134735620381818181818181818403305636363642424623b3362040402424343223b3344040403444343023b3321052304042323623b4c41414141414141414d","etight corridors9roxy, ashe656600.1000000.110000401400240541545312553264e3818181818404e4e38100323232213184033030324242424ff3b3303ff01ff0104033b3303012323ff04033b33032123230102013b33030102040404394d4c4141414141414d4e"},{"cthree of keys3ashe757600.1000000.1100005062002215410253112533235528381818181818181818403304042323232304043b3304012201ff01ff043b3302024343434321043b33ff034244444444043b3301ff0303394141414d33ff0103033b4e4e4e4e4c414141414d4e4e4e4e","djuncton island9roxy, ashe758600.1000000.1100004026002315415153236542c381818181818181818403323232323242401043b332301ff222402ff013b3323ff012323ff01ff3b332301ff03230123233b4c4131010303ff39414d4e4e33ff0123043b4e4e4e4e33212204233b4e4e4e4e4c414141414d4e4e","dbizarre island3ashe859600.1000000.1100006015002605411253164532165425654344e4e4e4e38181818404e4e4e4e38181001ff223b4e4e381810ff010424ff13184033030201ff01240104043b330323232323240404043b3323ff01ff01ff0204243b332321240303030304243b332322242323222424394d4c41414141414141414d4e"}}function f9(f)if(X==f)return false
-holdframe()C(0,0,w[1][f],sget,sset)C(0,0,w[2][f],pget,pset)memcpy(12288,24576,255)X=f end function el(f)if(fa==f)return false
-holdframe()C(0,0,w[3][f],pget,pset)memcpy(12544,24576,128)memcpy(12800,24704,2176)fa=f end function f7(f,e,n)holdframe()C(e,n,w[4][f],mget,mset)end function fA(f)holdframe()C(0,0,w[5][f],pget,pset)memcpy(14976,24576,2176)end function fS(f)holdframe()C(32,72,w[6][f],sget,sset)end function C(i,e,f,r,t)local function l(f,o)local e,n=f[1],1while(e~=o)n+=1e,f[n]=f[n],e
-f[1]=o end local function a(e)local n=$f>>f%1*8<<32-e>>>16-e f+=e>>3return n end local function f(e)local f=0repeat f+=1local n=a(f)e+=n until n<(1<<f)-1return e end local u,b,s,n,c,o,d=f"0",f"0",f"1",{},{},0for f=1,f"1"do add(n,a(s))end for a=e,e+b do for i=i,i+u do o-=1if(o<1)o,d=f"1",not d
-local o=a>e and r(i,a-1)or 0local e=c[o]or{unpack(n)}c[o]=e local f=e[d and 1or f"2"]l(e,f)l(n,f)t(i,a,f)end end end function fV()local f={}f.obj_list=fy(u)f.player=fy(u[1])f.g_p_zap_turn=g f.playfield=fW()add(B,f)if(count(B)>40)deli(B,1)
-end function fX()local e=count(B)if(e==0)return
-local f=B[e]if(e>1)deli(B)
-u=f.obj_list u[1]=f.player g,p=f.g_p_zap_turn,f.g_stage_lose local e=u[1]e.nextdir,e.isdead,e.ismove,p,T,E=-1,false,false,false,true,true fY(f.playfield)end function fW()local f={}for e=0,34do f[e]={}for n=0,32do f[e][n]=mget(e,n)end end return f end function fY(n)for f=0,34do for e=0,32do mset(f,e,n[f][e])end end end function fy(e)local f={}for e,n in pairs(e)do f[e]=n end return f end function l(n,f,o,e)return tonum(sub(n,f,f+(e and e or 0)),o)end function D(d,f)local e,o,n={},#d\f for o=1,o do e[o]={}n=(o-1)*f for f=1,f do n+=1add(e[o],l(d,n,1,0))end end return e end function s(f,e,n)return f+(e-f)*n end function k(n,o,d,a)for f=0,1do for e=0,1do mset(d+f,a+e,mget(n+f,o+e))end end end function J(o,d,f,e)local e,n,a,i,l,c,f=i.s_width<<1,i.s_height<<1,48+f\16<<1,f%16<<1,48+e\16<<1,e%16<<1for e=1,e,2do for n=1,n,2do f=mget(e+1,n)if f==o then k(l,c,e,n)elseif f==d then k(a,i,e,n)end end end end function K(f,e)local n=mget(f,e)if(n~=125and n~=127)return false
-k(126,24,f-1,e)K(f-2,e)K(f+2,e)K(f,e-2)K(f,e+2)return true end function fd(e,n,o,d,a)local f=#e for f=1,f do n=print(sub(e,f,f),n,o+sin(Z+f/10)*a,d)end end function v(f,e,n,o,d)?f,e+1,n+1,d
-return print(f,e,n,o)end function fg(f)return(f>=60and flr(f/60)..":"or"")..sub(flr(f%60)+100,2,3).."."..sub(flr(f%1*1000)+1000,2,4)end function fP()local f=z*m==1f1+=.075f1%=1fe+=.015fe%=1if c<=45and f then if(btn(6))poke(24368,1)
-if((S and d or btn(6))and count(a)==0)fZ()
-end I=mid(0,(d or p)and I+.2or I-.2,1)if(f)for f in all(u)do f:onstep()end e1()
-local f,e,n=u[1],i.s_width<<4,i.s_height<<4local o=f.inportal and cos(1-f.anim>>2)or f.anim N=i.s_width>8and mid(0,(s(f.oldx,f.x,o)<<4)-48,e-112)or(e>>1)-56O=i.s_height>7and mid(-8,(s(f.oldy,f.y,o)<<4)-48,n-108)or(n>>1)-60end function fQ()poke(24405,0)if(f0)e0()else ef()
-if(E)e4()
-if(T)e3()
-ee()poke(24405,96)cls(fc[1][y])pal(7,fc[2][y])local f,e=-32+A,-A if(y==3or y==5)f,e=-N/2,-O/2
-for f=f,128,32do for e=e,128,32do spr(148,f,e,4,2)spr(152,f,e+16,4,2)end end poke(24404,96)pal()if(y<=2)for f=0,127do sspr(0,f,128,1,sin(fe+(f>>4))*1.4,f)end
-poke(24404,0)camera(N,O)local f,e=i.s_width*2+2,i.s_height*2+2palt(256)map(0,0,0,0,f,e,1)fk()map(0,0,-7,0,f,e,128)fk()for f in all(f2[V])do f:ondraw()end palt(16384)map(0,0,0,0,f,e,12)palt()map(0,0,0,0,f,e,2)for f in all(u)do f:ondraw()end camera(0,0)local o=h(1)local f,e=s(127,115,I),o and 0or 87poke(24404,96)pal(fr[1])sspr(e,0,128,9,e,0)if(I>0)sspr(0,f,128,16,0,f)
-pal()poke(24404,0)local e=j<=i.s_goaltime and 7or 13if(d and j<=i.s_devtime)e=10
-local n=dget(i.s_saveslot)spr(n<599.995and 147or 146,88,0)if o then?fg(j),2,2,e
-if(fh)fd("new time!",32,2,e,1.3)
+flip()memcpy(32768,0,17152)A={{},{},{},{},{},{}}ff,fr=0,0local e,f=32768,%32768while(f~=0)add(A[f>>13&7],e+2)e+=2+(f&8191)f=%e
+f9,fb={51510,27795,14025,37740},{32769.5,42405.5,60855.5,-.5}f2,fe,D,S,T,fn,f8,j,k,a,fo,s,f7=0,0,0,0,0,true,time(),0,1,{},false,nil,nil,nil fu,fs=nil fh,fx,fm,U=E("0001115525511125",16),E("3c26915154",5),E("13b49a5d6",3),E(U,1)g={octo={64515,-925,-829,-733,-637,-541,-445,-248},t_switch=-349,t_coin=63494,p_state={64140,63686,63880},p_win=62483,p_move=63108,p_portal=63209}function eg(f,e,n)print(f<<10|e<<5|n,7)end fK()fL()fM(1)fg()V,W=0,0end function _update()fn=fn==false T+=.2T%=4f2+=.035f2%=1D+=.15D%=32S-=1if S<=0then S=14elseif S%7==1then K=true end fu()x=max(x-1)if(btnp()&48>0and x>45)x=45
+if(count(a)>0and x>10)x=10
+if(x<=45)j=min(j+.1,1)
+if p~=nil then k=max(k-.1)if(k==0)if p==0then fN()elseif p==1then fg()elseif p==2then fO(X,fp)elseif p==3then fP()elseif p==4then fQ()end j,k,p,X,fp=0,1
+end for f,e in pairs(a)do e:m_step(f)end if(h(4)==false)s=nil
+if(s~=nil)if stat(49)~=-1then sfx(-1,3)else sfx(s>>10&63,3,s>>5&31,s&31)f7=s s=nil end
+f8=time()if(f8<0)stop"game has been running for too long. take a break!"
+end function _draw()fs()for f,e in pairs(a)do e:m_draw(f)end local f=p==2or p==nil and count(u)>0local e=f and X~=nil and X or q or 1local n,f,e=f and fx[1][e]or 1,fx[2][e],64*cos(j*k>>2)if(e>0)rectfill(0,0,e,127,n)rectfill(127-e,0,127,127,n)
+if x>0then local a,o="stage "..G,cos(abs(max(abs(x-45),35)-35)/40)*64-64local n,d,o=o+8,o+9,w(a,o+12,97,7,f)line(d,105,d+o,105,f)line(n,104,n+o,104,7)w(i.s_name,n,107,7,f)if(e>0)?i.s_author,n,115,f
+end end function o(f,e,n,o)p,X,fp,fR,x=f,e,n,o,0Y()if(p~=2)music(-1,500)fo=false
+end function L(f,e)fu,fs,x,u=f,e,0,{}pal()end function e(f)fw(1)fy(1,0,0)music(h(5)and f or-1,0,7)d=0end function fP()M(6)e(-1)L(fS,fT)Z=90end function fN()M(6)e(0)L(fU,fV)end function fg()M(6)e(4)L(fW,fX)local f=fk()r,N=mid(1,f.world,count(b))y=mid(1,f.stage,count(b[r]))d,B,H,fY=0,0,.125,E("13b224cd02415d6d2494",4)end function fQ()M(6)e(4)L(fZ,f_)end function fO(f,e)L(e1,e0)local n=ff~=2f=mid(1,f,count(b))e=mid(1,e,count(b[f]))q,G,i=f,e,b[f][e]e4(f,e)f5,fz=0,61936.8827u,z,l,_,f6,v,K,f1,O,fv,x,C,fF,f0,I,fd,f4,P={},false,false,false,false,0,true,false,0,false,fR==true and 0or 90,0,false,{},{},{{},{}},1,i.s_tiles fw(2)M(f)if(n)poke(24405,0)local e=E("2854ef234924d6d54924",4)for n=1,4do pal(e[1][n],e[f][n])end spr(1,8,0,14,1)spr(16,0,8,2,2)poke(24405,96)e3(f)fy(2,96,0)
+local n,o,f=i.s_data,i.s_width+2for e=1,#n,2do f=c(n,e,1,1)F(96+f\16*2,f%16*2,(e-1)\2%o*2-1,(e-1)\2\o*2-1)end local e,f=i.s_obj_count-1for e=0,e do f=ef(sub(i.s_obj_str,e*5+1,e*5+6))if(f.type==11)add(fd[1],fA(f.spr,f.x,f.y))else add(u,f)
+end for f in all(i.s_hints)do add(fd[2],fA(f))end end function fA(f,e,n)local f={dir=type(f)=="number"and f or c(f,1,1),x=((e and e or c(f,2,1))<<4)+12,y=((n and n or c(f,3,1))<<4)+12}function f:ondraw()fa=self.dir spr(fa%2==0and 254or 255,self.x,self.y,1,1,cos(fa>>2)<0,sin(fa>>2)>=0)end return f end function fK()local n,a,e,f,o,d=b b={}for n in all(n)do a={}for n in all(n)do e={}f=2o=c(n,1,1)e.s_name=sub(n,f,f+o)f+=o+2o=c(n,f-1,1)e.s_author=sub(n,f,f+o)f+=o+1e.s_width=c(n,f,1)+1e.s_saveslot=c(n,f+1,0,1)e.s_goaltime=c(n,f+3,0,7)e.s_devtime=c(n,f+11,0,7)f+=19o=c(n,f,1)*3e.s_hints={}for o=1,o,3do add(e.s_hints,sub(n,f+o,f+o+2))end f+=o+1o=c(n,f,1,1)d=f+2+o*5e.s_obj_count=o e.s_obj_str=sub(n,f+2,d-1)e.s_tiles=c(n,d,1,1)e.s_data=sub(n,d+2)e.s_height=#e.s_data\2\(e.s_width+2)-2add(a,e)end add(b,a)end end e2="4fe5729bd9f69189773150d1dfc52318"U="55332"b={{"6tadpole3ashe601004.8344002.8344c0013110123221230221321310300400503600600100b3101b5100b0200b1203b3301124e4e4e38181818404e38184033ff01ff13403321131d010b01ff3b3301ff0cff01ff013b4c3101ff01ff01394d4e4c41414141414d4e","8suspicion3ashe402004.8344002.834451441431421412400104400124e3818181818403810ff01ff013b33ff01110dff3b3301ff01ff013b4c3101ff01ff3b4e33ff3931213b4e4c414d4c414d","efractured floor3ashe605006.8344004.836160450551651643632640504500a1160a6011a2540a40251e3818181830181818403301ff011a25ff053b33ff05ff121b01ff3b3301ff01ff1214143f3614141b01ff01ff3b3301ff121b01ff013b33ff01251a2101ff3b4c4141414b4141414d","btwisted path3ashe504005.3344003.334431031021010100300154e3818181818404e3810ff01ff01134033ff01ff19ff013b33010b011f0dff3b332101890cff013b4c413101ff01394d4e4e4c4141414d4e","asilly swine3ashe603007.7010005.501141051041031020100500223818181830181818403301ff011a01ff013b33ff0bff0cff0bff3b3301ff89ff89ff013b33ff11142a140dff3b3301ff010c01ff013b332101ff01ff01ff3b4c414141414141414d","dtricky portals3coco411005.3344003.567770323421431422411312300503200a1220a2012a2322a222315381818181818403301ff25ff013b33ff018901ff3b3301254521013b33ff014501ff3b4c41414141414d","cstylish bunny5autumn632007.4677005.501170561662651552541440430305600a4020a2040214e4e38183018404e4e4e3810451a4513404e4e3301ff1aff013b4e4e33ff010c01ff3b4e381001ff01ff0113403301ff0bff0bff013b33ff01ff89ff01ff3b4c31ff01ff0121394d4e4c41414141414d4e","dtesting stage!4unset758600.1000000.11000010150040381818181818181818403301ff01fffeff01ff3b33ff010901090109013b3301fffefffefffeff3b33ff010901090109013b3301fffefffefffeff3b33ff21ff010901ff013b3301ff01ff0109fe093b33090109010901ff013b4c41414141414141414d"},{"cbarrier break3ashe606006.6677004.717750010110211310300200100131531d4e4e3818181818404e381810040403ff134033210104020301ff3b3301ff01ff03ff013b330301ff010301ff3b4c4131030303ff394d4e4e4c414141414d4e","estaggered coins3coco627006.5011004.5011310310200104003004005643156462561c3818181818181818403362ff01ff01ff013b33ff19ff62ff19ff3b33010c0119010c623b332101ff0cff64ff3b4c31ff01ff01ff633b4e4c4141414141414d","cdiamond coins3ashe607007.9344005.68446024034044054164163050240046056402564325620454233818181818181818403301ff01ff01ff623b33ff6464016363ff3b33626464626363243b33ff01ff23ff01243b33222321ff2424013b4c414141414141414d","dunlocking path3ashe608006.3344004.334472232131031020011110100502300a4121a21419039f363551b3818181818181818403301ff448a44ff013b33ff01050b0501ff3b3301ff014301ff013b332c012143ff01423b4c414141414141414d","dtriangle coins3coco626006.5011004.50116163162261251341242060630045056412563425530355433561c3818181818181818403301ff01444462633b33ff01ff01ff01ff3b33646243ff4243013b334264ff62ff43213b4c414141414141414d","dfractured isle5willow620008.8677006.35105266256246236126090660035055a6100a00612035431355a0664a640621654273818181818181818403325ff01444442013b33ff01ff444401253b36141414141b24243b332242ff011a24243b33432323441aff053b33432323441214143f33052201ff01ff213b4c414141414141414d","atoggle maze3coco612009.8010007.23446263253243233223213090630042056461562125436455a0522a2205425569359f2b3818181818181818403344ff626301ff433b33ff01ff63ff01623b33012205238a23013b33242424448944213b3323ff01ff43ff423b330501622cff01ff3b4c414141414141414d","cnumerous keys4riley633009.8010007.117752432332232131030a043003405540156441569629f113534045624454a0560a60052b381818181818181840330303014442ff053b336201ff016264643b330144444343242c3b33ff0204012124243b33626363632289013b330501ff018a23233b4c414141414141414d"},{"ewatch your step5autumn330004.3011002.501140031132121020200300310551038181818184033014201ff3b33474443013b3301ff43ff3b332101ff273b4c414141414d","ccareful moves5willow518005.1677003.16774143142241231030430035055223541438181818181818403301ff01ff27423b33ff23ff0124433b4c3123014701394d4e33232227213b4e4e4c414141414d4e","cdiamond house3ashe509006.1677004.1844f154153252142141240330231221211301302003313114030540020254252541a4e4e381818404e4e381810232313184033ff012323ff013b332224242424223b33ff47ff0147013b33010701ff07213b4c4141414141414d","9conveyance3roxy528006.8344004.83446104103102101000010030040011353253541e38181818181818403301ff66ff01663b33ff664601ff663b330166060601663b33ff02030123223b33210303ff23233b4c4141414141414d","dunstable floor4riley417005.8344003.851040040140240340200400321551a381818181818403301ff0144443b33ff014244443b334343fe09fe3b334343ff89ff3b3321ff0109013b4c41414141414d","aforest maze5autumn531006.4677004.884440041140133230600400a5100a00519029f152539549f1f3818181818181840336589464646273b338a03ff8aff653b332cff010926023b33ff0404feff013b3321ff4709012c3b4c4141414141414d","bmisdirection3coco829007.7010005.501161030021122110010110700300280541715332255a2300a00239839f2238181818181818181818403325ff01ff06ff43ff223b33ff0144231924ff02ff3b33014442230c240404033b3321012501468aff032c3b4c4141414141414141414d"},{"dbring the heat3ashe416005.1677003.167732232131030202300741e714381818181818403301696969013b33ff0a0a0a283b33010a0a0a013b33ff012101ff3b4c41414141414d","acold circle5willow619006.1100004.501120031130300300a6360a60631c3818181818181818403301ff696969ff053b33ff6969696969ff3b33016969696969013b33210169696901053b4c414141414141414d","bfrozen water3mika624006.5011004.501112630406300811e8a1260a60121c3818181818181818403301ff696969ff053b33ff48acb5a401ff3b33010591968dff013b33ff0169696901213b4c414141414141414d","ahot diamond3mika523006.8344004.83445300301002012322030000025054724e71e381818181818184033210a7a8272223b33ff01578184723b3301ff017c86743b33ff0189575c543b3323ff28ff0a394d4c41414141414d4e","9lava coins3coco625006.5011004.51776103002112211001111060030041056730e74505626154433561c38181818181818184033016201280a620a3b33ff24ff017a72223b33016463558077523b332164236257540a3b4c414141414141414d","ahot springs3ashe810010.2677007.33442001111090010025054811e8761e7813e8a6320a2063a8404a04842d3818181818181818181840330166050606220606663b332148acb5b5a4285d693b3301ffaeb9b9a6235e693b33ff489196968d0551693b332555520a0aff01ff253b4c4141414141414141414d","ccool crossing3mika622007.9344005.684440020121221210a0020042056831e8712e74525640456814e8a2562a622544656234e4e38181818404e4e4e4e3362ff013b4e4e381810ff48461318403321280a896962053b33ff4669896901ff3b3362488e928bff013b4c41310501ff39414d4e4e336363623b4e4e4e4e4c4141414d4e4e"},{"dfollow the gem3ashe714012.8344009.284453003010023123130c000005200755006352555720552300543035040120654526025460417653383818181818181818184033214aefff43cf44443b33ff4aff01430144443b33014a4a4a434201af3b33ff010f236f0403033b332fff0123230403033b33ff01ff232301ff013b3322ff4f238fff01023b4c41414141414141414d","boctogem maze3roxy613011.2010008.201061631622611513502510f06300200545300756000203545130613353553015640250505545045160334655a6606a06663138181818181818184033224a23ef01ff0f3b33ff0303030404ff3b33240303030404013b3322cf2302ff2f213b3301ff01ff43ff4f3b33af43ff018f01ff3b33056f44044204053b4c414141414141414d","bweaving path5willow821017.3440012.384441871862851751008700700e731255403569439f4735620554636e6837e815753a0834a3408818e842856a8882a82884a38181818181818181818403328ff434301ff7a720a3b33ff01ff01ff017c740a3b330142aca4010b5754453b33628e958d2c03ff628a3b3614140d2519ff6969013b332201ff011a01ff01ff3b33239769080cff2666013b33ff886948ff02ff01213b332548626301630163453b4c4141414141414141414d","bfour islands3ashef15030.3344023.734493b90ba2ca2ba0aa3ba3bb0bc2cc1c0b900210546c0e62e054a51b0ab0515a1055b30650404554031a453845e89199f549021aa53afaf4af4fa82ce873ce71ec5352d0123d545ad00a1e15a151eabe4ea4ebe5ee07834e3818181818404e4e4e4e3818181818404e38102201240113404e4e381045082422134033ff01ff24ff453b4e4e33af24240189233b3301ff012489243b4e4e330149012301ff3b338e8bff01ff013b4e4e3323cfff0104233b338fff0a0a236f3b4e4e330223010423653b4c3125ff0148394d4e4e4c3123ff0423394d4e4c414141414d4e4e4e4e4c414141414d4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e3818181818404e4e4e4e3818181818404e38102c23234f13404e4e381021ff034a1340337a75587d82723b4e4e3302ff010301653b33575449575c543b4e4e3303030303ff013b3301ff482801ff3b4e4e3301ff018902043b33ff8a2f2223013b4e4e330f016604ff013b4c312501ff05394d4e4e4c3105464aef394d4e4c414141414d4e4e4e4e4c414141414d4e"}}function fw(f)if(ff==f)return false
+holdframe()J(0,0,A[1][f],sget,sset)J(0,0,A[2][f],pget,pset)memcpy(12288,24576,255)ff=f end function M(f)if(fr==f)return false
+music(-1)holdframe()J(0,0,A[3][f],pget,pset)memcpy(12544,24576,128)memcpy(12800,24704,2176)fr=f end function fy(f,e,n)holdframe()J(e,n,A[4][f],mget,mset)end function fM(f)holdframe()J(0,0,A[5][f],pget,pset)memcpy(14976,24576,2176)end function e3(f)holdframe()J(32,72,A[6][f],sget,sset)end function J(i,e,f,t,r)local function c(f,o)local e,n=f[1],1while(e~=o)n+=1e,f[n]=f[n],e
+f[1]=o end local function a(e)local n=$f>>f%1*8<<32-e>>>16-e f+=e>>3return n end local function f(e)local f=0repeat f+=1local n=a(f)e+=n until n<(1<<f)-1return e end local b,u,s,n,l,o,d=f"0",f"0",f"1",{},{},0for f=1,f"1"do add(n,a(s))end for a=e,e+u do for i=i,i+b do o-=1if(o<1)o,d=f"1",not d
+local o=a>e and t(i,a-1)or 0local e=l[o]or{unpack(n)}l[o]=e local f=e[d and 1or f"2"]c(e,f)c(n,f)r(i,a,f)end end end function ee()local f={}f.obj_list=fj(u)f.player=fj(u[1])f.g_p_zap_turn,f.g_tile_count=v,P f.playfield=en()add(I,f)if(count(I)>40)deli(I,1)
+end function e8()local e=count(I)if(e==0)return
+local f=I[e]if(e>1)deli(I)
+u=f.obj_list u[1]=f.player v,P=f.g_p_zap_turn,f.g_tile_count local e=u[1]e.nextdir,e.isdead,e.ismove,z,f1,K=-1,false,false,false,true,true eo(f.playfield)end function en()local f={}for e=0,34do f[e]={}for n=0,32do f[e][n]=mget(e,n)end end return f end function eo(n)for f=0,34do for e=0,32do mset(f,e,n[f][e])end end end function fj(e)local f={}for e,n in pairs(e)do f[e]=n end return f end function c(n,f,o,e)return tonum(sub(n,f,f+(e and e or 0)),o)end function E(d,f)local e,o,n={},#d\f for o=1,o do e[o]={}n=(o-1)*f for f=1,f do n+=1add(e[o],c(d,n,1,0))end end return e end function m(f,e,n)return f+(e-f)*n end function F(n,o,d,a)for f=0,1do for e=0,1do mset(d+f,a+e,mget(n+f,o+e))end end end function Q(o,d,f,e)local e,n,a,i,c,l,f=i.s_width<<1,i.s_height<<1,48+f\16<<1,f%16<<1,48+e\16<<1,e%16<<1for e=1,e,2do for n=1,n,2do f=mget(e+1,n)if f==o then F(c,l,e,n)elseif f==d then F(a,i,e,n)end end end end function R(f,e)local n=mget(f,e)if(n~=125and n~=127)return 0
+F(126,24,f-1,e)return 1+R(f-2,e)+R(f+2,e)+R(f,e-2)+R(f,e+2)end function fi(e,n,o,d,a)local f=#e for f=1,f do n=print(sub(e,f,f),n,o+sin(f2+f/10)*a,d)end end function w(f,e,n,o,d)?f,e+1,n+1,d
+return print(f,e,n,o)end function fq(f)return(f>=60and flr(f/60)..":"or"")..sub(flr(f%60)+100,2,3).."."..sub(flr(f%1*1000)+1000,2,4)end function e1()local f=j*k==1fe+=.075fe%=1f5+=.015f5%=1if(x==45and fo==false)music(h(5)and 0or-1,0,7)fo=true
+if x<=45and f then if(btn(6))poke(24368,1)
+if((_ and l or btn(6))and count(a)==0)e5()
+end O=mid(0,count(a)==0and(l or z)and O+.2or O-.2,1)if(f)for f in all(u)do f:onstep()end e6()
+local f,e,n=u[1],i.s_width<<4,i.s_height<<4local o=f.inportal and cos(1-f.anim>>2)or f.anim V=i.s_width>8and mid(0,(m(f.oldx,f.x,o)<<4)-48,e-112)or(e>>1)-56W=i.s_height>7and mid(-8,(m(f.oldy,f.y,o)<<4)-48,n-108)or(n>>1)-60end function e0()poke(24405,0)if(fn)ed()else ea()
+if(K)ei()
+if(f1)ec()
+el()poke(24405,96)palt(0)local f,e=-32+D,-D if(q>=3)f,e=-32+-V/2,-32+-W/2
+for f=f,128,32do for e=e,128,32do spr(148,f,e,4,2)spr(152,f,e+16,4,2)end end poke(24404,96)pal()if(q<=2)for f=0,127do sspr(0,f,128,1,sin(f5+(f>>4))*1.4,f)end
+poke(24404,0)camera(V,W)local f,e=i.s_width*2+2,i.s_height*2+2palt(256)map(0,0,0,0,f,e,1)fB()map(0,0,-7,0,f,e,128)fB()for f in all(fd[f4])do f:ondraw()end palt(16384)map(0,0,0,0,f,e,12)palt()map(0,0,0,0,f,e,2)for f in all(u)do f:ondraw()end et()camera(0,0)local o,d=h(1),count(a)local f,e=m(127,115,O),o and 0or 87poke(24404,96)pal(fh[1])if d>0then sspr(0,0,128,128,0,0)else sspr(e,0,128,9,e,0)if(O>0)sspr(0,f,128,16,0,f)
+end pal()poke(24404,0)local e=C<=i.s_goaltime and 7or 13if(l and C<=i.s_devtime)e=10
+local n=dget(i.s_saveslot)spr(n<599.995and 147or 146,88,0)if o then?fq(C),2,2,e
+if(fv)fi("new time!",32,2,e,1.3)
 if(n<=i.s_goaltime)?"⧗",81,2,9
 if(n<=i.s_devtime)?"♥",75,2,14
-end rect(96,1,126,7,7)fillp(fi[ceil(M)])rectfill(124-max(1,u[1].tilestouched/i.s_tiles*26),3,124,5,59)fillp()if(d or p)fd(d and"stage clear!"or"❎ undo",d and 42or 50,f+5,7,1.3)
-?u[1].tilestouched.."/"..i.s_tiles,8,32,7
-end function e0()sspr(12,56,1,15,0,56)sspr(4,56,8,15,5,56)sspr(0,56,1,15,4,56)sspr(17,59,15,1,112,127)sspr(17,60,15,8,17,59)sspr(112,127,15,1,17,67)sspr(36,56,1,15,0,56)sspr(37,56,8,15,36,56)sspr(0,56,1,15,44,56)sspr(49,67,15,1,112,127)sspr(49,59,15,8,49,60)sspr(112,127,15,1,49,59)line(112,127,127,127,7)line(0,56,0,71,0)end function ef()local d,e,f,n,o=fx,0,0,false,false for e=0,10do f,n,o=21+e,d&1<<e>0,d&8<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,92,n and 9or 4)sset(f,90,d&32<<e>0and 10or 9)sset(f,88,o and 10or 0)end for e=0,4do f,n,o=8+e,d&16<<e>0,d&64<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,90,n and 10or 9)sset(f,88,o and 10or 0)end for a=0,7do f,n,o=103-a,95-a,88+a e=d&1<<a>0and 7or 12sset(f,101,e)sset(50,103-a,e)sset(78,96+a,e)e=d&1<<a>0and 9or 4sset(f,91,e)sset(52,n,e)sset(76,o,e)e=d&4<<a>0and 9or 10sset(f,93,e)sset(50,n,e)sset(78,o,e)end fx>><=1end function ee()local o=f1 spr(224,80,104,6,2)local f,n=80for d=0,32,16do clip(f,104,16,16)for e=0,15do n=sin(o+e/8)+104sspr(d+e,112,1,16,f+e,n)sspr(f,104+e,16,1,f,n+e)end f+=16end local e=u[1]clip()palt(0,false)spr(208,24,104,3,1)palt()if(e.haskey)spr(144,32,104)spr(144,39,104,1,1,true)
+end rect(96,1,126,7,7)fillp(f9[ceil(T)])rectfill(124-max(1,u[1].tilestouched/P*26),3,124,5,59)fillp()if(l or z)fi(l and"stage clear!"or"❎ undo",l and 42or 50,f+5,7,1.3)
+if(d==1)local f=sin(a[1].m_anim_factor>>2)*-32+-24local e=w("stage "..G,f,106,7,0)line(f-2,112,f+e,112,7)w(i.s_name,f,115,7,0)w(i.s_author,f,122,13,0)
+end function ed()sspr(12,56,1,15,0,56)sspr(4,56,8,15,5,56)sspr(0,56,1,15,4,56)sspr(17,59,15,1,112,127)sspr(17,60,15,8,17,59)sspr(112,127,15,1,17,67)sspr(36,56,1,15,0,56)sspr(37,56,8,15,36,56)sspr(0,56,1,15,44,56)sspr(49,67,15,1,112,127)sspr(49,59,15,8,49,60)sspr(112,127,15,1,49,59)line(112,127,127,127,7)line(0,56,0,71,0)end function ea()local d,e,f,n,o=fz,0,0,false,false for e=0,10do f,n,o=21+e,d&1<<e>0,d&8<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,92,n and 9or 4)sset(f,90,d&32<<e>0and 10or 9)sset(f,88,o and 10or 0)end for e=0,4do f,n,o=8+e,d&16<<e>0,d&64<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,90,n and 10or 9)sset(f,88,o and 10or 0)end for a=0,7do f,n,o=103-a,95-a,88+a e=d&1<<a>0and 7or 12sset(f,101,e)sset(50,103-a,e)sset(78,96+a,e)e=d&1<<a>0and 9or 4sset(f,91,e)sset(52,n,e)sset(76,o,e)e=d&4<<a>0and 9or 10sset(f,93,e)sset(50,n,e)sset(78,o,e)end fz>><=1end function el()local o=fe spr(224,80,104,6,2)local f,n=80for d=0,32,16do clip(f,104,16,16)for e=0,15do n=sin(o+e/8)+104sspr(d+e,112,1,16,f+e,n)sspr(f,104+e,16,1,f,n+e)end f+=16end local e=u[1]clip()palt(0,false)spr(208,24,104,3,1)palt()if(e.haskey)spr(144,32,104)spr(144,39,104,1,1,true)
 for n=0,16,8do f=24+n clip(f,104,8,8)for e=0,7do sspr(e+n,104,1,8,f+sin(o+e/8)+e,104)end end clip()if(e.haskey)spr(145,32,104)spr(145,39,104,1,1,true)
-local e,n,f=(btn(4)or e.sprint)and e.onconvey==false,e.blink<4or d f=215if(e)f=214
-if(n or p)f=216
-spr(f,d and 37or 36,104,1,1,d)f=251if(e)f=252
-if(p)f=160
-if(d)f=250
-spr(f,40,104)for f=0,23do for e=0,7do sset(79-e,104+f,sget(24+f,104+e))end end end function e4()en={{1,13,5,12,13,12},{1,2,5,8,4,8},{1,4,5,9,4,9}}local f,n,o for e=1,3do o=0n,f=((e+g+2+o)%3<<1)+1,en[e]pal(f[3],f[n])pal(f[4],f[n+1])spr(155+e,96+(e<<3),8,1,2)end pal()E=false end function fk()poke(24405,0)camera(0,0)local f,e for n=0,34do f,e=(n<<3)%128,(n\16<<4)+8sspr(f,e,8,16,f,e,8,16,true)end camera(N,O)poke(24405,96)end function e3()local d,e,o,f=u[1].coins for n=0,1do e,o=4,5if(d>n)e,o=9,4
-f=17-n*3for n=0,8,8do line(72+n,f,76+n,f,e)line(72+n,f-1,75+n,f-1,e)f+=1e=o end end T=false end function fT(e)local f={type=l(e,1,1),x=l(e,2,1),y=l(e,3,1),spr=l(e,4,1,1),anim=rnd(),spin=rnd()}f.poskey=f.x<<4|f.y if f.type==0then f.startx,f.starty,f.poskey,f.dir,f.anim,f.jiggle,f.sprint,f.pstate,f.ismove,f.oldx,f.oldy,f.startturnx,f.startturny,f.haskey,f.onconvey,f.inportal,f.blink,f.octogems,f.coins,f.nextdir,f.tilestouched,f.isdead,f.prevslimetrap,f.prevcrackedfloor=f.x,f.y,-1,3,1,0,false,0,false,f.x,f.y,f.x,f.y,false,false,false,10,0,0,-1,1,false,false,false f.onstep=e2 f.ondraw=eo else if(f.type==5)f.oct_ind=f.spr f.spr=87
-if(f.type==10)f.dst_x,f.dst_y=l(e,4,1),l(e,5,1)
+local e,n,f=(btn(4)or e.sprint)and e.onconvey==false,e.blink<4or l f=215if(e)f=214
+if(n or z)f=216
+spr(f,l and 37or 36,104,1,1,l)f=251if(e)f=252
+if(z)f=160
+if(l)f=250
+spr(f,40,104)for f=0,23do for e=0,7do sset(79-e,104+f,sget(24+f,104+e))end end end function ei()er={{1,13,5,12,13,12},{1,2,5,8,4,8},{1,4,5,9,4,9}}local f,n,o for e=1,3do o=0n,f=((e+v+2+o)%3<<1)+1,er[e]pal(f[3],f[n])pal(f[4],f[n+1])spr(155+e,96+(e<<3),8,1,2)end pal()K=false end function fB()poke(24405,0)camera(0,0)local f,e for n=0,34do f,e=(n<<3)%128,(n\16<<4)+8sspr(f,e,8,16,f,e,8,16,true)end camera(V,W)poke(24405,96)end function ec()local d,e,o,f=u[1].coins for n=0,1do e,o=4,5if(d>n)e,o=9,4
+f=17-n*3for n=0,8,8do line(72+n,f,76+n,f,e)line(72+n,f-1,75+n,f-1,e)f+=1e=o end end f1=false end function ef(e)local f={type=c(e,1,1),x=c(e,2,1),y=c(e,3,1),spr=c(e,4,1,1),anim=rnd(),spin=rnd()}f.poskey=f.x<<4|f.y if f.type==0then f.startx,f.starty,f.poskey,f.dir,f.anim,f.jiggle,f.sprint,f.pstate,f.ismove,f.oldx,f.oldy,f.startturnx,f.startturny,f.haskey,f.onconvey,f.inportal,f.blink,f.octogems,f.coins,f.nextdir,f.tilestouched,f.isdead,f.prevslimetrap,f.prevcrackedfloor=f.x,f.y,-1,3,1,0,false,0,false,f.x,f.y,f.x,f.y,false,false,false,10,0,0,-1,1,false,false,false f.onstep=e9 f.ondraw=eb else if(f.type==5)f.oct_ind=f.spr f.spr=87
+if(f.type==10)f.dst_x,f.dst_y=c(e,4,1),c(e,5,1)
 function f:onstep()if(self.type<10)self.anim+=.02self.anim%=1self.spin+=.035self.spin%=1
 end function f:ondraw()local f,e=(self.x<<4)+8,self.y<<4if self.type<9then if self.oct_ind==nil or self.oct_ind==u[1].octogems then local e,o,d,n=e+sin(self.anim)*2,self.spr%16<<3,self.spr\16<<3,ceil(sin(self.spin*.5)*-8)if(n<=3)rectfill(f+7,e+1,f+9,e+14,7)
-sspr(o,d,8,16,f+9-n,e,n,16)sspr(o,d,8,16,f+8,e,n,16,true)end elseif self.type<10then spr(self.spr,f+4,e+sin(self.anim)*2,1,2)else?self.type,(self.x<<4)+8,(self.y<<4)+8,7
-end end end return f end function e2(f)if(not h(6)or count(a)>0)return
+sspr(o,d,8,16,f+9-n,e,n,16)sspr(o,d,8,16,f+8,e,n,16,true)end elseif self.type<10then spr(self.spr,f+4,e+sin(self.anim)*2,1,2)end end end return f end function e9(f)if(not h(6)or count(a)>0)return
 f.blink-=1if(f.blink<=1)f.blink=30+flr(rnd(60))
-S=btn(4)and fn==false fn=btn(4)f.jiggle=max(f.jiggle-.2,0)if(btnp(5)and not d)fX()
+_=btn(4)and f6==false f6=btn(4)f.jiggle=max(f.jiggle-.2,0)if(btnp(5)and not l)e8()
 f.anim=min(f.anim+((f.sprint or f.onconvey or f.inportal)and.2or.1111),1)if f.anim>=.65then local n={2,0,1,3}for e=0,3do if(btn(e))f.nextdir=n[e+1]
-end end if f.anim+.001>=1and not d and not p then if(f.ismove)ed(f)
-if(S)f.jiggle=1
+end end if f.anim+.001>=1and not l and not z then if(f.ismove)e7(f)
+if(_)f.jiggle=1
 f.sprint=false local e=f.nextdir if e~=-1or f.inportal then if(f.inportal)e=-1
 local o,d,a,i=f.inportal,16,f.x+cos(e>>2),f.y+sin(e>>2)if(f.onconvey or h(2))d=18
 local n=mget((a<<1)+2,(i<<1)+1)if(n==121and f.pstate==1or n==51and f.haskey or fget(n)&d>0)o=true
-f.nextdir,f.dir=-1,e if o and not p then fp=true if(not f.inportal and not f.onconvey)f.startturnx,f.startturny=f.x,f.y fV()g+=1g%=3E=true
+f.nextdir,f.dir=-1,e if o and not z then fF=true if(s==nil and(f7==g.p_move or stat(49)==-1))s=f.inportal and g.p_portal or g.p_move
+if(not f.inportal and not f.onconvey)f.startturnx,f.startturny=f.x,f.y ee()v+=1v%=3K=true
 f.anim,f.sprint,f.ismove=0,tonum(h(3))~tonum(btn(4))==1,true if(f.inportal==false)f.oldx,f.oldy=f.x,f.y
 if(e>=0)f.x,f.y=a,i
-end end end if d==false and f.tilestouched>=i.s_tiles then d=true if(j<dget(i.s_saveslot))dset(i.s_saveslot,j)fh=true
-end if(d)f.dir=3
-if(fp and not d)j=min(j+(time()-ff),599.999)
-end function ed(f)f.ismove=false local n,o,d,a,l,c=f.x,f.y,(f.oldx<<1)+2,(f.oldy<<1)+1,true,true local e,t,r,i=mget((n<<1)+2,(o<<1)+1),mget(d,a),n<<4|o if(e\16==12and f.pstate==2)e=123
-if(e==52)J(19,20,3,4)
-if(e==53)J(21,22,35,36)
-if(e==54)J(23,24,67,68)
-if e==55then f.coins+=1if(f.coins==3)f.coins=0J(25,26,99,100)
-T=true end for n=0,2do if(e==80+n)f.pstate=n
-end for n=0,7do if(e==56+n and f.octogems==n)f.octogems+=1
-end if(f.octogems==8)J(27,28,74,106)f.octogems=0
+end end end if l==false and f.tilestouched>=P then l=true s=g.p_win if(C<dget(i.s_saveslot))dset(i.s_saveslot,C)fv=true
+end if(l)f.dir=3
+if(fF and not l)C=min(C+(time()-f8),599.999)
+end function e7(f)f.ismove=false local o,d,a,i,l=f.x,f.y,(f.oldx<<1)+2,(f.oldy<<1)+1,true if(f.prevcrackedfloor)F(96,18,a-1,i)P-=R(a,i)f.tilestouched-=1
+local e,r,t,c,n=mget((o<<1)+2,(d<<1)+1),mget(a,i),o<<4|d if(e\16==12and f.pstate==2)e=123
+if(e==52)Q(19,20,3,4)s,n=g.t_switch,{7,8,14}
+if(e==53)Q(21,22,35,36)s,n=g.t_switch,{7,3,11}
+if(e==54)Q(23,24,67,68)s,n=g.t_switch,{7,13,12}
+if e==55then f.coins+=1s,n=g.t_coin,{4,9,10}if(f.coins==3)f.coins,s=0,g.t_switch Q(25,26,99,100)
+f1=true end for o=0,2do if(e==80+o)f.pstate,s,n=o,g.p_state[o+1],fm[o+1]
+end for n=0,7do if(e==56+n and f.octogems==n)f.octogems+=1s=g.octo[n+1]
+end if(f.octogems==8)Q(27,28,74,106)f.octogems=0
 if e==18then if(f.haskey)l=false else f.haskey=true
 end if(e==51)f.haskey=false
-if(f.prevslimetrap)k(126,26,d-1,a)
-f.prevslimetrap=e==48if(f.prevcrackedfloor)c=false e=50k(96,18,d-1,a)K(d,a)
-f.prevcrackedfloor=e==125or e==127local d=-1for f=0,3do if(e==113+(f<<1))d=f
-end if(e==123)d=f.dir
-if(d~=-1)f.nextdir=d
-f.onconvey=d~=-1for e,f in pairs(u)do if f.poskey==r then i=f if(l)deli(u,e)
-break end end if f.inportal then f.inportal=false else for d=0,6,2do if(e==89+d)k(126,f.pstate<<1,(n<<1)+1,(o<<1)+1)f.oldx,f.oldy=n,o f.x,f.y=i.dst_x,i.dst_y f.inportal=true
-end end if(e>208)fw(f)
-if e\16==11and f.pstate==0or e\16==12or e==50or e==29and g==0or e==30and g==1or e==31and g==2then fw(f,true)elseif c then f.tilestouched+=1k(126,f.pstate<<1,(n<<1)+1,(o<<1)+1)end end function fw(f,e)p=true if(e)f.isdead=true
-end function eo(f)if(f.isdead or f.inportal or not h(6))return
+if(f.prevslimetrap)F(126,26,a-1,i)
+f.prevslimetrap=e==48f.prevcrackedfloor=e==125or e==127local a=-1for f=0,3do if(e==113+(f<<1))a=f
+end if(e==123)a=f.dir
+if(a~=-1)f.nextdir=a
+f.onconvey=a~=-1for e,f in pairs(u)do if f.poskey==t then c=f if(l)deli(u,e)
+break end end if f.inportal then f.inportal=false else for n=0,6,2do if(e==89+n)F(126,f.pstate<<1,(o<<1)+1,(d<<1)+1)f.oldx,f.oldy=o,d f.x,f.y=c.dst_x,c.dst_y f.inportal=true
+end end if(e>208)fC(f)
+if(e\16==11and f.pstate==0or e\16==12or e==50or e==29and v==0or e==30and v==1or e==31and v==2)fC(f,true)else f.tilestouched+=1F(126,f.pstate<<1,(o<<1)+1,(d<<1)+1)
+if(n~=nil)fD((o<<4)+12,(d<<4)+12,n)
+end function fC(f,e)z=true if(e)f.isdead=true fD((f.x<<4)+12,(f.y<<4)+12,fm[f.pstate+1])
+end function eb(f)if(f.isdead or f.inportal or not h(6))return
 local a,e,n,o,d=f.dir,f.x<<4,f.y<<4,f.anim if(f.pstate==1)pal(3,8)pal(11,9)
 if(f.pstate==2)pal(3,13)pal(11,6)
-if(o<1)d=f.onconvey and o or.5+cos(o*.5*sgn(o-.5))*-.5e,n=s(f.oldx<<4,f.x<<4,d),s(f.oldy<<4,f.y<<4,d)
+if(o<1)d=f.onconvey and o or.5+cos(o*.5*sgn(o-.5))*-.5e,n=m(f.oldx<<4,f.x<<4,d),m(f.oldy<<4,f.y<<4,d)
 e+=(-1+rnd(3))*f.jiggle+8n+=(-1+rnd(3))*f.jiggle+8local o,d=cos(f.dir>>2)<0,sin(f.dir>>2)<0local a,i=o and e or e-8,d and n or n-8if(f.dir%2==0)spr(211,a,n+7,3,1,o)spr(211,a,n,3,1,o,true)else spr(217,e+1,i,1,3,false,d)spr(217,e+8,i,1,3,true,d)
-pal()end function fj()cartdata(fU)if(dget(63)==0)dset(63,69)for f=0,59do dset(f,599.999)end dset(62,0x1.12)dset(61,0)dset(60,0)
-end function h(f)return dget(63)&1<<f>0end function e8(f,n)local f,e=1<<f,dget(63)dset(63,n and e|f or e&~f)end function fs()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function fR(f,e)dset(62,dget(62)&~.9922|f>>7|e>>4)end function fJ()cls(0)map(0,0,-24*o,32,19,2)map(0,2,o*2%1*-24,48,19,3)map(0,5,o*3%1*-24,72,19,7)palt(1024)local f=sin(o)*4map(19,0,12,8+f,13,7)if(not h(6))map(19,8,28,8+f,4,5)
+pal()end function fL()cartdata(e2)if(dget(63)==0)dset(63,117)for f=0,59do dset(f,599.999)end dset(62,0x1.12)dset(61,0)dset(60,0)
+end function h(f)return dget(63)&1<<f>0end function eu(f,n)local f,e=1<<f,dget(63)dset(63,n and e|f or e&~f)end function fk()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function e4(f,e)dset(62,dget(62)&~.9922|f>>7|e>>4)end function fc(e)local f=0for e in all(b[e])do if(dget(e.s_saveslot)<599.995)f+=1
+end return f end function fE(f)return fc(f)>=count(b[f])end function fl(f,e)for f in all(b[f])do if(dget(f.s_saveslot)>(e and f.s_devtime or f.s_goaltime))return false
+end return true end function es()for f=1,count(b)do if(not fE(f))return false
+end return true end function fG(f)for e=1,count(b)do if(not fl(e,f))return false
+end return true end function fV()cls(0)map(0,0,-24*d,32,19,2)map(0,2,d*2%1*-24,48,19,3)map(0,5,d*3%1*-24,72,19,7)palt(1024)local f=sin(d)*4map(19,0,12,8+f,13,7)if(not h(6))map(19,8,28,8+f,4,5)
 ?"2025 cyansorcery",32,122,3
-if(count(a)==0and x==nil)fd("press 🅾️ to start!",28,96,1,1.4)
-end function fH()local e=z*m local f=e*8cls(1)rectfill(0,56,127,72,12)map(0,12,-24*o,56-f,19,1)map(0,13,-24+24*o,64+f,19,1)local f=f*.5?"presented by",39,60-f,1
+palt()pal(7,1)if(es())spr(241,1,119)
+if h(1)then if(fG(false))?"⧗",113,122,7
+if(fG(true))?"♥",120,122,7
+end pal()if(count(a)==0and p==nil)fi("press 🅾️ to start!",28,96,1,1.4)
+end function fT()local e=j*k local f=e*8cls(1)rectfill(0,56,127,72,12)map(0,12,-24*d,56-f,19,1)map(0,13,-24+24*d,64+f,19,1)local f=f*.5?"presented by",39,60-f,1
 if(h(6))map(19,7,18,60+f,11,1)
-palt()fillp(f5[flr(s(1,4,e))])rectfill(0,56,127,72,12)fillp()end function fN()if(z*m==1and btnp()&48>0)e(0)
-end function fO()for f=-32+A,128,32do for e=-A,128,32do spr(204,f,e,4,4)end end poke(24404,96)pal(fr[1])sspr(0,58,128,70,0,58)sspr(0,7,128,18,0,7)sspr(39,38,52,20,39,38)pal()poke(24404,0)palt(4096)map(48,0,0,0,16,16)local n={{"programming","bug fixes","general"},{"art, music","art, music","music"}}for f=1,2do for e=1,3do v(n[f][e],f*64-46,e*24+42,7,1)end end v("director",58,42,7,1)v("created by",44,1,7,1)v("a plural system",34,26,7,1)v("seven spirits, one body",18,32,7,1)end function fG()o+=.025o%=1if R>0then R-=1if(btnp()&48>0)R=0
-if(R==0)e(0)
-end end function fI()o+=.01o%=1if count(a)==0then local f=btn(6)if(f)poke(24368,1)
-if(btnp(4)or f)ea()
-if(btnp(5))e(3)
-end end function fK()_=mid(0,_+q,1)o+=.02o%=1local f=count(b)if _==1then if(btnp(0)and r>1)H=max(r-1,1)q=-.125
-if(btnp(1)and r<count(b))H=min(r+1,f)q=-.125
-end if(_==0)q=.125r=H H=nil
-local f=count(b[r])if(btnp(2))F-=1
-if(btnp(3))F+=1
-F=mid(1,F,f)if(btnp(4))e(2,r,F)
-if(btnp(5))e(0)
-end function fL()local n,f=fM,20+sin(_>>3)*29for f=1,4do pal(n[1][f],n[r][f])end rectfill(0,0,127,127,1)map(0,14,-24+24*o,-2-f,19,3)map(0,17,-24*o,115+f,19,2)map(32,-2+r*2,0,1-f,16,2)local f=122+f if(r>1)?"⬅️previous area",1,f,7
-if(r<count(b))?"next area➡️",84,f,7
-local f=count(b[r])local a=max(min(F-5,f-9),0)local f,l,c,i,e,o=23-a*10,a+10,h(1)for e,d in ipairs(b[r])do i,fz=e==F,f+10if e>a and e<l then o=f+3local a=dget(d.s_saveslot)if(i)fv(4,f,90,fz)
-pal(7,i and 7or n[r][2])?(e>9and""or" ")..e.." "..d.s_name,15,o,7
-spr(a<=599.995and 241or 240,6,f+1)if c then if(a<=d.s_goaltime)?fg(a),96,o,7
-if(a<=d.s_devtime)?"♥",120,o,7
-end end f=fz end if _<1then palt()if(q<0)pal(1,n[H][1])
-fillp(f5[flr(s(1,4,_))])if(q>0)rectfill(0,22,127,112,1)else rectfill(0,0,127,127,1)
-fillp()end pal()end function f8(e,n,o,f)add(a,{m_x=e,m_y=n,m_w=o,m_h=count(f)*10+6,m_items=f,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(f,n)local e=count(a)local n=n==e if f.m_anim_factor==1then if(btnp(2))f.m_highlight=max(f.m_highlight-1,1)
-if(btnp(3))f.m_highlight=min(f.m_highlight+1,count(f.m_items))
-if(btnp(4))f.m_items[f.m_highlight]:i_onclick()
-if(btnp(5))f.m_anim_incr=-.25
+palt()fillp(fb[flr(m(1,4,e))])rectfill(0,56,127,72,12)fillp()end function fZ()if(j*k==1and btnp()&48>0)o(0)
+end function f_()for f=-32+D,128,32do for e=-D,128,32do spr(204,f,e,4,4)end end poke(24404,96)pal(fh[1])sspr(0,58,128,70,0,58)sspr(0,7,128,18,0,7)sspr(39,38,52,20,39,38)pal()poke(24404,0)palt(4096)map(48,0,0,0,16,16)local n={{"programming","bug fixes","general"},{"art, music","art, music","music"}}for f=1,2do for e=1,3do w(n[f][e],f*64-46,e*24+42,7,1)end end w("director",58,42,7,1)w("created by",44,1,7,1)w("a plural system",34,26,7,1)w("seven spirits, one body",18,32,7,1)end function fS()d+=.025d%=1if Z>0then Z-=1if(btnp()&48>0)Z=0
+if(Z==0)o(0)
+end end function fU()d+=.01d%=1if count(a)==0then local f=btn(6)if(f)poke(24368,1)
+if(btnp(4)or f)eh()
+if(btnp(5))o(3)
+end end function fW()B=mid(0,B+H,1)d+=.02d%=1local f=count(b)if B==1then if(btnp(0)and r>1)N=max(r-1,1)H=-.125
+if(btnp(1)and r<count(b)and fc(r)>=U[r][1])N=min(r+1,f)H=-.125
+end if(B==0)H=.125r=N N=nil
+local f,e=count(b[r]),btn(6)if(e)poke(24368,1)
+if(btnp(2))y-=1
+if(btnp(3))y+=1
+if(y<0)y=f
+if(y>f)y=0
+if btnp(5)or btnp(4)or e then if(y==0)o(0)else o(2,r,y)music(-1,500)
+end end function fX()local o,f=fY,20+sin(B>>3)*29for f=1,4do pal(o[1][f],o[r][f])end rectfill(0,0,127,127,1)map(0,14,-24+24*d,-2-f,19,3)map(0,17,-24*d,115+f,19,2)map(32,-2+r*2,0,1-f,16,2)local f,e=122+f,U[r][1]if(r>1)?"⬅️previous area",1,f,7
+local n=fc(r)?n>=e and(r<count(b)and"next area➡️"or"")or"▶solve "..e-n,84,f,7
+local e=count(b[r])local d=max(min(y-5,e-9),-1)local n,a,c,i,l,f=13-d*10,d+10,h(1)for e=0,e do i,fH=e==y,n+10if e>d and e<a then f=n+3local d=b[r][max(1,e)]local a=dget(d.s_saveslot)if(i)fI(4,n,90,fH)
+pal(7,i and 7or o[r][2])if e>0then?(e>9and""or" ")..e.." "..d.s_name,15,f,7
+spr(a<=599.995and 241or 240,6,n+1)if c then if(a<=d.s_goaltime)?fq(a),96,f,7
+if(a<=d.s_devtime)?"♥",120,f,7
+end else?"back",27,f,7
+pal(7,10)if(fE(r))spr(241,6,n+1)
+if h(1)then if(fl(r,false))?"⧗",113,f,7
+if(fl(r,true))?"♥",120,f,7
+end end end n=fH end if B<1then palt()if(H<0)pal(1,o[N][1])
+fillp(fb[flr(m(1,4,B))])if(H>0)rectfill(0,22,127,112,1)else rectfill(0,0,127,127,1)
+fillp()end pal()end function ft(e,n,o,f)add(a,{m_x=e,m_y=n,m_w=o,m_h=count(f)*10+6,m_items=f,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(f,n)local e=count(a)local n,o,d=n==e,btn(6),count(f.m_items)if(o)poke(24368,1)
+if f.m_anim_factor==1then if(btnp(2))f.m_highlight-=1
+if(btnp(3))f.m_highlight+=1
+if(f.m_highlight<1)f.m_highlight=d
+if(f.m_highlight>d)f.m_highlight=1
+if(btnp(5)or btnp(4)or o)f.m_items[f.m_highlight]:i_onclick()
 end local o=true if(n and e>1and a[e-1].m_anim_factor>0)o=false
 if(o)f.m_anim_factor=mid(0,f.m_anim_factor+(n and f.m_anim_incr or-.25),1)
 if(f.m_anim_factor==0and f.m_anim_incr<0)deli(a)
 end,m_draw=function(f,n)palt()local e=count(a)local n=n==e if(n and e>1and a[e-1].m_anim_factor>0)return false
-local e,u,o=count(f.m_items),count(u)>0and 147or 241,s(5,f.m_h,f.m_anim_factor)local n,e,d=f.m_x,f.m_y-(o>>1)local o,a,l,c,r,t=n+f.m_w,e+o rectfill(n,e,o,a,1)rect(n+1,e+1,o-1,a-1,13)local b,e=n+8,e+6for s,i in pairs(f.m_items)do if e<a-9then l,c,r,t=n+3,e-3,o-3,e+7d=s==f.m_highlight if(d)fv(l,c,r,t)
-pal(7,d and 7or 13)?i.i_label,b,e,7
-if(i.i_setting~=nil)spr(u-(h(i.i_setting)and 0or 1),o-11,e-2)
-end e+=10end pal()end})end function f4()for f in all(a)do f.m_anim_incr=-.25end end function n(f,e)return{i_label=f,i_onclick=e,i_setting=nil}end function W(f,e)local f=n(f,function(f)e8(f.i_setting,h(f.i_setting)==false)end)f.i_setting=e return f end function fZ()f8(16,64,96,{n((d and"next"or"skip").." puzzle",function()e(2,y,f3+1)end),n("restart puzzle",function()e(2,y,f3,true)end),n((V==2and"hide"or"show").." hints",function()V=V==2and 1or 2f4()end),n("stage select",function()e(1)end),n("options",fF),n("go to title",function()e(0)end)})S,fn=false,false end function ea()f8(24,96,80,{n("start game",function()e(1)end),n("continue",function()local f=fs()e(2,f.world,f.stage)end),n("options",fF),n("credits",function()e(4)end)})end function fF()f8(16,count(u)>0and 64or 92,96,{W("show timers",1),W("slime overlap",2),W("sprint by default",3),W("lesbians allowed",6),n("pico8 menu",ei)})end function ei()extcmd"pause"end function fv(f,e,n,o)rectfill(f,e,n,o,2)fillp(fi[ceil(M)])rect(f,e,n,o,154)fillp(0)end function Y(e,n,o,d,a,f)add(U,{x=e,y=n,spd=o,dir=d,col=a,time_max=f,time=f})end function e6(a,i,d)local f,e,n for o=0,.9,.1do f,e,n=a+cos(o)*4,i+sin(o)*4,o*360Y(f,e,.9,n,rnd(d),12)Y(f,e,1.8,n,rnd(d),8)end end function ec(o,d,e,n)for f=0,.8,.2do Y(s(o,e,f),s(d,n,f),0,0,14,s(5,12,f))end e5(e,n,{14,7})end function e5(e,n,o)for f=0,.9,.1do Y(e+cos(f)*4,n+sin(f)*4,.8,f*360,rnd(o),8)end end function e1()for f in all(U)do local e=f.dir/360f.x+=f.spd*cos(e)f.y+=f.spd*sin(e)f.time-=1if(f.time<=0)del(U,f)
-end end function er()for f in all(U)do pal(7,f.col)spr(flr(s(163,161,f.time/f.time_max)+.5),f.x,f.y)end pal()end
+local e,b,o=count(f.m_items),count(u)>0and 147or 241,m(5,f.m_h,f.m_anim_factor)local n,e,d=f.m_x,f.m_y-(o>>1)local o,a,c,l,t,r=n+f.m_w,e+o rectfill(n,e,o,a,1)rect(n+1,e+1,o-1,a-1,13)local u,e=n+8,e+6for s,i in pairs(f.m_items)do if e<a-9then c,l,t,r=n+3,e-3,o-3,e+7d=s==f.m_highlight if(d)fI(c,l,t,r)
+pal(7,d and 7or 13)?i.i_label,u,e,7
+if(i.i_setting~=nil)spr(b-(h(i.i_setting)and 0or 1),o-11,e-2)
+end e+=10end pal()end})end function Y()for f in all(a)do f.m_anim_incr=-.25end end function n(f,e)return{i_label=f,i_onclick=e,i_setting=nil}end function f(f,e)local f=n(f,function(f)eu(f.i_setting,h(f.i_setting)==false)if(f.i_setting==5)music(h(5)and 0or-1,0,7)
+end)f.i_setting=e return f end function e5()local f if(l)f={n("next puzzle",function()o(2,q,G+1)end),n("restart puzzle",function()o(2,q,G,true)end),n("stage select",function()o(1)end)}else f={n("back",Y),n("restart puzzle",function()o(2,q,G,true)end),n("skip puzzle",function()o(2,q,G+1)end),n((f4==2and"hide"or"show").." hints",function()f4=f4==2and 1or 2Y()end),n("stage select",function()o(1)end),n("options",fJ),n("go to title",function()o(0)end)}
+ft(16,64,96,f)_,f6=false,false end function eh()ft(24,96,80,{n("start game",function()o(1)end),n("continue",function()local f=fk()o(2,f.world,f.stage)end),n("options",fJ),n("credits",function()o(4)end),n("back",Y)})end function fJ()ft(16,count(u)>0and 64or 82,96,{n("back",function()a[count(a)].m_anim_incr=-.25end),f("show timers",1),f("slime overlap",2),f("sprint by default",3),f("sound effects",4),f("music",5),f("lesbians allowed",6),n("pico8 menu",ex)})end function ex()extcmd"pause"end function fI(f,e,n,o)rectfill(f,e,n,o,2)fillp(f9[ceil(T)])rect(f,e,n,o,154)fillp(0)end function f3(e,n,o,d,a,f)add(f0,{x=e,y=n,spd=o,dir=d,col=a,time_max=f,time=f})end function fD(a,i,d)local f,e,n for o=0,.9,.1do f,e,n=a+cos(o)*4,i+sin(o)*4,o*360f3(f,e,.9,n,rnd(d),12)f3(f,e,1.8,n,rnd(d),8)end end function ep(o,d,e,n)for f=0,.8,.2do f3(m(o,e,f),m(d,n,f),0,0,14,m(5,12,f))end em(e,n,{14,7})end function em(e,n,o)for f=0,.9,.1do f3(e+cos(f)*4,n+sin(f)*4,.8,f*360,rnd(o),8)end end function e6()for f in all(f0)do local e=f.dir/360f.x+=f.spd*cos(e)f.y+=f.spd*sin(e)f.time-=1if(f.time<=0)del(f0,f)
+end end function et()for f in all(f0)do pal(7,f.col)spr(flr(m(163,161,f.time/f.time_max)+.5),f.x,f.y)end pal()end
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4
@@ -177,156 +197,156 @@ fb838396839b3f38078d5c5c2cc6138ac8424840805ef1e8ccb43c5cd0640c56f48326b088523194
 f18b2674c11a197c3c3ff377dffa0682d99190758fb82fff77464944a1076807371fff77834609361e712c1cbcffff19c877976fc26f71f31ffff921dc3e840e
 fff53f4810020efffee2c30a804efffff0a8cfff5e0ff8cfff77f1e94cfff9e0d44862a0efffde4c4e02b0361ef2efff217c039ba245e2e6efffc139f2171727
 0fff7c83221128368fff7c040101a80fbaf0ffffde0970c819071f48d14e1ffffb868b20e0e90524a0fff7b249ff86833cfff53142c52828198cd00fff7bc254
-0707480b11c91efffcd227270f1f701efff854219f580901070838fffb506cf24341c004ffffff0d48fffffffff11000a6b2ffffff0ffffff0df7040fc93a8c2
+0707480b11c91efffcd227270f1f701efff854219f580901070838fffb506cf24341c004ffffff0d48fffffffff110007692ffffff0ffffff0df7040fc93a8c2
 577aff73113994666bc466233999ca399856bc4c2b56269d231bf95930293e2d7af44ef85c33dfb82fff70c1c3a4c7e97c1f71514871c817171f48190715e16f
 8024ef1ef4e9444e0e4e5a44e29acd2f19324261e2ac3cf10640c2c0c541c7c2cbcb983110a11715e23cf71e4ef711ef741152ef4f80f583053016c1c8b342c2
 c112cf002c111328fc6cdcf7c90a6f748392ff485874c521c5f4afd2fd7abc7f53b3f852e9877fcbf6e86bbf677b772e9ce78c3f3cf0f3cf19f36ef8427ecf06
-fb4e78762fad97453ea72bc711369c19727d5f4ebbf89cadbfe8724b7f9c39b4b7f9c31ae617f397e8a1ea6f8d1b3c1fb8f63b787632ff074ae82b4987a56d21
-961ac37c85a48e83e0b4fa68095e22e0d34883e49b215b8101f3431213f4860e95c31a1e8c619d212f66227b6a4b2bd1a294f2546cf43538d8a28c2174ef0fb8
-f56c8b57b4d196eadc5742e89af33902c923e8074ae3e707cc66f7094c7a329e332191f75230e7c0746e29b8f21f83e84d837c689424023e3ec422090ff0752e
-0e0225e0e84c7c23d8029b6ca9ec09d1cf5944081e1e98be297c17178de812f662c79b09071590fb540848b29be883ea070fbd1b07c8780d4c675ce94ea82c17
-c51331f17521487cf099d174c337462e8836ed48786f3c2c1fc2f302612b760ac3a5e15e7ad812f34b2297e9cf09a342e9cf0ba80f8f1e8dd9d5e78856fb0198
-5297711bcb9844844ef2e003c8490340cc11680811680786812131a198f120930270f79d1b23f8c678489ad9b652c432784899df09652ccce78de2709d69742f
-3462f84694375ae9cdb32c13a717c071748f830a79fe895fa3e69942c279432342c5972ff8d31e27c398bc3f48bc7f42e275db4eb9bc10e00783e17df4ee3c5c
-1797e29bc579dffc4e90f4872af8c7e9bcaddb2f4297274f9c1b72f0433830c10e0070830c10e02c261ae8367c3f4717cfc0e031e90d2c31e90f4861e902090c
-3946c01b9cc84295043c3636a0c1cf20a1e90f48b043484866a225742a94a1b0bd3c1e956ae01ab1b02c252c60c60c60c280b123cf9e02f9c2c670f9cf81e090
-70830c10ac5108f237c2371362fe2c8c6787670d594a212121e9052490909052cfd4827fac1cf01e191d0748b8136c68016cffa68362a35f9d28d87280b0603c
-280b028090d02cfc421fc07ccc127e498d8487823649052486878fd9a213c1337c4d763b3e0093043c28052348c01234844e00de6c319303c1337c237125f964
-b42c548381681681681f9cf36488d8b4f2db0a8359e1482b10d248c012348c0f078940ebcf08a46f39c52717c2c331d124681a0d24b0d198094c802af4f84469
-ce2e2e2db2c11e90f4872c31e90f4876c2c47c2c39ce1df98fff75ebbc579d32fff39ac5105ea08275049b81371e8c3972ddcf18f20e0e00f493ebf36c3f7c87
-ef81fcf1a90d0792642933c378383e060f30e87c9af7802e3a786d42f0244ba5e84dc15aa3b32c1980d869e3a1f6eb8214ba071f7c2e10e1340ef00a24e1e18c
-3c1a529894954390ce151d44b3d0349321caa21d81f41b5c42271d8d90299b2bd327948552178be9df074236f4c1219c2f1707944a99ff10f301628070981202
-9844136163bc9b5429c9bc4217398dd1698b29c5986855291a56b46f54109ce71e5b2ffb09f387b97d55948f21f3078cff046273ff82a1ef1e9097cf1e71e81d
-409864018f1ef70c4ff712f34ec06c1f48ece0645287cf1e71610ff729ff58e11e361e8303d237c832425980fc0bf5ef0f1938cf0e3285ef0f5eca387ae3b8ed
-9342c3ca1e8369c1784763a90cf2fff2e4e737c1e40fc310fd0f487241c278b2b0a49425492981aa809ca8a55e90f0756e1e29b87cac1448c9120d3b42139fe8
-7c62c12b61c39f27179dffd2fa1f11e7029fe79b812c097a7097eeef1cb745c057e546ecd3702b0f302bcf29c7fb46948324531e80b80ee0fb48f52cf23f7cf2
-2f7c4444e07d8036319830f5ad4c0f3bcf3cf3cf43bf3c32074209442c922048722204802cf02f71f70f354c320b06129848f6012108c0219000a1e790fb48b8
-f9444c0b18c242c245281248840b0120e80f301e70079cf51c4ca042c2c6819010514240cf11e5acb48f93898d1088090b087a2c2c55161e780f1f0f13e6e1e0
-44af0069848580b4408243110a243c328b8f301e7905ea84f1184224319028070822270818742cfc1e7901ea84f310420d442c68210960520248ac81fb190fbc
-0f9432e10c24342c1140824a2220412803923ef2a48f18f2439f3e144a942148504808022801010f70fb1f30ff8cf34561c0830461ac0461acf1af71f70ff0ff
-1b020253a44a53a4856e702cf048f180f3022ff019313187a0628c350bacdcf7cdcf597edf525fb17270721d380b40eedf272cd1e9090b04e8c1e0e79dc1c1d4
-c39878b88cf12f485030e3071718b832cf008be853fbc10f7c10123693c51a490920e3e706808f18f10cc77c6ea3637d17d0952cfe1e0bb2cf40240c1c10e807
-46a22353918862bf0321e20f3040f5870c30ac7c5c3c796e951c25f820160e2ee0ff70e2243cf2c9cf4488533ff3090f1f31fff060e05c148a161d4775cf4c10
-e0e53cbc7c3cf342480838210d34d6674c674250f37c03e4e80ff23e805070838c830f4afbc02360e71acf02727030718214697270029202cc1243f8f181505e
-22c51e4ac8150f34a9725f4ae02f4b7495e8422f4838032cf568083807071ff4811a4828afeff3cf406c868f8090fb482830c10656e4e02c8280ff0f0f1ff0ff
-83e817c13e832c2b30f2f50cbcfa12c2cf21e12cd1fd31e9108f50cf6cf242cdcf61216c8f99bcd71ff8be3f78c9f7c4809c39427e6248483224ad4029642843
-1f7c3cfc271f8583ce22c1e9b8b8f18f72c31ef7a3c3c51299019303480fd0813a3c11eff9c3c041040cb4973c8f38b92ff324821e54ef80070f0f252c811e70
-e2e0acfb98f8f54eb8c3cbcdc28073f34012cfb9878f12f8712b8cf6c11298ff301e7c4cfdcd16cf0cf182cf0cf150cf0eb72fd1dc7e4f7c7acf1f8427f929f3
-e107078c91a0e0e4ef5e2e19078e5c7e78b8b8f18f72c31ef7a3c3c51e1e3e1ef0e72ef7dc3cf0cfff3e05ef042eff248fff78c8f79b8b2cf2c5c30ef7a93cf0
-c8ff87848ff103e7c0f737781f30f70a0f30f70a0f387e99f5e79ab9bf99777ccf1e08d1bf1212f3e268c1cbbdc0702fc551ef86ea9ddfef131c11bb2bcf2bb8
-16fdf261768d0ffe2a6f742ae71bc27c8c0d7f79c2b7ed39c0df5e799ce793e712301968f3e88f2179f8f00210223760bc5b8d1126939628b89c14089e3c8f54
-e020cca488c80085e253cdf852954a21929522d6643fb4819e6863dc13748c1485e2c17016617c1409c8478bb0cb8c0778094e01c20e3ef69ff903940c715d8c
-327c2187036674e83c33f007c23e8a23842c81b834813aa2c816b4712c827c213c5e2a2621b45d5ff0b50d403f0b004289b8d3009066ce1084019f33e96e9900
-190b1efd294e0c374524bc1921a5a7490dac65dbe8cdfebf497a7eb7ff0bc9bb2eaaf2c31a8a3bc27c31ef1ef1e71265eace125eac3f092f4669c11e897d2ea4
-e9744c197ea95803ce985c5168db1b8f2c05275c18ba1940c5d888307199321a5709934ae9057020090e2f0740090e2f07400906e115e8f30cf107cf2c735035
-34a4e052418027805834093482c188cf3cff5afc73d9904e952755ef1eff3e8f78f52e8f1817c233023d4e9036c2e1d501f485c369842f485c3a98cf328f34e7
-b974a44bc3ab4e859312104674e15900ce83a6210853bc1f7c21f7c293ef0983e7856e8c27437fd95e11e8d7f385ea48677cb69f21ab9cf219f529cf28932dc1
-93ce27e57db93b7431bcc29c7f427d519767f5df3cef81df368f368f7af0abb26176df24f0bff461e003eff1cf43d6bb054040108d11d8f3237a4333609f1448
-f101e700f3ad20984794e794e227219083227b48f1848b9456b3e03c12f04fa8dff18b418072b58395ae5610fd40ab00b448ffd0305ab5c56da78b4a15c52d1d
-75e296eb6a21ff31ac1c194ef8c19f5274ef9073f09269c2ff716cd07504ffffff0de5109842eefffff100000000206222222222000222222222200802000008
-ac8f79a5ce9809f34a18c311cff12332cfb1648b215bfb838fb930fb5300047fcfc000000fd900efbf1e0c130e7cf1000e7718c3f0280cfff73e7a50ff58b242
-c2c51e0e7140c7c9c50e2e80f300c9cf0c010f30f30858b2cf40240c1c10e8070717187049f8b878b8f79b80d0fb0fb0f31fff0602c90e5e3e1ef12120e02c83
-932cfbc8392f307270307182108b807583923641cd1ef2010701e0e2ef7206c868f8090fff8070f1ff0fffa0161e790f01e7c02cdcf61216c0d50cfff73e7a50
-7cf3cf248f7928f52cf2cff0868f52cf0cf04813e70eff541c1cd1e6e7e0f30f34839fb9ff10838ff3073ffb6efff50878ffd35ef60f01effb12492fff90f740
-c1490f33360e70e3e4acf2c5c2cf81e2e1ef7ecf1c506400ba0cfff73e7a5e8d10c10e830830c17007083e00e00320a0080820020a0080820120090360090360
-090360090303e4e0e4e0e4e0e4a4048b808071101e2202cb48f180f301e702c50e203071818b0c0c50090f5868f243c71a1eb02c83818170303e0606c1c24000
-105004041001050040048130848130848130848130805e0e4e0e4e0e4e061071101e2202c54048b840cf048f180f301e700103071818b0c0c5060ea1a1eb0d0f
-5868f243c03a0cfff73e7a5e0002c11483200a0f6858734838780f050872c200907d070ff13ed08300e3e06583a03e025821a485124781870400e8082fb40c80
-850c1480901248136c8116801e7321ac10210848f0cff12c50e780ff48f32c51ef711eb0b02c0c7108ff00092c2009004a0348092c1580b0d0821a4828030b08
-70484801249f520247801e02c20e0e161481f25e74e0e201a42c5105e2071702cb021e520ac1c83832006b0cfff73e7a507c603c0c603c0c603c0c603c2c8b8b
-8b8b8b8b8b838216c8216c8216c8216482560a49182560a49116c8216c8216c8216c868c100a0d30041a700824f0005016021606021606021606021642803024
-280302428030242803020030300c0c00030300c0c016c5c5c5c5c5c5c5c0c8152c8152c8152c8156c0492305ac0492305649036490364903649032824f00058e
-100a0d30041af002c0c042c0c042c0c042c0c08001214810121481012148101214002b46ffffff0ff7aef40821436579cdaefbe19c4d574aaa97c3e237d79aa2
-4e12fc4fa594b96e136e8f655aea37fab5d5f34ef0fb8abef94fe36787e5f38f34e9999c3333976662fccc4e899dce236c0cea094c80b0910b0136c66c8dc24d
-62ff3a6ef83f7159c137817e1db56e2f784a179a5a1f8a4ed9bd836f8c2d87c16137817c1d9cc5e09cf3179f7c2f4c5e19c71f8f427caf461d624eaafbedf3e7
-93d67edfbcebf12e973979f673e21e2076e2fd4ee93c15675f6c4e9581f62dc6d8c28b6f162e103f5c787eec3d277887fcf7e79dbf7cf297e2e2be3ff83a9f7a
-f0f3070b0e70c1fdf3fcd8b80ff832e708f16e783e6e19cf28f388215109ef0884e6c9483d2e60fecf13c9c3297edf5c9f8369c1b32fc3def0bb8fce90f75f79
-3e8363f4e3b1f7cc6248f493f794d2b0e23634e013855225f0d9f36ef99f70cf209f369e7d888d5f707ec9fc1b57938b33fb0ebd633f89db8df3770c8f5e0cf3
-7f6bdabfef9835ce51044cc89f1ea462c6ffc8df3100e0cdb57b577d20269c1ec3c1bd6dabadcf3d42bc9fa9777e5ef8bf2f982846e56ed4c9f0e1c18c5fb4cf
-114176aa0f34eb40f3000279b71b5c93f6ef17de2bcf0ee1f2f56df6fe1762907bdf0a2987e783fc6b48932ad174291f303d948a6f860487dadf78629116c421
-b6b2d1f13d863a946489e42492f97df3e8d593e873fe1bbad6e9e1c527e7e707d1fc1d07c10c3ea3d5df728b0c30e9de8787e78f383ae2f9bea529bb2e1aea36
-7c17d3c6346df4b21c70e407d6978f3e86cf17d5b7a97e2f87eab398bcedb067337d642c3493e01f4eace794ebc2e6122c69f7ee83040c36cf23ff08160fd5f8
-6b942fd9aedb89f762fcc3b66da7e8e574211799c3d3837248b16fdf34e051f47b539369977780f2196a22f9722884e1848fe019f1c37878c6768324e57f2798
-fef85e1a6fbcf21b90f1626772211031fef2bd6b777dd1122b222cb2114e783c2ff484d14cab8df026f23c9e019366e706c14c979ab2f48b293e795e16cb48f3
-801c403f7cc98985e5127f37e6bd1b7fa8db6278878ad6198ced70731bc0fec5003b6d19cf2e0fa8cf137ee8d27d6acf3ed4ef137a0f71287e07df2bc078f500
-3fb872763fd5772f7cb18d518a0f09fe2bcf28eea901f30e8cb1f9db98b3ec3d3b3274f07ad7fc57f7d34e93c5df1eef7266c29f76e2faf16f64354484326462
-e27111d044843f4cc7944c5e62b8668884644cc85e7977f6793c79ef0fd1e9e7d77f8df18329a7932f4e97bb398cb98339cc1bdf1227a4ef04c6b98884439cf0
-e8de419f542722e9d631bf7285293c6bf88d74f7b8d6f3c17de475fd4f85e97ef8ba9f788cd7bce0dc5998c2f5c5ef8b6b7229302e49cb454485ec8bc62b8420
-9f2293611169f12e299c919c30119498880df1279ce374e9b87eabea3e98febef3fdbdcf12df32115cc2ef8c1b3f8d4dc9ed9f5a288f70fa8f58c963f916a624
-4411b0e6956b7cc363f387401f70e953ff87675db1fc1b7eb4a9727d16ff484a62efa0f707edfb4c77bc51bc9170908fdc91e702f78819f529cb1c40cf748f8c
-598b5674c6737842c0e785ddd7a75c159e12b38ccbfbc677fff167bdfff980fffffb11effff732cfffff648fffffd80fffffb11effff732cfffff648fffffd80
-fffffb11effff732cfffff648fffffd80fffffb11600b966ffffff0ff7aef40412386e57d9bfac621119d26c4b7ca2a972f8bc4fbc14cc57ee1f8abeac3e557d
-d9f1cf1aeaf52ff8f7ec3c5ff4e3f86e13fa9bef94df1aeaf525f38acf31df1e457df3dfa7934ef938989bef9c37ddd87e8df3e7932b9f74ef19136060129970
-0b91363362fb87c6c1c9272f48b0127df3bf2db667df0717a4c3702d451ab057a0118dcf23fb82ffcce79b4294446e938529a2461a6244063b9913976d3ff9e9
-b36bf5e9344bfbc52ae00814031e666f060ebc583caad98c254762834181403164ca81839fc7c860191ea7d50ecf835ff37c5fe9f46ff89be23ff05ffc351c50
-e562ccf2c06ef1e2ff0e4ef0fbc57579dec3e2d3ff87e9d694cff739c6bd6bd6bd622222222222222f4abd12fc27542ff4cf098b39c21fb48ab39cd94ef8bcd1
-12ede263d598df12f5c9160ce792200ef87f83b5196f27203f42ec42fa1f52a1aef13bf3e96e05744202229c67838b89d12cf20000e78ff7cbe8554a42de1778
+fb4e78722b8be70707cc9f4eabe9c77f137a6febf6f486fe3972f96fe39724dd2ee727d35317d393e8ff917c2ad2652ef8695b44a582fc136f590d2fb82fffb4
+4d31f1844a90989d5187617c51e8c19836312f6e07f1922ff3b99994f90510698323fb8e817be66e843f0ff31ea802c923e8074ae39f1c13d9df142178cfbcf4
+9c08f13c199b4f2fe79a74f84c8f4ef77111acf3eab2170f15e0e84c7c235ef72c990102679e317c52f8e5c1e8d134ed448f4ff5e7a80068b293e883ea070fbd
+1b07c8780d4c4ff7690488ecf0995e88ec399832a3fe8786f2c2c1fc2f302618eff48b6168cdda84af4ee4552e9cd9a80f8bf8dd9d5ee856fb01981fcfb2ff07
+08163a481273cc11680811684d1a168cc4868ff917cacc119342c45a9342c43278489a43784899d19effb8b2a74832c7c13a71748f830a717c4a79bff72e9f94
+e9cc52f4ae2972c56f46e2b2ceff2e9f7dd7817d5e8b4e2fc56ff337d31e90f44f19fc3f342f2e942f4ecd39b3f4e6866070830c10e0070830c1a161b05d367c
+37573fcfc0e0780f4867872c31e90d2c3148a1f429b822e89cc842d5043c3636e10e09f5043c31e907186801e8c454e5746a94a1d0bd5c1e956ae01ab1b02c25
+2c60c60c60c280b123cf9e02f9c2c670f9cf81e09070830c10ac5108f237c2371362fe2c8c6787670d594a212121e9052490909052cfd4cd5ee5938f12c323a1
+e807136c8d012c8ff5d07c447ae3b50b1f40161c0685016140121a148f9942e91e89934ec921b190f056c821a480d0f0fb355e03c1337c4d763b3e0093043c28
+052348c01234844e00de6c319303c1337c237125f964b42c548381681681681f9cf364881e2db4f282e45a701ac604b012348c0123c3c12218f273a2bdf4279d
+5c1b1fcc4780916824b0d247804213288e3d321952db8b8bcea8c11e90f4872c31e90f487642c47c22f44e1df98fff75ebbc579d32fff3bac5105ea08275049b
+81371e8c3972ddcf08f20e0e00f493ebf36c3f7c83ef81fcf1a90d07926429f2c3781b381cf083e179ef1f50171d34b6297012a5d274a6a5aa3b32c1980d869e
+3a1f5eb8214ba071f7c2e10e1340ef00a24e1e18c3c1a529894954390ce151d4c3d9681ac19065f84436c35c61398c543672846eac6f8c5216594c1e976f3c19
+c8d3178452bc7c1c521966ef70cf048902c142680842215c858dc27e619427e2394cd42677852ea42752a165946869d29d715042bf587dacff24ef0ed6e57552
+1eb4cf0c12ff3099cdcf3a868f78724e1f78f583643142a1140eeff103dff58cf0933817c31a3b381590e1f78f5850cff94ef71a748f8583e0c4bcc13e809452
+2c33ce79f1c74e027bf8069f1c793be0e9afc2a77e090f0b683e8527c12d9d8620fbcffb839fdc17831c3f40c73c31e9050bc1eac282529415a4268a2242b2a6
+5972c3c59978b4e2e1b27011276804fc294c4eb3e1b9078ca50f4ebc5c56ff7bcb6c748f184ebf5e268034ece14e9bbf30fe15134d9719937fc18c2cf08c2fb4
+2fdf29521e805f42c11611cd1e790fb48f56ef8f54ef89888c1ea116c622170eb4b981e769f78f78f966f78740e84029848354080f444080148f14ef2ef0e7a8
+874061c242190fd0242009142210043cf21e79071f3988816309584858a40348019061240c11e702cf00e29fb28985184858d032120a284808f32cb49790f370
+31b3001121610f45858ba2c2cf01e3e1e36cdc3c1884f10c2190b01698005862204586874071f702cf21ac519e32094486221401e00544e0030f848f93cf212c
+519e720840a9848d05202d0a404805913e7321e791e3964c308586848328005845440824016256cf5490f30f5862f7c3884394280b08010144012020ef0e73e7
+0ef19f78ac2810708c24918c249f34ff2ef0ef1ef361404a64984b6490bccf048f180f301e7044ef12272620f41c4097a0659b9ff8b9fb2fcf1fb4ae73e4e0e4
+2a701690cdbf5e48ff983ef71e0e86872c3c544ef0972ce06cfffb07d1b5e7930ef830091bc1ea0b0524a0fff73c77c6ed3637d19159d2cfe1efffa46a223539
+188a9c78190718f1068ffff196e951c257441870c5cd1efffc0f31126dccff042cfff515c148a1635abb2e72e0070ffff30c14908e1bad4ea4774250fff7c241
+c10e06170e94f79147c0cfff1ac2f4e004250c3e01a97cf0c828fff7296e94d39afe96f82bc1944e907016cfff190324905e1fdfff1d050708383aca72701641
+cfff117c13e836c1748cce0cbc710fff7b2eb72c31acf20efff8bbf2ef17d514ecd48095639d6248c7112d424a9484390f7c32f3bc5c361e0bb80783e2e2e70e
+f90f48ff9e0f075846244e0c012c7306c8e0748ff72f03050010f25ed03ef0e6acff801a48719f320c1c3cb4903648f18b8382ff62e3e719f22f0f273b02cdcf
+01480ff62e1e78c7e58c22fb174842eff048f131f737781f30f70a0f30f7410f38fe9c5743f93df1f92f3c329cd7a4ef870c1c12768283839f79b8742c1c5c7e
+db8b8f18f72c31ef7a3c3c51e1e3e1ef0e72ef7dc3cf0cfff3e05ef042eff248fff78c8f79b8b2cf2c5c30ef7a98f181ff1f090ff306cf81ef6ee03e70ef041e
+70ef041e70fc33fbcf25f17f319b8f38ffff795effff30cf05df52cff0c71c2d5ce80ffff06ba28b729fdbbc8eef8032dd8ffd731ab1778fd94254610fff730c
+4210f54ff719e1e997083699ffd34612c82ff719f78fffff2c98ad57ced3fcfeee77eb7ff09c757687241cffdba25eaee8cac5d7e892f85321e89bd2eb0ff375
+1d83079a85417990171ed93486d146e01ef7e05e8b10e60c1fb0fd41c4d8ffdbcf10ef0e7be3f4476209ffff04c1f301e7983e72e8991098fff340eff23f4252
+a5e15ef7e07cf10ef083e727cf03370ffffe8fb6e0dc1e0bb87f833766d95e9529f8f78f368f325fbc0ff4f90ff4cf2ce09ff461e00fff1e7a9a673a808f3e89
+b2ef8c5e49666c06f302cf080f308f15e79529f5291939840c11e62cf042cd4a2bd1781e09f926ff70e2302272b583952e5610fd40ab08ffb1305ab1794be0e2
+96c079474f59b4ef78493834e79c2fb469f72cdc3cfff817307504ffffff0de5109842eefffff100000000206222222222000222222222200802000008ac8f79
+a5ce9809f34a18c311cff12332cfb1648b215bfb838fb930fb5300047fcfc000000fd900efbf1e0c130e7cf1000e7718c3f0280cfff73e7a4af71ea090b07583
+8f5010f172718b832cf00072f30340cf0cf0061ea0f3180107070832c1c5c50e105e3e2e1e2ef5e2243cf2cf2cf4cff3818072879f878f7848083803e4e80ff2
+3e4acf0c9c1c0c50a400e22c51e4ac8150778fb040c14838b8ff90813a1e3242cff32c1c7cf3cffb24858f52c348f138073fb5848130890cfff73e7a5cf78734
+1c5c8780f317077858b058360c80f5120eb032c342c310360e2648780707100e0e024687b07016c87002c93c1582d0f0f0f758fd2c14b08b973424838760cb04
+8b24877808f1a0778170f07f0ff41e5001ac805eb1e70c0fb58c01a40cf2c0c8f511e360e908f81ff584839401e1ac0c9401e0e0e70a1a46838392248030f2f6
+014832c3348b0478b687812c9c380300cf0cfff73e7ac240808424902279c394e7a42836425102280b03232160070011808d19421010968528002c6449888321
+900b48880b8446780c8809161229a4230b8402934420c62880396329c22e90986288409c8842e0290c52448c6074240162688c4c2044211344032d88c1121098
+00a22804c2296212900423119b07029350844429294246018423e401440d206c24000d0e140b07429ac032a242404608002b70407809016064e129006830c7b4
+422208402806190085039844680900232f048988c5327083ea4294c42001a9442c1298e29430888481701a4e0099078011294a7421972042a1649768c2988884
+4021406982838011c52611842460a01cfff73e7aeeade084444e160938c21198cb01d888c227c3211024024f00626c729742902a21698e22197e884244810864
+852919422464619f34c0e04422962479023a7424e0eb1201514294522b07c1948c4009441090a0198c2cf0161c2111b440c6293e042e8888a489462114609852
+111462211784409844e860101c11843267088409448d48320944a0ea0940e04242889020409032e804409401b0a84629880680e809461420e900f08cea429889
+850944427802244884694c4251229c80904446c64c5290421b0888940208011649010f40f10c4401198042343287800b448440b0a21b061429142124918621d4
+22901018880140348009840d480d3211942e8421088060c00200a01cfff73e7ad4c002124878046988c54420a742944295212228d22229028629444504298090
+019292944a850b44098c42d6029480907d222090288884294a190ed622048840149841880193fe0098094288b0984a2121b097212a44ea5842221976299821f4
+42292104629b2900348d4c9d400c294119d409f1a0098162228362194e2c3210142807442329219a06212a88986223110d848626f540946907940e39e128729c
+294fb8809e24719b219944907444c1298b34284219721228840b0e02154242c1988722742212b424a94e90124398098842a4231c4c0a20021a1464031942d021
+429c3212612211b426112743115242c483224a22422e521294430d4804c142429c422128a420ab46ffffff0ff7aef42104836579cdaefbe12137963557d19aa6
+e1f8bcc5f5aaa0978c33db652d6a97c893eb559abecdbe657df09f3cf2aeaf72dbf8d1e97df0ef0976662fccc4e9999c6646914de236c0cea094c80b0910b013
+6c66c8dc24562ff386ef83f7159c137817e1db56e2f784a179a5a1f8a4ed9bd836f8c2d87c16137817c1d9cc5e09cf3179f7c2f4c5e19c71f8f427caf461d624
+eaafbedf3e793d67edfbcebf12e973979f673e21e2076e2fd4ee93c15675f6c4e9581f62dc6d8c28b6f162e103f5c787eec3d277887fcf7e79dbf7cf297e2e2b
+e3ff83a9f7af0f3070b0e70c1fdf3fcd8b80ff832e708f16e783e6e19cf28f388215109ef0884e6c9483d2e60fecf13c9c3297edf5c9f8369c1b32fc3def0bb8
+fce9075f793e87c93f9361ef89d480f927ef2955cd9a91b0c1260ba44ae1a3f7ccf33ff08f502f7c232eafa17df1c917e37c6d5e09b337162c36ebb767fa6ff4
+606cf270cbbbfed9b74cb26fa0f140336e78b29a0bd36cf300070c5bb6bdebf66bdcf1bc3e07c675757579f7e8c7195db9bfb8f1ce3b9101637a8fe98a1f04ea
+f52ef84cf0e0e79b663842e13e60080ba42c3376aeed5e998f126e42983e9db7d7ecfc5edcf0aef84cd7e57fa3d1ff8523e8c32ef840ef84ad53bc434d29f785
+e11b40ef84e9ea69dbd042985e11940ec4475d83ff933bb27c1f6eb3a93e8e572f07ad9f9cb993e8f840c5e8f523ff03e22c54c523f46e9bff8876e12558c94c
+1cde22ef95cab06d6881721e32e293c23b7ea93ff8bfdd5dafc3eac1b4c7313fdbc1c9ec812e16cd7807d2f42bf5ed8d1b422c69f74c1c1c50e2b8f56ef103c4
+8f1e2ffc29427c7ae8f87cf33fc3e97e84b787adbe7842267cf3c3fb47b35480f30ce34e05112bd1707357eb922e522b454e3f8389e25e1321eb344e70fceef3
+22b87db36ce57d19b4cb6dc5c36fbcf31b90f1626f42211031e487abeecb324ce0f83a74c961738c2ffc14a03b636f388581c9b34bbb6ef06c1ee875d1fd51ea
+4e9f569b81f21ef024031ccf27031bcf0246fef0c5f7cb7c6fd211974493cad8c46fe304c23cb3f104ca5742f783c44ef86ecd1b5ebdc8f7cb9cf06e51ef240f
+c1ebb791e0f006e71f4ec6eb3fe4ef8b30bb2051e12fd569f50dd7312e70c1973e3bf21f34c97a7674e8e1e2bcf17ee2e70b7e8f2ef1e610bdf38c32e40638c5
+75620d480108d012b709fec524a9800b14e4990c276cbbb3fe7fbc1d4d5dc5fc5bb605e18628fe8fa7a1cc511f1cf148f50af70cc2a6037c32e00721bf524f48
+f433373374440c548f50e906437f717e5ecd993b9c7db6dd174ce9bf47df3213296664e01f2429c216f99578e6fb48c1260ebdef8358c65c1b564c2e207c60bf
+58420bc517abafc99c71faf2fc3f3cf2fcf0f1f8beeeb7e585d7487d29f3c59c96b381ff876bf3a5936aacbee6ef1b836b11a69d3ec88972bd69f3c5d4d6723e
+4bee7199c6ef0667c517d7edf36fc7a7f17c7677ca7d7fe7487891752fbcd9b56cdf27acea487c8b59f784e89b0e9f073132cf3066429c798f10a020f0160e23
+e278cf19bd9f9f3667c1f853fcc877e83fa7e8f1e93ef97ce6f9130917a3663f3c56ffff0e98f3e8f76fb8dfffb6b725fffffb11effff732cfffff648fffffd8
+0fffffb11effff732cfffff648fffffd80fffffb11effff732cfffff648fffffd8039b26ffffff0ff7aef49045812367dabcfee11317962317d1dca2ea721317
+d598987ebc3e8627ec2397e3f99c3333976662fccc4e9999c3333976662fccc4e999981360d1203c0681c03813233679dfff79fe577f57780c4c316b3f85c1c1
+e79b3bcf01b8de788b6f38d617d26b4c58c217da6972031bdab4ea8bc56b73eadc2d439116e3bd9ef8c1e0df2d2000077eddd22f2e9ef24f794c906903481bc7
+71a1d4430c5ea6d14a16e81df1212388f521feef8f72bbe70de4fa93278f2f100c3177f85e93a44a7cf376444c9371831c337ecb2c2e9c4014e95ce0a96e0746
+9d22dc226fccf05fa86ece3707ca7d5962b42fc315be11bc8920772ebcc54c794f78036d6326fb97e6df3d178932782f442195f783c3fe81f5e78576c352117d
+62ce48cc996e9b2ef9be836fe6bb7bd575cf3add3bdabde86cf3fc17cedd6dd6fc31f3fa2fc6319fadd39de9eebc1b3ef97f0bed731e6e6e28e727b7e32e7028
+100040a101517319db1f308b0484e840e9c92ef022ff88b80731e4ab60a9af5cf5f8fed32f7c52def2ffc3f3cf3e87db7cc1fc5f43670c5cf1647e66cd617087
+80791f23b3ef9132e8f14cb637110b217abcd4f983e71c9231c9fdf3bc54e626bf366127d57e5e8c5ab738fcaf6c04e078dee7726f3811b93d2ebccd4e42f44c
+68db64c6e700f1caf789071662fb88f100200fad398f3b9f5c39cf2bd9fc1bfab6719f548938ac398797815e2050fe46e2099f3803cc00ec011224026199d490
 __map__
-f789fb61f1466048db765f83e0c94464d91e03e11fcbc1c32f9338c730626432063fb8e5178778e5c0f10f6f3ce9832c1e02e26362228e1f1cfe00c87150cfbe5bec38b47fcc00584e8ef413588ae0f1dcae279954fb02ea0b11577ed92ac9198b24678803929cf165422289e83623cc7d5ee7fdc374585c724a2eae573e62c4
-452e6224f7fdc3b33cdb99dae5e15836b7e4ca715c579223d7b6c391e6ca2f7310c7b5ee971e49de381dd9769c61b9bee3fae5dc9938c03f768c3ca5ea832704de0470245ee3706b0e39f62e93241b8e4773337e90438c1f38c003a938f8e65da57c92f45a991c61f1388e1cc71fb64e92d8747925bcae030ecb66afc3f54918
-ff48166047486411212ec8a148153bfc906df1248e85f28f993cce1efb834242d492a4de4c9ec44d1c6c15045e79c8b8e29fa5ddf1e2074c13d137a96ac8c4c0f8650c2669be53e493e3884df2c351f4971ca206c3e08703c775c52f04203e277545778a3c632e7c57e71142450c801b8ff8a078a9ef75704daf2b4c78f3f941
-dcffcce223b9fcf2fea1f138c7a5e9c1977f360b3d370fff1b6e3bed70d13e5fc488fb8f7ce6ea1fdb0e2c7664f2c3c43ff38f47a7d3caf224d992c71fd9921f1cd94476c49d76c7b61ef15fda897cdb736cc79ef8e9388efdd2c791fcf074ab47229bd872c07ec8f8882bf805fb803fa2323a0949f68bc4e248248f591e2442
-892ba8382ec1a696dd6ab9b2182c33e8e113b2b89dcbad5b0707c76247269df8637f94bd8ea5b2f970a8643feaa5ff0a39607dce53b0fcf25973c2fec87600fb07c788995b5fc791caf2a4e992c7912d51afeddbf65d713fc7b16bdbf3c47fcf71ecdaf66eefb31ddf174be2072249deaecb58b0a92d2f2c1923ae0fb00f6611
-67f639762c24d929b13886c56c098c10e2ba007b6016b1ac62e4f187233d16b5adbbdef0a572f3ccb15f82c013779a1f1af9e3dad577db47c4b51f1cbba294fc10f14b2a7846be2070e4da65cf2f897f3a93cf7264c42339047b9ef0c0fdcb73e43df3f442f243cee8e63847303f8859f24bbe19f938fe3896235df07eb62759
-e4aaed8ff041b97ef049a4bae3724130c7e0c7a8e6b5624fb677b67f58aed04b1de6ed7185744b78de4773b183a4b2c1f2037391494848f258164deb916b8f713892bd9183e5657998c5fa05904948c81396edb46ddb9a6f708d3c48f30bec83e380cc1eb26d335be24a9e58b647403cbf1cf15ce8f1074974c7226973a23f1c
-f3d8716d2d3d42f1e23cba24fcb33c2c2478cc1a498f0dc7b1882c5b8c10fb236923ec0bc77d1cedbc4ffc1096499bf0cfdb6edb46837f7e398efd500d7ea18dd005b8d776db36daa00f1cc7b13f22cd3661c4f5ad23c7b16ddf83707cbbc9b7fdf06d3bd0de6fbb3f68701f6d6f1a326c7e498ee76893a38244be63912cdb23
-20f624fd40c271afed92f3745c4dc23f6fda6dfb217ae07e9ef689c2fd3ceda2c18ef8ae5cc721b4454f387a4ca4d92284787fd1ef8ff7eef948b6ebfee7d2e87704c1995fe459716cd72f73986156d8464ae57fa6e41069e197e7b6fce1d8f95d8a38b3987e4072c4b38459dce4700819d99fb7ed976d9738ba556ce761abd8
-fe5ce6e8061547b70324f19804fc60871fe60f380edb2fcbe4eab6882b891ff00c95fc22c7b2d921c92f46e69f1da7edda86ebda064f0249987f249363d93299cb9a10cffafdf0c7337ce68febcbed8a3f1c92c31f227918c4a8f7993ecf735c89f80e5fd77f9a1b5ed7953cae7f5c4ef170b9e5fcc7e5c1cbe3bda739aeeb8b
-b0a3fd251775b47d7ee0bc724988e3721cf0873d1d17f5bd644ca57175b7e6973393f0da258e777cc47b8e4f7b47587fc8b1185b63fffffff07fea4f804a912bc35d76ef5031577378d475e572a9ebcbe5d23c4eafb9ee54d5f343ee9df2fcd1aef2fc6126cfcce499993c33936766f2cc4c9e99c93333396636636c76d9658c
-815dc6c8ecffdfdceff3c3f1fae13d76787fd9f24bec4992b8c4f64b5c9be5892d49c4e7175bc7bb2d8b2549e21fb1bdb9d59dc487640df91ffcb7feb13f1cbdaf1fae3d7fdcc2fdb6fde883e3c61f8977c7d776690f9873fb18dc4fdb50d8e30f969ce307799f9cd7fbc3ce6b7bfee6f82fc9f3c758afbecbf184fb97b6bfd0
-07c71b24b6e787b60fe9e07edafe40e17cdafe120d04f3cb232c7d72b6c744faaf84fef724d7f3c87b5ccd72e4e23edb8e1ea425993b398eb67fa415ccb985c1d7b63c3c62c29bc9a772f11dcf766cfbbf5c7d923ef4877393a579a2592a17e336fd23b6e4d163271b71da76c496cc967f92bd598e25e72be97533916bebcfd4
-e78d3f1a7f24c191d4ea8e6cf77389e39924de674e0c91c924f14fe61fc029599aff07f5b8b3a7e14c8e2cbfccf2105f1259af81d9fe89ed3944635bd57ccc55e99d789f11f33157fc92c72322d2feaefde35964b1c5972d8c25771e47e624bbe6ba7479275db69b398ee417f1cb8e55bfac632adf755dfb65dbcf48b4326622
-72278ee4f821f1e6057ffcf0875fe87cc3b11f7ec83ff02c07c43289b9087250879bcd012497d49dfd1dea0f2e70f10f8f0476488e497f310ff3de732e976e7f5cfc423d4bf28ec00f8ed40f2226525ba6eba48eec6fd7e1951ed178e48cbdeffc93fc719ff37de211abd8e3b25f3281a8d76935d7651ef3ced64c882462c496
-f98b637fecd8b163f78ec53fcdb3eed9b167c7e29a1fee3872fcb23cf5ed1f7df61e89270346f28f1d788db10123f9c50e30c6068cb101636cc0c8757c3ff4ecc7a7b2f9a23ffcf0cbf111fed8f187efb9edfbe5935b0a8117643ee39d777e390efec05ee49503027ec181134f7765d39f7c3d2a57f31c9eafb7e7f3cb4bfc20
-b9f48763a77f1284e3cdee23b69c76396d9698f561e7f00f6cd86b56f3c7d1acedfc71fe71ec3afe388e7b91c60f599e799f1d479c4f8f77fbbe977fe6c1953c71fd0ff887ff3f94cfffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ff
-ff8df0ffff1be1ffff37c2ffff6f8401d063fffffff07fea4f80ef14326597badc1ec9548ea86570d4ccf5a4aa76e5b1a689d932380e33cf976b975c673b5f5c6f3b8deb6da771dded34ae1fda695c7fb4d3b87e69a771fdd31e8ec3f18bf9632a83641ebb4ca62a04e1314666b319300166c00c9801336066d879fd725e97d7
-3ff937ff886bd7f24b9350e911dfd8327cfb8e8bc3ec5a647d5c2a554763213db20cfb3fdd0fb7c7f3cb79f4f9c799fce2fd47b87ea1cfe99f7fba6d4db4c72fe397e587876ff14fe29a2bc0eb4845daff89031cc39b4b42a2cf9526d1fa381212767bae6e5bfff9856e8e5f1844124772f5694a23ff3b39f0e6827f127d1c07
-a19ee9037f3c935f8ec833b97025f2ff488f6e5b9fedd8b66d2222edff407078bc397e585c47ec8aa7eba8b3fc805f240857960326ae5918572406c0fbf4a8c8fa3f1082fd20a9c5dbd8b577dd8b38cb89a309e69f3c4363d7fae9ec3d420476bcfc6277f7c7766c6bff356078f3489c67ecdb731cbb10b71cc9e2c3fedadb6e
-5b8fedd8d6e9967e477ca47573b81ffe2f72fd507dee95d4926bf98824b2f8b0f9c7932709e662c8991fba6d5bd23f32ffec785d4fb7adfd9fc86c579f3e7daac76a8b25ff10cb9c4d16549f708523dec499b988237379fefae13ab6add7b5675bfbafe1b876edfae5891e62c9b73c39d85c43bd4fb85c6f58def8289b238fe7
-c8d3f67fa038ae35fd125d63f349306f2432a7631e09c9fe39e20dfbc1fbf0e8fa872667586cc77b77fd9fd8a58e3d3daa5b2dd972308df8eac2a63b22d7f1a54bdee42093ef893f2e2c8945fe27e0f8a16ddbfaa5b5e45a2ee249fcf1b0598ee1b8dcc7b13fc42dbae5842d6d82dff2b5dbd67b3bb6b5ffcad80fc77a5d5bdf
-c515ff401c09715eaecbfd241287b167fe49fc91f8e7f2cf75789bfd0f64b23fac6dea58be17ee5fce2fca0fb8ee1f7ef0dd7fb8ba79373bb11badfe5021fa09ff07f2a26bfe596dcbb6c31f4b5cc9d7a7f95b0eafe3f0cb15c7f1fc7172fcf3c72ffb47771d9fe6dab66f7f78eef3fd05e7f9a679ebe9711ccde5b8ae1c598e
-2ed976ac9cd9c8a1e27fc4448f1dafcf9d3f2efef1a97d3b67edb11ec773f6979ecf796e93624ead4b7e38bf5defcea9a7bbaa6fff78be779bfe4f980c95c495a6213fb83cdfbea9a353fda7d7737ddba41ce271ccf0b93cdfbed91cdd337d773dd7b74dff278cf99c72921f72321ef73f3fdcdbbae797b6477ff9637ff4f8e1
-87bbdb76fe13dffd4f8eaae0beaeefdb8e698e69f65ffa7d5fb76ddbb6adffdaa5ceef8f5f12619ee911fbc9f1ff37c3ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f230c3184ff7fe3cfefffff07edeef0000406080a8e8d21757d5d5b597b898b91
-212426282a924d557781716979953365e7e8ea40424446484a4c4e5052545658466f6b85376d0360626466686a6c6e70727476783081828486888a8c8e90929496984461e1e2e4a0a2a4a6a8aaacaeb0b2b4b6b82a111222c2c4c6c8ccced0d2d4d6d838313262dddade5a9a7afeba227301191a0c0e0205092d7f393a42832d
-2e0a111315171d1e5c5ef2f4f6181b1d3d3e247d7ef8fafc14169c9e3436bcbec0c3c5a1a3a5fd2749922449922473f478ae3e3f7ce77bfff0c72ff9e7a7bf7e5bfefbe11f3ffed83f7ffdf7e72b7f7f7efbebf7ffc11f3ffd1ffe17ff8ffc4ffe2ffffd6f7ef8e1ff73ff6f1cffa3fbff71dffddfdeffa7ffd5ff2b49922449
-92e47ff67ffbdffdfffe87ffc7ffe5fff37ffa7ffddffe7fffc7bfbfffe7ffc3bfffeb1ffff93ffcbffd9ffee7ff8fefff013ff4febfbffffbdfffd7efffe97a1ffeffc06f7ffcff83ffbff0ff1ffeffc4ffbff8ff1bffffe3ff8ffcff93ffbff2ff5ffeffccffbf59fe073fe7faff3bff9fffcb2fffebffbff1bf49fe47ffc4
-78ecfff7bfff5f39fe67cf0fffbbbf7ffbedfffffcffa1ff7ff4ff97feffd3ff9ffaff57ff7febff7ffdffb1ff7ff6ffd7feff9bebffcffdfcffefdcf9fdfcff1bf93ffff13f991ffff9bffcffbdfffff7ff07932449922449feffe1ff5ffcff8fff7ff2ff5ffeffcdfffff9ff47ffffe9ff5ffdffafff7ff6ffdf128e9cefff
-dffd9fff1ffe4fff9beff8ebd9fffffdffc3f9fcffe3dffef0ff97fffff3ff9ffeffd7fdffdbfffffbff8ffffff3ffbffeffdfffff7cfe38fefffd3fcffffae7ff4338f5b9fefffeffff07fc0ffefbffff813f5bff87df7ef8ffff82ffff3ff8ffff84ffff5ff8ffff86ffff7ff8ffff88e7ffff27729d43ceffffaff0fdffff
-c5ffff0ffcf03fb8ff390f223ffe78e6effd78fcff7fc4ffff47fcff7fc6ffff471c9158cff37ff1cbffa6fffff4fff03f7812d1ffffdff8ffff8efdd1fdffffc7ffff8724697eecffff8ffcff7fc9ffff77fcffffc99bc5cbf3ffff29bf3effffbf727ecbf5ffff2dfffffff2ffff31ffdfffff9ff9ff1b75fdff7fcdffffdf
-fcffffc2ffe4fffd3fe98ffdffff9cbfff07ffffbf73468be4ff2664fefb8fff855c3f74d7ffa2fcf0dff1ffdfffffbfe7ffff7ffeff3f283fefffff87feffbfc8b1ffff3ffaffffa41cfffdffffd2ffff37fdffff53922449922489fdff7fd4ffff4ffdff7fd5dffdffffabffffcffaffffadd72fffff1ff2dbfffcffffbbfe
+3f4c09d7983f16478e6f11c77eb839e45ff91ffdf24fb627b91c6de2ea0f69af58ff60f9852b67da2bae1e69ff88abffa4157ff466afee3b7ef0ff2778e417cfc5bf72f225feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ff
+ffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2004964fffffff07fea4f104238cd6597efba5031973655d791aaba9e5c86ebcbe955d79baabaeefce00f75fd92aabafe49cf6f87e717bff8479e99c93333796626cfcce499993c339363660ba85dc600c6d8b88cb1d965a142c8ff78d71f2f97fea10cc2
+307e99477e50bf58982861469858fc33ff68943908c3f861fe91a83f2c4c943023cc1fce489f5639edfde3e4f5fc735fceb8c0c1e59f70c625454461d00370f9673c51ffc02ff008475cfe103fc4957f363fc4e507f30b11621f3970f30beff1c78efcf1e4380ee79b7faee78febf8ec785e7e58de43f7f517398f91eb0c324e
+1cb9a74ee34d7cbbae2687f2595dbb9e26ffa83c6ff20f9f5f2affb48e73d55dff547e49e1fe2147ffb8fa5e897d795dfbe3f48b8352feb0f345e038ddf9c10e2749c42e0363e083e7f827f9c43fc4fe114ab8899d3fe007b80ef25cec9044ec9f8c7f9825b820f7fc80a7cf735df3a46dc6c7e69f1dc738793cbfe0a062f6cf
+3ea9ac49643f787c38f047240f3f60f18bf2cb5c8904474e891193ecf1be9cb95cd7f97d349451b9ebf4995fde8dd83eb227af675f74f9c1920c95579644de408ef8de9cfe91cf459e47ea140401dd91e420fe104982e4c00f24d9f19e4becf28ba44b6e3b7243be3efef071e24b5cdb157c26765c39f6811b12407c6028c8f1
+0f7e813c921fc43ff0fcf398a4df363f645edbb28c39cee7ecc1c16387287bcd210b14f698fc22020b36635321c8c73c72fc81187f24fe807d621f6cb99a01e09a1d7ddd3c47727ecb735cf394477240d997ec9f2c5f3d7ac891a72f9e68f38378548f593bdb234e0948fe50ceb872953bae34fc43722a480ee589e4f40f579f
+6baee36a5d8e5ebffc73ccc3299e607ffc816f7ec87ce28f79605f6c5c701c7f7cdb9c7303c4fe90e1088e2bd79bbc4ac2e00741f047727b5d7335f12ccf9dc47bf885f003c7846e3f6472a99c062e8e09013de097c17861e72f38c1037620af27af62e7e6bcb54f9a5f3c4b2481900907ec8730bf383c579e5fea12e2807d1c
+b9f2b82ef77cb05fe2c83f67e1b85cf34112978a63721c965c22811fae5c009705d4f9380260dea7f0c7e51189f05cfce38f7f739d8fcb95e48fa8edbcf9001e5e7b2ffc01fe011f18082cc3035b70c33fc9711dfb61e7fed83f8be7877c3b3f5f9ee3dab5e8f35c233ec7f1ec3992c393ce916693f09cf6c3f1aab7c88ef58f
+fbe4a6fcc13ff69aed0ea71df9835fe4a6e480bdc167f39a14436b72c87dc44e983fe68f479281f33377f461f68b70d9917f4cc738f4c8e2c9bb378f9d7d4d5f4e971f96f8ec87ebb1133bf3489215baebc261fc02fb017e502a2bfcb2e30acfdcb09b61ff30c89ee09315833ffef8f479f3ccb1ca71783e7bef8b7fecf20fe4
+8744c041f8077c903f8eec0ff805b620e01f8b0b7aec1c8be73fe7edfd4764abcb8e833de070fd63fff2ffc7f2f9ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11067662fffffff07fea4f60432157ad8f9cbe29599eaeda3cc7
+6412b3c48e3cb63cd7aacd73794c9e99c93333796626cfcce499993c33936766f2cc4c9e99c96632b1cbd8610cdb2cc4feffdd8f9ff3799d79338e65c12569805b118db8a48d39d03812c7931f7b481c69625d1a5c9206b89df81c39e372581287581c891e39aeef5e9cfa5e7dba8b97cb020388852907ac1fc0aeb089267964
+8fa593245b42982518406cc89b1cc303c666d243728c731d67bd124a2807b801660f5c53d855009b0776b4d6d5724cb26c0246c0206fe200c7811df83349e5dcb36deb9a5ccf7a1c8d63cb5712e361a6d85c33cc1808b86097d9a1d634796adb648b1f083f306ec8b3a40a983e39c46cdf1cd791c47f871f8ea73fe4f1875d5a
+d378cff8c1e2076b6e87349c95942ccd893c915424c20fbee48f2d777c398ee4801f3c4b2d0eb237bf1ce48f7cfcd0e77c13973c4c7f50c739dbd877d13de6781c9b1eeea833cbde468223cb4d9c46208937bfe87ec120996bcfb3a25df066f983a831c815cb411c2e2e0234f3435c2e71043ec9b72f47bf73813fe60f47faec
+1f0f9f2d1e62474288dca2c42a133b1a6b633f2413b913883dcb1a7f2c7e71c4b94cec0f71fdb063c732b17fc4f5cfb6eff967b8aef589ea2f3d93f3f0cbf56d2147faccf31e7f381cd72f21f0f8e78fedd6edd58459d496901fe2976eba25c813d9eab0bd7ac43f9b5fba2d82f8e23dffb0de47afe758d709ae38feffaceb4b
+fdffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf1106f364fffffff07fea4f14023876e5a9fbdc2622ae75a9ba8e3c2ecde3f198ebcb
+a9aa674a9eeabb9256ef95b4fac3fe20adfeb2b751fd2513d3e368a38e7fdafbe0f030973c33936766b29905c7cc668c8d03c60e9648262c13b619b621f18427c432c426ff7d3fec3eeafe83b8f68f2d71adb67fe21a5be2d81f1602939026b65d9b38d4465c9b2d71ad3671adb6c6b1c3426012d2c4b663d0e7cae17a8ee3f8
+e59f3fec977ffee0e1253c04841f081fe10f101067fe79c5c4f147ba800f140304644208219c24090bcc99fc2396d8b5e507bfec1fff1cb9ae4a72da2f39b8edb8ff918ac825c71fe617bb3894180bf148242162830c928844442247f8237cf307b8592298c326821fe49773ff5c4b8f38da67f17efde31fba269ecc058b647e
+61ee230fc7b1c4e2c3716511f2a6d02d716442fc10362f430eaa999bf9431cde1f3ef27d72451c39729d89ce3ff3cdb7fcb02339c2c575e5390e1f6f434693c4985cbe278e0071877bb9228f1d9f1c24541c49ded9e4f23db6381232d82f278fb7c7bea412992d1a4d882dc9b30cd9940d1379aee338126f677de4795cf1cbd1
+fde0e86507887d0262b74cec8307897090447889112e62379603b10cb15b6c628483d8013f80d311af588597b8ffe087eb699f1fcae1726c3d02ebfdc89166723c3e95897b2e9244a4891c10fe188324603e891c9048bc739204fb032e0b821fdeecfabee3c8f11c0edb3fbc3f1ccff383a34d34401c492479b31c5c68134917
+e4699e25f2ee3dc2ebe8957832219e847996c843dfc43cccc41feee70f761ef28d68fec9b738affc22412c9ec51f991fc8aec4394f1ed7f3ec8c63d150d7c5729163897f264ff4950995d9f134cfe389f3f9c192e7c9be507f84fa619268e297c9135774f14fa87f2e590e92253279e29f673d2e3f9237477e28d9f1be6d4e5d
+7ee8e6fde19127125ddc891fb25dcc0fe287b0b8234bdeb0e40803e298844a184448f20564bd9fbc3b767e399638ae5faa8973fe19b1f808f867f97ec90a1f0684c083c180e510e75c41e035aec419045e21f008829ffc739efeb9975f721c4fa3f791739ef9f883cd38f90173937f9c9763803fc02ff3cffcc2c41b858dd9e9
+9739c171e0d80fbfe4ed0f5b6cf9e3390f9ce0b4f778ec07783919ecf18745f8835ae1e1b047088745b8607f00d83f5fecfb0c0ef0c2e2b025fc413889dd89fd81e7073f9c5eef0fc70fd7f23d3e67765f7f3c7b7eb17fbc1c870b5cb69c1c8c8121818e6bf1310e328311720066bf64fcc0f805fc4228a4efc2f1c7fdf4398e
+e3c8234d72dbf9bd9cc90fa7dca272cbf18be5b03b37c090984c904f1222d611a924994c1072cc1f6177c209fb6349442ef14825e4def7e63c8e1c0fa74a3e9e1cfdf6cf3a8e54f6d80181b0239bb5bc944a8207c28e1c87350c19fb052bf2831d69b3157f04efa6799a8cf9693927cfe29f5f72fc92e8f22df921a82c894397
+92e862e6ce93f34b6e797eb1e34e74f98378c742f22ccfbb54929a45f3f867e91f9283788eeb4eceedfe83fd029bf2d90f891dc245b8902489f00fe1020f08ccc51ef8e172ce3f8c93d82fc52673f187bc8fc7d742f59fdced1f5fae744ddb3cf34cf881877ff887876bbe0917e1e09963c2c3c161fde13afc40d9e5e1e0a298
+4c3838791cdf3fbf3c2818378767fb63dfe9b0fd335f9e244f3acf9cff1bd72587fc4f5cff1793eb7af287ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf1106a063fffffff07fea4f80642175a39dbcef1ec9c4d5c4c475e471a9eb4bbf6307739c7bd575e787e78f1d9e
+3ffce007796626cfcce499993c33936766f2cc4c9e99c93333796626c7ccc0301863b36b8ccd183b8cfcffa3f7fce13d4e377f38f64b16e631993c8b78f2e412bfe4c82424bb1a118f98e4cac4ead8b2308fcae459c4992b93dc7179256f1c4e09c99e465651ead90f6ff783fdd03fccc3f8e348cecbf9c40f39f34b7ec8515b
+1d71c82413268c1dc93912bf0888cd26b97274b97ed13fccb627ccf34be387caf147e2ca7c8eed0fc79c8ec70fc79378b2c4ba239afcb09cc41247963f1c82482289e38d2bbfe5b339fd71d9711cb91ee2f86339fe487226be799fe4bbbcd70fd7716c5b0fbafa2104714c131267e695207e780683d893dd4fb1432d472dfeb0
+f823c7b21f9e1d5ed2fe81f607f43cf64bb7f923ba43691bec48c831d2c28efc4116a77890f37388acfef861a7c7d35d33ea7a9f7f8e7b712cfff40fbb47ff69ea89fc93d33aee5f92fc90e6871cd64cef34dec81f29e3fed688fc91d831eebb69236762efa6d2584412bbc2ff236992e73a73f5ea73a5e78ef3dc7dbdfe58e6
+7b2514af24597d72c6e331bb24d43ff3cf2c511db221a1208791fc20c72d7e48587e10f7540f3ff01c3f3cc7c3d9fb9ff53b3fb63fc20f077cb071ecfd837d2e1ec23b231cc45ef861bb61b0c0716023811fb63bb8997dc6b7dd66917cff9cfd5cbf70fbb6ba8eef3a98f34cc5e986fc22c72f7fbc3aeffc009541dc904347e6
+9df9f04b3c892aaf3cffa82349c4e08f4bb4ae07271c79f6bcb99ef3cc11f9e5399f274f3d0887002e274ee2825f6e9c3880097333214c0837e4e050d40936a1b03fce0b7c84ecfc615b92bbebb52d4f1712b10bfe0161fc32301fe685fd0027b84160bf6090a47081811bfc901a06cc2f2038d6c4f78ff63abf25895d59aece
+f74ffee03ad237bbe08ff920f927cec97ce09b139ccbbd4713bf242c4d5271cf97f9985f927c22cb24779347368ff3f575d7f9bcce3eff38f3f674eca4b05f820ff60425f68770c2068c13f640087f10eb0c870036ec6510c24df8010027c6f0ed7af2b9a6f926df9ee7bd5f9f7dd76ddf3fecc6fec13ee10758cd0a8733f20b
+77d8a03058b1409ca43c610f9ce01f50f0c26eec3cd81f43e0b4eb87c3f1cf6d7fe4b46f5d9cb5c3f5affdff237ec9edffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2ffff6f84ffffdf08ffffbf11feff7f23fcffff46f8ffff8df0ffff1be1ffff37c2003184ff7fe3cfefffff
 __gff__
-ffffebd7ffd9ffccff7ff9ff27ffff1ff6ffff63ffff5ff69367de9ff37ffa3f6d0723bbff17ffffbff03fddffff9ffdff7f9a63ffffbff6ffff6d39ec7ffac7ffffbffdff7fdc7f3ffdff95f7bfe3ffffe7feffbfeeff0f1c875f7ff9ff07ffff7ff7ffff79ffffbf97244992244972fc3f8ee4ff1ff8ff07f37fdae1fff6ff
-ff7dfffffff7ffff81ffffc17fffffc2f5ffff0d001984ff97ffcbf7ffff69000906b2b1b7b9bfc6cbc7c30fdadb0c080d0eb4b8bebdb0c4cccecdc0eaebfd10020301b6cfdcdd2004eced340b350736b337dedf444546bc47eeef13151719bb232527291416181ac12426282ac958595a5b5c5d5e5f68696a6b6c6d6e6f7071
+07edeef0000406080a8e8d21757d5d5b597b898b91212426282a924d557781716979953365e7e8ea40424446484a4c4e5052545658466f6b85376d0360626466686a6c6e70727476783081828486888a8c8e90929496984461e1e2e4a0a2a4a6a8aaacaeb0b2b4b6b82a111222c2c4c6c8ccced0d2d4d6d838313262dddade5a
+9a7afeba227301191a0c0e0205092d7f393a42832d2e0a111315171d1e5c5ef2f4f6181b1d3d3e247d7ef8fafc14169c9e3436bcbec0c3c5a1a3a5fd2749922449922473f478ae3e3f7ce77bfff0c72ff9e7a7bf7e5bfefbe11f3ffed83f7ffdf7e72b7f7f7efbebf7ffc11f3ffd1ffe17ff8ffc4ffe2ffffd6f7ef8e1ff73ff
 __sfx__
-6f7e4afe2f8071ba673ff3023c573f7113ff7701e673ff501fc453ff7538f753c776124433df770f07339f77238133f777327770fe673ff213fa453f7140ce770df433ff77327773977119f771f6433e77332f77
-ffcffd7f3fb740f65326f7732f773f91726f770fc443ef7711e770fe673ff223f7533bf770f9243477735f7727a312ff363f77735f7737a7727e573f7753f7772cb471f9773ff133ff7336f772787737e773ff66
-7ffdffb33ff730b9172f7773e7331fb773ff653ff751be363ff773df7701d771ff773f9473f7311dc473ff703f77732c7723c623df7222c7535f772fc773fb363cf770ff773f05127f773fc673ff523ef7706f77
-ff3ff4ff3ef7706b36275443ee373ff753ef771df473ff733f77718e773f9673ff312df473ff743f7771ae772f222240672ff771f8473ff3509b773f3373ed653ff7716b671fe773f2653f7773cf773fb673ff07
-ffcf43e83af7738c553f7772e8373ff353d9673f737398770f92433f772fd773fb673ff7126e333f7773fa673ff6725e773f77120f7733f512fe070f7771601726f773f73012e673f77701a443ff771f82207f26
-ff23fe57379673f77702f773f7723477735f303df710e6711cf653ff77378673ff77039653ff771fc0717f7728c373ef773f9163ff772b8773f42225f773f7723ef773f4142df773f7331a97323f773f7533ef77
-ffe7253f39c77276773ef773f9442cf773f7343ed771fc533ef773f2221ae733fb5732f773f7323ff771fa113c77702f77089773f77725b403ff772f50632f773f77211c363bf753fb173ff473f8571fc670f516
-e84f7ffc11e771df773106337f163fd243f7350236413d32087513f77117e363ff772316312c771fd710cf771fc753f7733ff753cd753fb263ff772711336f773f723128013ff052cb54082231fd773ff7706f77
-7f51b2ff1fa770fc0724e7723e770f366228263b8673f7770eb6301b0123c0137a612ff773ff760c7130b34113d453ff0010e763cf773fb713ff773f7442cc7408b61194021ce7539f773f7043ff773f0273df77
-ffff8fcd3f7730ae563cf773f3223f9763ff7717a1123f773ff512477732f773f774199773f7732a8713cf773fb213ff772fa173ff77179063ff7733a403cf773fb3138f773fb722df773ff7336c473ff7730a24
-37c2ffff3ff7717e073ff77271001fc023ff773fb073ff463f0012a42316e553f1443cf773f72121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771bc063ff77
-ffff6f842f9203ff771f3403ff773f6013ef773f5123cf773f33438f773ff6030f773f75121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771bc063ff7737814
-c31fdf763ff771f3403ff773f6013ef773f5122cb4434307258372ca5134a113a77725c533ee761cb371dc653be6618f631f0372ef703db052ff661f4732cb613b7653ee6127f273c707397773fc44356633fa47
-971fbcfb0ae331bf032db753616613c463667536627295113d1772007730e563d7140e6331ec6703f0423f7020c702fb361ce1506e67217273cf060d8743c4730c1651aa6326f70388373cc3334f702467738d36
-00000000254361e2630b771036613bb2612c701d1432fd4721f4535d350eb67020700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+fffff3ff39f7707d773ff463f7753df772fe773f9373ff75128701ce763ff753df713f7713e7743ff512fb472bf453ff773df7703f473cf7723f753eb073ff313ff7733f771fa773ff353df771bf773ff573ff70
+ff88e7ff3fa773ff753ff773c977388773ff673fc743fb5727f770314335f433ef773ef773f7303c7703ef573ff77016731bd7707e753e9473ff7702e773f77338f773fb203ff771f9473ff7706e773f77738f77
+d1ffffdf3f73232d61039743ff772fa073df773ff243ff770f8673077338e7739470224733e34726f763d3473cf773f9243ff77079673f77706f773f7341cc0118d743377731f543fb323ff7734f773077338111
+1b75fdff38f773fb703df053df773ff343ff7707222291772cf773ff703cf773fd443ff77379673ff7709f5105f5433f773f7423f2733ff773f2173ed5435f773f7623ff773fb173ff7731c771ff773ff7139f77
+ff87feff3fd643ff771fb673ff7702f7724f773d77329f703df773fb613fe7707c773ff73331340ba263f332249773bf703ff201c57334d353fb123cb071ff073ff753ff773fe363ff773f9773f773284732ff77
+feffffeb3fa4431e773f7733af773fb221cc773df773fb153ff7737c673ff7713911244441222209e673f77714f773f7743df773fd251ff673ff772be773ff743af773ff62177723ff771f8171bf773cf773ff53
+fdff7fdc17f7719f770cf773fd473f7323ff771f8373ff7723d773f77536f11279751fe173f9573f466074123be7717c773ff73307731df773ff713df773f95123d773ff7336f773f766398663f95707f773ff73
+ff81ffff3f5733df7715e373fe163ff7727b773ff732ef770f061076753fd473f7303ff773fd373ff7739d773ff73172220991124444329673f87024f771f8473f730337771af063fb373ff773dd773ff7737f77
+340b3507017773ff7702f273ff770d000198203ff313ff5437f773f746004400681331e3339e7306f5407f140f8551b360084600e82338a733da0304b640ef6400b562bf67100100340036e741cf65200202cf66
+1d1fc22e36c13378751f324051343c6342ef7613421174413b6122543229021160411ac04240322805209345191551b1651d1751f146291562b1662d1762f1073111733127351373790001a1003a2005a3007271
+3b5f373f2d472083051111520506221673d1573b1030ce600ae5000147395511c41308e402b062031113201202503011773f9700f243390533b0633d0733f401085440a5540c5640e57421c51246772ce3423b16
+f13cffaf1cc5723f311f86730f740fd773cf271bc572ff343f477237351ff733fc773df573fb043ff063fe163d7753c7733e7323ff313ff643ff36387533f7123df773cf713ef573f26139f733cf722cf7732f73
+c7ff67fb3ff450fd7737e771df7729c473fa672fb153f7640231232f7339f7304f7721f443ff763f9461fe7723f772c77739f743ff173f95713b772fe771bf770ff473ff671fb773f9663fd573fb471f24017977
+ff23b2ff1fd772fb770f9173fb771f4223ff173f75736f733f7733e7223ff5125c771b4353ef7700f773f8063f77230f513cf77076123bf7713c773ff003df770b67119f771fb471fb672f11139c673f7703ec47
+ffa796ef3f9173fd703df7715e7318f77039603ff6439e773fb173fd471fc453ff71398773f8173f7763e1543ef770ef703b8363fb173f77732b363f77009b773ff013ff703df7725e773bc573f77404b273fd27
+8fff7f3227f773fd273ff333ef323bf771fd773f966387753ef7733e773fa373f7323ef333ff772df770ff673fd773f65432f763f97737c753ef771df771ff5127f773ff673f7043ff753f77738f771746139f77
+ffaf24243f7122de672f2121ff273f7723ff7726b673ff743f7731ac363f7733df772ba773fb343f7773df7733a773fb34267360997337f771fb773ff6539f773fe773f9413f7773cf7717e6639f770ff773f951
+fcfffda53cd763f77138f7717f443ef77361771df773fb353cf713ff731cd773f9673ff773cf7731f773f8273fb573f3431bf773f17236f77177673cf77375433e77404f173f7763ff773cf771fa3237e773fd73
+ff28f7fe3ff771f8063ff171be7231f743f131329363ff77078113df773fd0008f773f77124e3425f770f714287373cf773f9143ff772f8273fd2707e671fa701f8651df773f7333cf773f7141cf773f77131f35
+92fc7fc23f77722f773f7523e77325c263ff772f8773f77303d663ff77370553ee163ff773b8773ff7723877175433ff323f9773f77708b663ff77071773f7713ba773ff73248513fe773ab173ff7727c773ff71
+ff1fdfff3f3443ef773fd2608e773f776219173ff772f40127f571ff7732f77397733a7713d77423d77277223fc013ff653f7033cc372377705f77179140c51527a441bc771fc3127f773f7163c0113f7751fa64
+1853d9ff3fc771f3671ff7724f773f736328373ff773501110e7711b660ab40344753ff773fb343fb460f5773cf713e77031b223ff123ff742c112247533cf773f9743ce041061211e331ce763ff772fb6433c54
+ffff94ff01a012fb673ff771ee773ff77091620fb441c641218611ff473ff7701d773f77334d673f777119133ff773f8502bb673ff77244772ef773ff3112e163ff771ba263f9173ff770f5453ef773f0521ea67
+7f23fcff3ff7232f773f73520f773ff1308a673ff7716a473ff772ee663ff773f23339f773fb0304f773ff700df773ff3131f773f7360000621e773ff7730f772977410c72051163bc301ee643ff771f5013ef77
+fcffff463f33438f773ff6030f773f75121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771bc063ff77378143ff772f9203ff771f3403ff773f6013ef773f512
+96f3d8d338f773ff6030f773f75121f773f73302f773f77604e773ff7508c773ff73118773f777238673ff77069473ff770da073ff771b4063ff773fb012c21207f131dc34365611bf132df55361663ba331d453
+ed8fbe1c23d7633b6618f0323d370ee613b833359152d5733cb07396673f0633b23232d6632f3034f4535656127660fb711dd5316c7033c021e8373cb051f8731ce000870724525092613f0672f37721f2323343
+9efc70fe1cb6700d431d57318c4338f041e6710af563e3650ff05277671c8702bb4727b6701f072e9742d70733b103b97539e313b7133fa07396223f1220ee563965733f451b7143ed43237303d457303472f264
+0000000020b711b3712c7303f2431e4520e36307b75388233956422b453336732173095712f3633f843367140e36329b17033063f9660fc4304726278740f97327d3619d5732f000300000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -363,70 +383,70 @@ c31fdf763ff771f3403ff773f6013ef773f5122cb4434307258372ca5134a113a77725c533ee761c
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __music__
-00 72737475
-0c 76770001
-0f 02030405
-03 06071e1d
-02 1f422e2d
-02 2f485051
-00 52606162
-00 7c7d7a7b
-0e 300c0d0a
-01 0b407879
-08 1b1c3308
-01 092b2c43
-00 12322242
-00 31417e7f
-03 0e0f3839
-00 3a3b3c3d
-00 3e3f1148
-00 494a4b4c
-00 4d4e4f21
-0b 1b247f2c
-07 4763623b
-00 5f373f1c
-07 7b63171f
-07 7c704f4f
-07 7f7c751b
-07 7b6f473f
-0a 7f63575f
-0d 3f3f7f7d
-0f 7b7f407f
-0f 613f637d
-0a 5f7c3f7e
-0e 277f177f
-0f 4d7f6778
-0a 3b7f237d
-0f 7f7c1f7e
-0b 7b3f1c79
-0f 3f7c2f6c
-0f 7f723f71
-0e 3c7f2f7f
-0d 594f7f37
-07 7f5d7f29
-0f 793f7c6f
-0b 527f4d42
-0e 22723f79
-0f 3f447f61
-07 497f6f7f
-0f 681f7f63
-0b 7f6c7f79
-07 4f7f737f
-0f 7a537e2f
-0f 7f5b7f4f
-0f 797f7d5f
-05 7e7f6c7f
-0f 7b7f781f
-0c 08577e47
-05 7f677b5f
-07 7f6f7e4f
-07 727f7e1f
-0e 257f737f
-0e 7b763f7f
-0a 3f7e257f
-05 1b257f1b
-0e 577e7f40
-0d 7f3f607f
+0c 6f1c7f23
+0b 7b7f715f
+0f 7d5f5e7f
+0f 277f557f
+04 2b491224
+06 4912647f
+0d 767f7b5f
+0f 7d7f7e07
+0f 7f477f65
+0b 7f737f7a
+0e 7f7d5f7e
+0e 7f7f473f
+0f 3f7f677f
+0f 433f7f6b
+06 1f7f793f
+0f 7c3f7d1f
+0f 7e677f0f
+03 6f7f013f
+0f 747e3f3f
+0f 7f7b5f7f
+0f 576f7f69
+0c 7a1f7e7f
+09 406f7f7c
+0f 7f037f3f
+0b 707f1f7e
+0f 7f447f3f
+0b 787f1b7f
+0f 7f637f0f
+0f 7c7f137f
+07 3f727f5f
+0f 7e7f4c7f
+05 3f597e07
+0e 3f677a7f
+0e 3b7f1f7f
+0d 4b2f7f6b
+0f 7f3f713f
+0a 497e477f
+0d 44786c7f
+07 773f7f5f
+0a 397e674f
+0e 0f7f3b3f
+0e 7f7b6d7f
+0f 7f7c7f21
+0d 7f7f747f
+0f 177e7f53
+0f 7f1f7a7f
+0a 577f7f6b
+0d 7f7f7d7f
+0b 317f7f76
+0f 7f577e7f
+0f 1b6b7f4f
+0f 7d7c7f6f
+0f 5c797d7c
+05 7f1b793f
+0b 7f713f19
+0e 1f7f793f
+0f 7c7f3d7f
+07 7f777f07
+09 13244912
+0c 24497e7f
+0b 617f5f7c
+07 7f0f7f7f
+0b 727f5f7e
+0f 7f4d7f7f
 __label__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
