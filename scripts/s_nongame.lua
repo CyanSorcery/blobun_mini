@@ -113,7 +113,7 @@ function update_stage_select()
  if g_sss_anim_factor == 1 then
   if (btnp(0) and g_sss_menu_world > 1) g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -.125
   -- roxy note: check for player worlds unlocked
-  if (btnp(1) and g_sss_menu_world < count(g_levels)) g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
+  if (btnp(1) and g_sss_menu_world < count(g_levels) and stages_beat_in_world(g_sss_menu_world) >= g_w_req[g_sss_menu_world][1]) g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
  end
 
  -- show the next world panel?
@@ -157,12 +157,12 @@ function draw_stage_select()
  map(0, 17, -24 * g_title_scroll, 115 + _y_offset, 19, 2)
  -- draw the stage title
  map(32, -2 + g_sss_menu_world * 2, 0, 1 - _y_offset, 16, 2)
- local _bott = 122 + _y_offset
+ local _bott, _req = 122 + _y_offset, g_w_req[g_sss_menu_world][1]
  -- draw to go to previous world?
  if (g_sss_menu_world > 1) ?"⬅️previous area", 1, _bott, 7
  -- draw to go to next world?
- -- roxy note: check for player worlds unlocked
- if (g_sss_menu_world < count(g_levels)) ?"next area➡️", 84, _bott, 7
+ local _p_beat = stages_beat_in_world(g_sss_menu_world)
+  ?_p_beat >= _req and (g_sss_menu_world < count(g_levels) and "next area➡️" or "") or "▶solve "..(_req - _p_beat), 84, _bott, 7
 
  -- draw the stages
  local _stages = count(g_levels[g_sss_menu_world])

@@ -52,12 +52,16 @@ function last_worldstage_set(_world, _stage)
  dset(62, dget(62) & 0b1111111111111111.00000001111111111 | _world >> 7 | _stage >> 4)
 end
 
-function achv_beat_stages(_world)
- -- if any of the stages aren't beaten, do an early return false
+function stages_beat_in_world(_world)
+ local _count = 0;
  for _st in all(g_levels[_world]) do
-  if (dget(_st.s_saveslot) > 599.995) return false
+  if (dget(_st.s_saveslot) < 599.995) _count += 1
  end
- return true
+ return _count
+end
+
+function achv_beat_stages(_world)
+ return stages_beat_in_world(_world) >= count(g_levels[_world])
 end
 
 function achv_beat_times(_world, _dev)
