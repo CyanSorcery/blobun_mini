@@ -23,8 +23,6 @@ function menu_create(_x, _y, _w, _items)
 
     -- confirm
     if (btnp(5) or btnp(4) or _pause_press) self.m_items[self.m_highlight]:i_onclick()
-    -- cancel
-    --if (btnp(5)) self.m_anim_incr = -.25
    end
    
    -- only increment if a menu below is done with its animation
@@ -95,21 +93,25 @@ function menu_item_setting(_str, _setting)
 end
 
 function menu_create_puzz()
- local _t
+ local _mi_np, _mi_rp, _mi_ss, _t =
+  menu_item_base((g_stage_win and "next" or "skip").." puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
+  menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
+  menu_item_base("stage select", function() set_game_mode(1) end)
+
  -- if the player has won, do this menu instead
  if g_stage_win then
   _t = {
-    menu_item_base("next puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
-    menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
-    menu_item_base("stage select", function() set_game_mode(1) end)
+    _mi_np,
+    _mi_rp,
+    _mi_ss
   }
  else
   _t = {
    menu_item_base("back", menus_remove),
-   menu_item_base("restart puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage, true) end),
-   menu_item_base("skip puzzle", function() set_game_mode(2, g_p_i_world, g_p_i_stage + 1) end),
+   _mi_rp,
+   _mi_np,
    menu_item_base((g_arrow_index == 2 and "hide" or "show").." hints", function() g_arrow_index = g_arrow_index == 2 and 1 or 2 menus_remove() end),
-   menu_item_base("stage select", function() set_game_mode(1) end),
+   _mi_ss,
    menu_item_base("options", menu_create_options),
    menu_item_base("go to title", function() set_game_mode(0) end)
  }

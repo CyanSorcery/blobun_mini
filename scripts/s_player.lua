@@ -227,7 +227,7 @@ function player_end_move(self)
  end
 
  -- make particles?
- if (_partcol != nil) part_create_slime_explode((_x << 4) + 12, (_y << 4) + 12, _partcol)
+ if (_partcol != nil) part_create_item_grab((_x << 4) + 12, (_y << 4) + 12, _partcol)
 
 end
 

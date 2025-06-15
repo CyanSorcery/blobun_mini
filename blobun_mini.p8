@@ -400,15 +400,15 @@ function convert_stages()
 end
 
 #include res/r_levels.lua
-#include scripts/s_px9.lua
-#include scripts/s_util.lua
+#include scriptsmin/s_px9.lua
+#include scriptsmin/s_util.lua
 #include scripts/s_gameplay.lua
-#include scripts/s_objects.lua
+#include scriptsmin/s_objects.lua
 #include scripts/s_player.lua
-#include scripts/s_config.lua
+#include scriptsmin/s_config.lua
 #include scripts/s_nongame.lua
-#include scripts/s_menu.lua
-#include scripts/s_particles.lua
+#include scriptsmin/s_menu.lua
+#include scriptsmin/s_particles.lua
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4

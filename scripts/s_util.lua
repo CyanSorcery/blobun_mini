@@ -11,7 +11,7 @@ function add_undo()
  -- add this to the undo queue
  add(g_list_undo, _undo)
  -- if there's too many undos, remove one
- if (count(g_list_undo) > 40) deli(g_list_undo, 1)
+ if (count(g_list_undo) > 60) deli(g_list_undo, 1)
 end
 
 function perform_undo()
