@@ -54,7 +54,7 @@ function gameplay_draw()
  poke(0x5f55,0x0)
 
  -- what should we redraw?
- if (g_even_frame) redraw_conveyers() else redraw_waterlava()
+ if g_even_frame then redraw_conveyers() else redraw_waterlava() end
  if (g_p_updt_zap) redraw_floor_zappers()
  if (g_p_updt_coin) redraw_coin_blocks()
 
@@ -187,6 +187,7 @@ function redraw_conveyers()
  -- cleanup
  line(112, 127, 127, 127, 7)
  line(0, 56, 0, 71, 0)
+
 end
 
 function redraw_waterlava()
@@ -302,7 +303,6 @@ function redraw_floor_zappers()
  g_pal_zappers = {{1, 13, 5, 12, 13, 12}, {1, 2, 5, 8, 4, 8}, {1, 4, 5, 9, 4, 9}}
  local _subt, _o1, _addmod
  for i=1,3 do
-  --_addmod = ((g_p_zap_turn + 1) % 3 == i - 1 and g_p_zap_cntd < 8) and 1 or 0
   _addmod = 0
   _o1, _subt = (((i + g_p_zap_turn + 2 + _addmod) % 3) << 1) + 1, g_pal_zappers[i]
   pal(_subt[3], _subt[_o1])

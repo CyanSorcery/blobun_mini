@@ -32,7 +32,7 @@ function pack_undo_tiles()
  local _t = {}
  for _x=0,34 do
   _t[_x] = {}
-  for _y=0,32 do
+  for _y=0,31 do
    _t[_x][_y] = mget(_x, _y)
   end
  end
@@ -41,7 +41,7 @@ end
 
 function unpack_undo_tiles(_t)
  for _x=0,34 do
-  for _y=0,32 do
+  for _y=0,31 do
    mset(_x, _y, _t[_x][_y])
   end
  end
