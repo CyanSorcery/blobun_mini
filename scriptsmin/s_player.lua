@@ -7,8 +7,7 @@ if(g_btn4_press)self.jiggle=1
 self.sprint=false local _new_dir=self.nextdir if _new_dir~=-1or self.inportal then if(self.inportal)_new_dir=-1
 local _can_move,_check,_chx,_chy=self.inportal,16,self.x+cos(_new_dir>>2),self.y+sin(_new_dir>>2)if(self.onconvey or setting_get(2))_check=18
 local _nextblock=mget((_chx<<1)+2,(_chy<<1)+1)if(_nextblock==121and self.pstate==1or _nextblock==51and self.haskey or fget(_nextblock)&_check>0)_can_move=true
-self.nextdir,self.dir=-1,_new_dir if _can_move and not g_stage_lose then g_p_started=true if(self.inportal)g_play_sfx=g_sfx_lut.p_portal
-if(g_play_sfx==nil and stat(49)==-1and not self.onconvey)g_play_sfx=g_sfx_lut.p_move
+self.nextdir,self.dir=-1,_new_dir if _can_move and not g_stage_lose then g_p_started=true if(g_play_sfx==nil and stat(49)==-1and not self.onconvey)g_play_sfx=g_sfx_lut.p_move
 if(not self.inportal and not self.onconvey)self.startturnx,self.startturny=self.x,self.y add_undo()g_p_zap_turn+=1g_p_zap_turn%=3g_p_updt_zap=true
 self.anim,self.sprint,self.ismove=0,tonum(setting_get(3))~tonum(btn(4))==1,true if(self.inportal==false)self.oldx,self.oldy=self.x,self.y
 if(_new_dir>=0)self.x,self.y=_chx,_chy
@@ -25,14 +24,14 @@ g_p_updt_coin=true end if(self.prevslimetrap)tile_copy(126,26,_oldx-1,_oldy)g_pl
 self.prevslimetrap=_tile==48for i=0,2do if(_tile==80+i)part_create_slime_explode((_x<<4)+12,(_y<<4)+12,g_pal_state_part[i+1])self.pstate,g_play_sfx=i,g_sfx_lut.p_state[i+1]
 end for i=0,7do if(_tile==56+i and self.octogems==i)self.octogems+=1g_play_sfx=g_sfx_lut.octo[i+1]
 end if(self.octogems==8)tile_swap(27,28,74,106)self.octogems=0
-if _tile==18then if(self.haskey)_destroy_obj=false else self.haskey=true
-end if(_tile==51)self.haskey=false
+if(_tile==18)if(self.haskey)_destroy_obj=false else self.haskey=true
+if(_tile==51)self.haskey=false
 if(_tile==125or _tile==127)self.prevcrackedfloor=true g_play_sfx=g_sfx_lut.pit_t
 local _dir=-1for i=0,3do if(_tile==113+(i<<1))_dir=i
 end if(_tile==123)_dir=self.dir
 if(_dir~=-1)self.nextdir=_dir
 self.onconvey=_dir~=-1for i,_obj in pairs(g_list_obj)do if _obj.poskey==_poskey then _collision_obj=_obj if(_destroy_obj)deli(g_list_obj,i)
-break end end if self.inportal then self.inportal=false else for i=0,6,2do if(_tile==89+i)tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)self.oldx,self.oldy=_x,_y self.x,self.y=_collision_obj.dst_x,_collision_obj.dst_y self.inportal=true
+break end end if self.inportal then self.inportal=false else for i=0,6,2do if(_tile==89+i)tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)self.oldx,self.oldy,self.inportal,g_play_sfx,self.x,self.y=_x,_y,true,g_sfx_lut.p_portal,_collision_obj.dst_x,_collision_obj.dst_y
 end end if(_tile==123and self.pstate==1)_tile=192tile_copy(104,18,_tcp_dx,_tcp_dy)
 if(_tile>208)player_destroy(self)_doslime=false
 if _tile\16==11and self.pstate==0or _tile\16==12or _tile==50or _tile==29and g_p_zap_turn==0or _tile==30and g_p_zap_turn==1or _tile==31and g_p_zap_turn==2then player_destroy(self,true)elseif _doslime then self.tilestouched+=1tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)end if(_partcol~=nil)part_create_item_grab((_x<<4)+12,(_y<<4)+8,_partcol)

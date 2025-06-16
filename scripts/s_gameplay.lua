@@ -54,7 +54,7 @@ function gameplay_draw()
  poke(0x5f55,0x0)
 
  -- what should we redraw?
- if g_even_frame then redraw_conveyers() else redraw_waterlava() end
+ if(g_even_frame) redraw_conveyers() else redraw_waterlava()
  if (g_p_updt_zap) redraw_floor_zappers()
  if (g_p_updt_coin) redraw_coin_blocks()
 

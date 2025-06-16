@@ -57,8 +57,6 @@ function player_step(self)
 
     g_p_started = true
 
-    -- play floor portal sound?
-    if (self.inportal) g_play_sfx = g_sfx_lut.p_portal
     -- if no sfx is playing, and we're not on a conveyer, play the move sound
     if (g_play_sfx == nil and stat(49) == -1 and not self.onconvey) g_play_sfx = g_sfx_lut.p_move
    
@@ -156,11 +154,7 @@ function player_end_move(self)
  if (self.octogems == 8) tile_swap(27, 28, 74, 106) self.octogems = 0
 
  -- generic key?
- if _tile == 18 then
-  if self.haskey then _destroy_obj = false else
-   self.haskey = true
-  end
- end
+ if (_tile==18) if(self.haskey) _destroy_obj=false else self.haskey=true
 
  -- if this is a key block, take their key away (passage into this block is checked elsewhere)
  if (_tile == 51) self.haskey = false
@@ -197,9 +191,7 @@ function player_end_move(self)
     -- slime this tile
     tile_copy(126, self.pstate << 1, _tcp_dx, _tcp_dy)
     -- set our new position
-    self.oldx, self.oldy = _x, _y
-    self.x, self.y = _collision_obj.dst_x, _collision_obj.dst_y
-    self.inportal = true
+    self.oldx, self.oldy, self.inportal, g_play_sfx, self.x, self.y = _x, _y, true, g_sfx_lut.p_portal, _collision_obj.dst_x, _collision_obj.dst_y
    end
   end
  end
