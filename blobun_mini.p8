@@ -64,10 +64,10 @@ function _init()
  decompress_sfx(1)
 
  -- tmp
- --unpack_intro()
+ unpack_intro()
  --unpack_title()
  --unpack_stage(5, 1)
- unpack_stage_select()
+ --unpack_stage_select()
  --unpack_credits()
  --set_game_mode(5, 1) unpack_victory()
 
