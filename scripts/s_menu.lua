@@ -153,7 +153,7 @@ function menu_create_title()
  })
 end
 function menu_create_options()
- menu_create(16, count(g_list_obj) > 0 and 64 or 82, 96, {
+ menu_create(16, count(g_list_obj) > 0 and 64 or 72, 96, {
   menu_item_base("back", menu_goback),
   menu_item_setting("show timers", 1),
   menu_item_setting("slime overlap", 2),
@@ -161,6 +161,7 @@ function menu_create_options()
   menu_item_setting("sound effects", 4),
   menu_item_setting("music", 5),
   menu_item_setting("lesbians allowed", 6),
+  menu_item_base("exit game", function() extcmd("shutdown") end),
   menu_item_base("pico8 menu", menu_create_pico8)
  })
 end

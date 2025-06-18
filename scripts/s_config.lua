@@ -1,6 +1,6 @@
 function init_config()
  -- first, initialize this cartridge's save data
- cartdata(g_cart_name)
+ cartdata("cs_blobun_"..g_cart_name)
 
  --[[
 	slot 63:
