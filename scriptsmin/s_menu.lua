@@ -1,9 +1,9 @@
 function menu_create(_x,_y,_w,_items)add(g_menu,{m_x=_x,m_y=_y,m_w=_w,m_h=count(_items)*10+6,m_items=_items,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(self,_index)local _m_count=count(g_menu)local _is_top_pane,_pause_press,_i_count=_index==_m_count,btn(6),count(self.m_items)if(_pause_press)poke(24368,1)
-if self.m_anim_factor==1then if(btnp(2))self.m_highlight-=1g_play_sfx=g_sfx_lut.m_sel
-if(btnp(3))self.m_highlight+=1g_play_sfx=g_sfx_lut.m_sel
+if self.m_anim_factor==1then if(btnp(2))self.m_highlight-=1g_play_sfx=61700
+if(btnp(3))self.m_highlight+=1g_play_sfx=61700
 if(self.m_highlight<1)self.m_highlight=_i_count
 if(self.m_highlight>_i_count)self.m_highlight=1
-if(btnp(5)or btnp(4)or _pause_press)g_play_sfx=g_sfx_lut.m_confirm self.m_items[self.m_highlight]:i_onclick()
+if(btnp(5)or btnp(4)or _pause_press)g_play_sfx=61828self.m_items[self.m_highlight]:i_onclick()
 end local _do_anim=true if(_is_top_pane and _m_count>1and g_menu[_m_count-1].m_anim_factor>0)_do_anim=false
 if(_do_anim)self.m_anim_factor=mid(0,self.m_anim_factor+(_is_top_pane and self.m_anim_incr or-.25),1)
 if(self.m_anim_factor==0and self.m_anim_incr<0)deli(g_menu)
@@ -11,8 +11,8 @@ end,m_draw=function(self,_index)palt()local _m_count=count(g_menu)local _is_top_
 local _count,_sprchk,_b_h=count(self.m_items),count(g_list_obj)>0and 147or 241,lerp(5,self.m_h,self.m_anim_factor)local _x1,_y1,_is_hilite=self.m_x,self.m_y-(_b_h>>1)local _x2,_y2,_sx1,_sy1,_sx2,_sy2=_x1+self.m_w,_y1+_b_h rectfill(_x1,_y1,_x2,_y2,1)rect(_x1+1,_y1+1,_x2-1,_y2-1,13)local _base_x,_base_y=_x1+8,_y1+6for _ind,_item in pairs(self.m_items)do if _base_y<_y2-9then _sx1,_sy1,_sx2,_sy2=_x1+3,_base_y-3,_x2-3,_base_y+7_is_hilite=_ind==self.m_highlight if(_is_hilite)menu_draw_select(_sx1,_sy1,_sx2,_sy2)
 pal(7,_is_hilite and 7or 13)?_item.i_label,_base_x,_base_y,7
 if(_item.i_setting~=nil)spr(_sprchk-(setting_get(_item.i_setting)and 0or 1),_x2-11,_base_y-2)
-end _base_y+=10end pal()end})end function menus_remove()for _pane in all(g_menu)do _pane.m_anim_incr=-.25end end function menu_goback()g_play_sfx=g_sfx_lut.m_back g_menu[count(g_menu)].m_anim_incr=-.25end function menu_item_base(_str,_func)return{i_label=_str,i_onclick=_func,i_setting=nil}end function menu_item_setting(_str,_setting)local _item=menu_item_base(_str,function(self)setting_set(self.i_setting,setting_get(self.i_setting)==false)if(self.i_setting==5)music(setting_get(5)and 0or-1,0,7)
-end)_item.i_setting=_setting return _item end function menu_create_puzz()g_btn4_press,g_btn4_held,g_play_sfx=false,false,g_sfx_lut.m_confirm local _dest if(not g_final_world_clr and achv_beat_last_world())_dest=1
+end _base_y+=10end pal()end})end function menus_remove()for _pane in all(g_menu)do _pane.m_anim_incr=-.25end end function menu_goback()g_play_sfx=63333g_menu[count(g_menu)].m_anim_incr=-.25end function menu_item_base(_str,_func)return{i_label=_str,i_onclick=_func,i_setting=nil}end function menu_item_setting(_str,_setting)local _item=menu_item_base(_str,function(self)setting_set(self.i_setting,setting_get(self.i_setting)==false)if(self.i_setting==5)music(setting_get(5)and 0or-1,0,7)
+end)_item.i_setting=_setting return _item end function menu_create_puzz()g_btn4_press,g_btn4_held,g_play_sfx=false,false,61828local _dest if(not g_final_world_clr and achv_beat_last_world())_dest=1
 if(not g_game_clear and achv_beat_game_stages())_dest=2
 if(not g_game_fast_clear and achv_beat_game_times(false))_dest=3
 if(not g_game_dev_clear and achv_beat_game_times(true))_dest=4

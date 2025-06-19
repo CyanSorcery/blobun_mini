@@ -13,14 +13,14 @@ function menu_create(_x, _y, _w, _items)
    local _is_top_pane, _pause_press, _i_count = _index == _m_count, btn(6), count(self.m_items)
    if (_pause_press) poke(0x5f30,1) 
    if self.m_anim_factor == 1 then
-    if (btnp(2)) self.m_highlight -= 1 g_play_sfx = g_sfx_lut.m_sel
-    if (btnp(3)) self.m_highlight += 1 g_play_sfx = g_sfx_lut.m_sel
+    if (btnp(2)) self.m_highlight -= 1 g_play_sfx = -3836
+    if (btnp(3)) self.m_highlight += 1 g_play_sfx = -3836
     -- allow wraparound
     if (self.m_highlight < 1) self.m_highlight = _i_count
     if (self.m_highlight > _i_count) self.m_highlight = 1
 
     -- confirm
-    if (btnp(5) or btnp(4) or _pause_press) g_play_sfx = g_sfx_lut.m_confirm self.m_items[self.m_highlight]:i_onclick()
+    if (btnp(5) or btnp(4) or _pause_press) g_play_sfx = -3708 self.m_items[self.m_highlight]:i_onclick()
    end
    
    -- only increment if a menu below is done with its animation
@@ -72,7 +72,7 @@ function menus_remove()
  end
 end
 function menu_goback()
-   g_play_sfx = g_sfx_lut.m_back
+   g_play_sfx = -2203
    g_menu[count(g_menu)].m_anim_incr = -.25
 end
 function menu_item_base(_str, _func)
@@ -94,7 +94,7 @@ function menu_item_setting(_str, _setting)
 end
 
 function menu_create_puzz()
- g_btn4_press, g_btn4_held, g_play_sfx = false, false, g_sfx_lut.m_confirm
+ g_btn4_press, g_btn4_held, g_play_sfx = false, false, -3708
  -- if the player has met one of these conditions, bring them to the victory screen
  local _dest
  if (not g_final_world_clr and achv_beat_last_world()) _dest = 1

@@ -48,13 +48,15 @@ function _init()
  g_pal_dark, -- used for darkening the screen
  g_pal_stage_trans, -- used for stage transitions
  g_pal_state_part, -- colors for state particle generation
- g_w_req -- how many stages are required per world
+ g_w_req, -- how many stages are required per world
+ g_sfx_octo, -- sfx lookup for octogems
+ g_sfx_pstate -- sfx lookups for player state changes
  = str2tbl("0001115525511125",16),
  str2tbl("3c26915154", 5),
  str2tbl("13b49a5d6", 3), -- colors for normal, fire, ice
- str2tbl(g_w_req, 1)
-
- #include res/r_sfx.lua
+ str2tbl(g_w_req, 1),
+ {-1021,-925,-829,-733,-637,-541,-445,-248},
+ {-1396, -1850, -1656}
 
  -- convert all the stage data
  convert_stages()

@@ -1,30 +1,8 @@
 -- format for this table: {pattern << 10, offset << 5, length}
 -- use compress_sfx(pattern, offset, length) to get the number
-g_sfx_lut = {
- octo = {
-  -1021,
-  -925,
-  -829,
-  -733,
-  -637,
-  -541,
-  -445,
-  -248
- },
- t_switch = -349,
- t_coin = -2042,
- p_state = {-1396, -1850, -1656},
- p_win = -3053,
- p_portal = -2394,
- p_hurt = -4088,
- p_move = -3580,
- m_sel = -3836,
- m_back = -2203,
- m_confirm = -3708,
- s_trap = -3452,
- pit_t = -3326,
- pit_o = -3258
-}
+
+-- roxy note: during development there was a sfx lookup table here
+-- however, we've removed it since it's not needed anymore
 
 --[[function compress_sfx(_pattern, _offset, _len)
  print((_pattern << 10) | (_offset << 5) | _len, 7)
