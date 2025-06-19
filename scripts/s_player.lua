@@ -21,7 +21,7 @@ function player_step(self)
  
  -- allow input buffer?
  if self.anim >= .65 then
-  local _t = {2, 0, 1, 3}
+  local _t = str2tbl("2013")
   for i=0,3 do
    if (btn(i)) self.nextdir = _t[i + 1]
   end

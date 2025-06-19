@@ -303,9 +303,10 @@ function redraw_slimetrail()
  end
 end
 
+-- order is {LLMMHH}, {C}{M}{Y}
+--g_pal_zappers = {{1, 13, 5, 12, 13, 12}, {1, 2, 5, 8, 4, 8}, {1, 4, 5, 9, 4, 9}}
+g_pal_zappers = str2tbl2d("1d5cdc125848145949",6)
 function redraw_floor_zappers()
- -- order is {LLMMHH}, {C}{M}{Y}
- g_pal_zappers = {{1, 13, 5, 12, 13, 12}, {1, 2, 5, 8, 4, 8}, {1, 4, 5, 9, 4, 9}}
  local _subt, _o1, _addmod
  for i=1,3 do
   _addmod = 0
