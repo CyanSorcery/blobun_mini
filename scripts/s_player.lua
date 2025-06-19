@@ -144,23 +144,32 @@ function player_end_move(self)
 
  -- octogems
  for i=0,7 do
-  if _tile == 56 + i and self.octogems == i then
-   self.octogems += 1
-   -- put code for putting particles at next octogem location
-   g_play_sfx = g_sfx_lut.octo[i + 1]
+  if _tile == 56 + i then
+   -- this allows the gem to show up in an already touched tile
+   -- if it hadn't spawned there yet, letting the player know they goofed
+   if self.octogems == i then
+    self.octogems += 1
+    g_play_sfx = g_sfx_lut.octo[i + 1]
+    -- find next octogem
+    for _o in all(g_list_obj) do
+     if (_o.oct_ind == self.octogems) part_create_octogem((_x << 4) + 12, (_y << 4) + 6, (_o.x << 4) + 12, (_o.y << 4) + 6)
+    end
+   else
+    _destroy_obj=false
+   end
   end
  end
  -- was that the last octogem?
  if (self.octogems == 8) tile_swap(27, 28, 74, 106) self.octogems = 0
 
  -- generic key?
- if (_tile==18) if(self.haskey) _destroy_obj=false else self.haskey=true
+ if (_tile==18) if self.haskey then _destroy_obj=false else self.haskey, _partcol, g_play_sfx = true, {6, 7}, g_sfx_lut.t_coin end
 
  -- if this is a key block, take their key away (passage into this block is checked elsewhere)
- if (_tile == 51) self.haskey = false
+ if (_tile == 51) self.haskey, g_play_sfx = false, g_sfx_lut.t_switch
 
  -- are we on a cracked floor right now?
- if (_tile == 125 or _tile == 127) self.prevcrackedfloor = true g_play_sfx = g_sfx_lut.pit_t
+ if (_tile == 125 or _tile == 127) self.prevcrackedfloor, g_play_sfx = true, g_sfx_lut.pit_t
 
  -- are we on a conveyer? if so, overwrite new direction
  local _dir = -1
