@@ -2,115 +2,115 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()cls(1)?"loading...",1,122,13
-flip()memcpy(32768,0,17152)_={{},{},{},{},{},{}}ff,ft=0,0local e,f=32768,%32768while(f~=0)add(_[f>>13&7],e+2)e+=2+(f&8191)f=%e
-fb,f7={51510,27795,14025,37740},{32769.5,42405.5,60855.5,-.5}f2,fe,n,S,T,fn,fo,j,o,a,f8,h=0,0,0,0,0,true,time(),0,1,{},false f9,fu,fs,J=C("0001115525511125",16),C("3c26915154",5),C("13b49a5d6",3),C(J,1)x={octo={64515,-925,-829,-733,-637,-541,-445,-248},t_switch=-349,t_coin=63494,p_state={64140,63686,63880},p_win=62483,p_portal=63142,p_hurt=61448,p_move=61956,m_sel=61700,m_back=63333,m_confirm=61828,s_trap=62084,pit_t=62210,pit_o=62278}fN()fO()fP(1)fh()end function _update()fn=fn==false T+=.2T%=4f2+=.035f2%=1n+=.15n%=32S-=1if S<=0then S=14elseif S%7==1then K=true end fQ()g=max(g-1)if(btnp()&48>0and g>45)g=45
-if(count(a)>0and g>10)g=10
+flip()memcpy(32768,0,17152)_={{},{},{},{},{},{}}ff,ft=0,0local n,f=32768,%32768while(f~=0)add(_[f>>13&7],n+2)n+=2+(f&8191)f=%n
+f7,fb={51510,27795,14025,37740},{32769.5,42405.5,60855.5,-.5}f2,fn,e,S,T,fe,f8,j,o,d,fo,h=0,0,0,0,0,true,time(),0,1,{},false f9,fu,fs,J=C("0001115525511125",16),C("3c26915154",5),C("13b49a5d6",3),C(J,1)x={octo={64515,-925,-829,-733,-637,-541,-445,-248},t_switch=-349,t_coin=63494,p_state={64140,63686,63880},p_win=62483,p_portal=63142,p_hurt=61448,p_move=61956,m_sel=61700,m_back=63333,m_confirm=61828,s_trap=62084,pit_t=62210,pit_o=62278}fN()fO()fP(1)fh()end function _update()fe=fe==false T+=.2T%=4f2+=.035f2%=1e+=.15e%=32S-=1if S<=0then S=14elseif S%7==1then K=true end fQ()g=max(g-1)if(btnp()&48>0and g>45)g=45
+if(count(d)>0and g>10)g=10
 if(g<=45)j=min(j+.1,1)
 if q~=nil then o=max(o-.1)if(o==0)local f={fR,fS,fT,fh,fU,fV}f[q+1](U,fx)j,o,q,U,fx=0,1
-end for f,e in pairs(a)do e:m_step(f)end if(not y(4))h=nil
+end for f,n in pairs(d)do n:m_step(f)end if(not m(4))h=nil
 if(h~=nil)sfx(h>>10&63,3,h>>5&31,h&31)h=nil
-fo=time()if(fo<0)stop"game has been running for too long. take a break!"
-end function _draw()fW()for f,e in pairs(a)do e:m_draw(f)end local f=q==2or q==nil and count(m)>0local e=f and U~=nil and U or D or 1local n,f,e=f and fu[1][e]or 1,fu[2][e],64*cos(j*o>>2)if(e>0)rectfill(0,0,e,127,n)rectfill(127-e,0,127,127,n)
-if g>0then local a,o="stage "..L,cos(abs(max(abs(g-45),35)-35)/40)*64-64local n,d,o=o+8,o+9,w(a,o+12,97,7,f)line(d,105,d+o,105,f)line(n,104,n+o,104,7)w(c.s_name,n,107,7,f)if(e>0)?c.s_author,n,115,f
-end end function s(e,f,n,o)if(e==5)M=f f=nil
-q,U,fx,fX,g=e,f,n,o,0fm()if(q~=2)music(-1,500)f8=false
-end function fy(f,e)fQ,fW,g,m=f,e,0,{}pal()end function e(f,e,n)fg(6)fp(1)fw(1,0,0)music(y(5)and f or-1,0,7)u=0fy(e,n)end function fh()e(-1,fY,fZ)V=90end function fR()e(0,e1,e0)end function fS()e(4,e4,e3)local f=fv()r,N=mid(1,f.world,count(b))v=mid(1,f.stage,count(b[r]))u,A,E,ef=0,0,.125,C("13b224cd02415d6d2494",4)end function fU()e(4,fz,fk)M=nil end function fV()e(4,fz,fk)end function fT(f,e)fy(e2,ee)local n=ff~=2f=mid(1,f,count(b))e=mid(1,e,count(b[f]))D,L,c=f,e,b[f][e]en(f,e)f6,fF,W,X=0,61936.8827,0,0m,k,l,Y,fd,F,K,Z,O,f_,g,B,fj,f1,G,fa,f0,P,eo,e8,e6,ed={},false,false,false,false,0,true,false,0,false,fX==true and 0or 90,0,false,{},{},{{},{}},1,c.s_tiles,fq(),f5(),H(false),H(true)fp(2)fg(f)if(n)poke(24405,0)local e=C("2854ef234924d6d54924",4)for n=1,4do pal(e[1][n],e[f][n])end spr(1,8,0,14,1)spr(16,0,8,2,2)poke(24405,96)ea(f)fw(2,96,0)
-local n,o,f=c.s_data,c.s_width+2for e=1,#n,2do f=i(n,e,1,1)z(96+f\16*2,f%16*2,(e-1)\2%o*2-1,(e-1)\2\o*2-1)end local e,f=c.s_obj_count-1for e=0,e do f=e5(sub(c.s_obj_str,e*5+1,e*5+6))if(f.type==11)add(fa[1],fA(f.spr,f.x,f.y))else add(m,f)
-end for f in all(c.s_hints)do add(fa[2],fA(f))end end function fA(f,e,n)local f={dir=type(f)=="number"and f or i(f,1,1),x=((e and e or i(f,2,1))<<4)+12,y=((n and n or i(f,3,1))<<4)+12}function f:ondraw()fi=self.dir spr(fi%2==0and 254or 255,self.x,self.y,1,1,cos(fi>>2)<0,sin(fi>>2)>=0)end return f end function fN()local n,a,e,f,o,d=b b={}for n in all(n)do a={}for n in all(n)do e={}f=2o=i(n,1,1)e.s_name=sub(n,f,f+o)f+=o+2o=i(n,f-1,1)e.s_author=sub(n,f,f+o)f+=o+1e.s_width=i(n,f,1)+1e.s_saveslot=i(n,f+1,0,1)e.s_goaltime=i(n,f+3,0,7)e.s_devtime=i(n,f+11,0,7)f+=19o=i(n,f,1)*3e.s_hints={}for o=1,o,3do add(e.s_hints,sub(n,f+o,f+o+2))end f+=o+1o=i(n,f,1,1)d=f+2+o*5e.s_obj_count=o e.s_obj_str=sub(n,f+2,d-1)e.s_tiles=i(n,d,1,1)e.s_data=sub(n,d+2)e.s_height=#e.s_data\2\(e.s_width+2)-2add(a,e)end add(b,a)end end ei="4fe5729bd9f69189773150d1dfc52318"J="55332"b={{"6tadpole3ashe601004.8344002.8344c0013110123221230221321310300400503600600100b3101b5100b0200b1203b3301124e4e4e38181818404e38184033ff01ff13403321131d010b01ff3b3301ff0cff01ff013b4c3101ff01ff01394d4e4c41414141414d4e","8suspicion3ashe402004.8344002.834451441431421412400104400124e3818181818403810ff01ff013b33ff01110dff3b3301ff01ff013b4c3101ff01ff3b4e33ff3931213b4e4c414d4c414d","efractured floor3ashe605006.8344004.836160450551651643632640504500a1160a6011a2540a40251e3818181830181818403301ff011a25ff053b33ff05ff121b01ff3b3301ff01ff1214143f3614141b01ff01ff3b3301ff121b01ff013b33ff01251a2101ff3b4c4141414b4141414d","btwisted path3ashe504005.3344003.334431031021010100300154e3818181818404e3810ff01ff01134033ff01ff19ff013b33010b011f0dff3b332101890cff013b4c413101ff01394d4e4e4c4141414d4e","asilly swine3ashe603007.7010005.501141051041031020100500223818181830181818403301ff011a01ff013b33ff0bff0cff0bff3b3301ff89ff89ff013b33ff11142a140dff3b3301ff010c01ff013b332101ff01ff01ff3b4c414141414141414d","dtricky portals3coco411005.3344003.567770323421431422411312300503200a1220a2012a2322a222315381818181818403301ff25ff013b33ff018901ff3b3301254521013b33ff014501ff3b4c41414141414d","cstylish bunny5autumn632007.4677005.501170561662651552541440430305600a4020a2040214e4e38183018404e4e4e3810451a4513404e4e3301ff1aff013b4e4e33ff010c01ff3b4e381001ff01ff0113403301ff0bff0bff013b33ff01ff89ff01ff3b4c31ff01ff0121394d4e4c41414141414d4e","3test4unset659600.1000000.1100001022001b4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e3818404e4e4e4e4e38102113181818404e3301ff01ff66263b38100626466666263b33464646464666263b33060606060666263b4c414141414141414d4e4e4e4e4e4e4e4e4e"},{"cbarrier break3ashe606006.6677004.717750010110211310300200100131531d4e4e3818181818404e381810040403ff134033210104020301ff3b3301ff01ff03ff013b330301ff010301ff3b4c4131030303ff394d4e4e4c414141414d4e","estaggered coins3coco627006.5011004.5011310310200104003004005643156462561c3818181818181818403362ff01ff01ff013b33ff19ff62ff19ff3b33010c0119010c623b332101ff0cff64ff3b4c31ff01ff01ff633b4e4c4141414141414d","cdiamond coins3ashe607007.9344005.68446024034044054164163050240046056402564325620454233818181818181818403301ff01ff01ff623b33ff6464016363ff3b33626464626363243b33ff01ff23ff01243b33222321ff2424013b4c414141414141414d","dunlocking path3ashe608006.3344004.334472232131031020011110100502300a4121a21419039f363551b3818181818181818403301ff448a44ff013b33ff01050b0501ff3b3301ff014301ff013b332c012143ff01423b4c414141414141414d","dtriangle coins3coco626006.5011004.50116163162261251341242060630045056412563425530355433561c3818181818181818403301ff01444462633b33ff01ff01ff01ff3b33646243ff4243013b334264ff62ff43213b4c414141414141414d","dfractured isle5willow620008.8677006.35105266256246236126090660035055a6100a00612035431355a0664a640621654273818181818181818403325ff01444442013b33ff01ff444401253b36141414141b24243b332242ff011a24243b33432323441aff053b33432323441214143f33052201ff01ff213b4c414141414141414d","atoggle maze3coco612009.8010007.23446263253243233223213090630042056461562125436455a0522a2205425569359f2b3818181818181818403344ff626301ff433b33ff01ff63ff01623b33012205238a23013b33242424448944213b3323ff01ff43ff423b330501622cff01ff3b4c414141414141414d","cnumerous keys4riley633009.8010007.117752432332232131030a043003405540156441569629f113534045624454a0560a60052b381818181818181840330303014442ff053b336201ff016264643b330144444343242c3b33ff0204012124243b33626363632289013b330501ff018a23233b4c414141414141414d"},{"ewatch your step5autumn330004.3011002.501140031132121020200300310551038181818184033014201ff3b33474443013b3301ff43ff3b332101ff273b4c414141414d","ccareful moves5willow518005.1677003.16774143142241231030430035055223541438181818181818403301ff01ff27423b33ff23ff0124433b4c3123014701394d4e33232227213b4e4e4c414141414d4e","cdiamond house3ashe509006.1677004.1844f154153252142141240330231221211301302003313114030540020254252541a4e4e381818404e4e381810232313184033ff012323ff013b332224242424223b33ff47ff0147013b33010701ff07213b4c4141414141414d","9conveyance3roxy528006.8344004.83446104103102101000010030040011353253541e38181818181818403301ff66ff01663b33ff664601ff663b330166060601663b33ff02030123223b33210303ff23233b4c4141414141414d","dunstable floor4riley417005.8344003.851040040140240340200400321551a381818181818403301ff0144443b33ff014244443b334343fe09fe3b334343ff89ff3b3321ff0109013b4c41414141414d","aforest maze5autumn531006.4677004.884440041140133230600400a5100a00519029f152539549f1f3818181818181840336589464646273b338a03ff8aff653b332cff010926023b33ff0404feff013b3321ff4709012c3b4c4141414141414d","bmisdirection3coco829007.7010005.501161030021122110010110700300280541715332255a2300a00239839f2238181818181818181818403325ff01ff06ff43ff223b33ff0144231924ff02ff3b33014442230c240404033b3321012501468aff032c3b4c4141414141414141414d"},{"dbring the heat3ashe416005.1677003.167732232131030202300741e714381818181818403301696969013b33ff0a0a0a283b33010a0a0a013b33ff012101ff3b4c41414141414d","acold circle5willow619006.1100004.501120031130300300a6360a60631c3818181818181818403301ff696969ff053b33ff6969696969ff3b33016969696969013b33210169696901053b4c414141414141414d","bfrozen water3mika624006.5011004.501112630406300811e8a1260a60121c3818181818181818403301ff696969ff053b33ff48acb5a401ff3b33010591968dff013b33ff0169696901213b4c414141414141414d","ahot diamond3mika523006.8344004.83445300301002012322030000025054724e71e381818181818184033210a7a8272223b33ff01578184723b3301ff017c86743b33ff0189575c543b3323ff28ff0a394d4c41414141414d4e","9lava coins3coco625006.5011004.51776103002112211001111060030041056730e74505626154433561c38181818181818184033016201280a620a3b33ff24ff017a72223b33016463558077523b332164236257540a3b4c414141414141414d","ahot springs3ashe810010.2677007.33442001111090010025054811e8761e7813e8a6320a2063a8404a04842d3818181818181818181840330166050606220606663b332148acb5b5a4285d693b3301ffaeb9b9a6235e693b33ff489196968d0551693b332555520a0aff01ff253b4c4141414141414141414d","ccool crossing3mika622007.9344005.68444002012122121090020042056831e8712e745256814e8a2562a622544656234e4e38181818404e4e4e4e3362ff013b4e4e381810ff48461318403321280a896962053b33ff4669896901ff3b3301488e928bff013b4c41310501ff39414d4e4e336363623b4e4e4e4e4c4141414d4e4e"},{"dfollow the gem3ashe714012.8344009.284453003010023123130c000005200755006352555720552300543035040120654526025460417653383818181818181818184033214aefff43cf44443b33ff4aff01430144443b33014a4a4a434201af3b33ff010f236f0403033b332fff0123230403033b33ff01ff232301ff013b3322ff4f238fff01023b4c41414141414141414d","boctogem maze3roxy613011.2010008.201061631622611513502510f06300200545300756000203545130613353553015640250505545045160334655a6606a06663138181818181818184033224a23ef01ff0f3b33ff0303030404ff3b33240303030404013b3322cf2302ff2f213b3301ff01ff43ff4f3b33af43ff018f01ff3b33056f44044204053b4c414141414141414d","bweaving path5willow821017.3440012.384441871862851751008700700e731255403569439f4735620554636e6837e815753a0834a3408818e842856a8882a82884a38181818181818181818403328ff434301ff7a720a3b33ff01ff01ff017c740a3b330142aca4010b5754453b33628e958d2c03ff628a3b3614140d2519ff6969013b332201ff011a01ff01ff3b33239769080cff2666013b33ff886948ff02ff01213b332548626301630163453b4c4141414141414141414d","bfour islands3ashef15030.3344023.734493b90ba2ca2ba0aa3ba3bb0bc2cc1c0b900210546c0e62e054a51b0ab0515a1055b30650404554031a453845e89199f549021aa53afaf4af4fa82ce873ce71ec5352d0123d545ad00a1e15a151eabe4ea4ebe5ee07834e3818181818404e4e4e4e3818181818404e38102201240113404e4e381045082422134033ff01ff24ff453b4e4e33af24240189233b3301ff012489243b4e4e330149012301ff3b338e8bff01ff013b4e4e3323cfff0104233b338fff0a0a236f3b4e4e330223010423653b4c3125ff0148394d4e4e4c3123ff0423394d4e4c414141414d4e4e4e4e4c414141414d4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e3818181818404e4e4e4e3818181818404e38102c23234f13404e4e381021ff034a1340337a75587d82723b4e4e3302ff010301653b33575449575c543b4e4e3303030303ff013b3301ff482801ff3b4e4e3301ff018902043b33ff8a2f2223013b4e4e330f016604ff013b4c312501ff05394d4e4e4c3105464aef394d4e4c414141414d4e4e4e4e4c414141414d4e"}}function fp(f)if(ff==f)return false
+f8=time()if(f8<0)stop"game has been running for too long. take a break!"
+end function _draw()fW()for f,n in pairs(d)do n:m_draw(f)end local f=q==2or q==nil and count(y)>0local n=f and U~=nil and U or D or 1local e,f,n=f and fu[1][n]or 1,fu[2][n],64*cos(j*o>>2)if(n>0)rectfill(0,0,n,127,e)rectfill(127-n,0,127,127,e)
+if g>0then local d,o="stage "..L,cos(abs(max(abs(g-45),35)-35)/40)*64-64local e,a,o=o+8,o+9,w(d,o+12,97,7,f)line(a,105,a+o,105,f)line(e,104,e+o,104,7)w(c.s_name,e,107,7,f)if(n>0)?c.s_author,e,115,f
+end end function s(n,f,e,o)if(n==5)M=f f=nil
+q,U,fx,fX,g=n,f,e,o,0fy()if(q~=2)music(-1,500)fo=false
+end function fm(f,n)fQ,fW,g,y=f,n,0,{}pal()end function n(f,n,e)fg(6)fp(1)fw(1,0,0)music(m(5)and f or-1,0,7)u=0fm(n,e)end function fh()n(-1,fY,fZ)V=90end function fR()n(0,n1,n0)end function fS()n(4,n3,n4)local f=fv()r,N=mid(1,f.world,count(b))v=mid(1,f.stage,count(b[r]))u,A,E,nf=0,0,.125,C("13b224cd02415d6d2494",4)end function fU()n(4,fk,fz)M=nil end function fV()n(4,fk,fz)end function fT(f,n)fm(n2,nn)local e=ff~=2f=mid(1,f,count(b))n=mid(1,n,count(b[f]))D,L,c=f,n,b[f][n]ne(f,n)fa,fF,W,X=0,61936.8827,0,0y,z,l,Y,f5,F,K,Z,O,f_,g,B,fj,f1,G,fd,f0,P,n8,no,na,n5={},false,false,false,false,0,true,false,0,false,fX==true and 0or 90,0,false,{},{},{{},{}},1,c.s_tiles,fq(),f6(),H(false),H(true)fp(2)fg(f)if(e)poke(24405,0)local n=C("2854ef234924d6d54924",4)for e=1,4do pal(n[1][e],n[f][e])end spr(1,8,0,14,1)spr(16,0,8,2,2)poke(24405,96)nd(f)fw(2,96,0)
+local e,o,f=c.s_data,c.s_width+2for n=1,#e,2do f=i(e,n,1,1)k(96+f\16*2,f%16*2,(n-1)\2%o*2-1,(n-1)\2\o*2-1)end local n,f=c.s_obj_count-1for n=0,n do f=n6(sub(c.s_obj_str,n*5+1,n*5+6))if(f.type==11)add(fd[1],fA(f.spr,f.x,f.y))else add(y,f)
+end for f in all(c.s_hints)do add(fd[2],fA(f))end end function fA(f,n,e)local f={dir=type(f)=="number"and f or i(f,1,1),x=((n and n or i(f,2,1))<<4)+12,y=((e and e or i(f,3,1))<<4)+12}function f:ondraw()fi=self.dir spr(fi%2==0and 254or 255,self.x,self.y,1,1,cos(fi>>2)<0,sin(fi>>2)>=0)end return f end function fN()local e,d,n,f,o,a=b b={}for e in all(e)do d={}for e in all(e)do n={}f=2o=i(e,1,1)n.s_name=sub(e,f,f+o)f+=o+2o=i(e,f-1,1)n.s_author=sub(e,f,f+o)f+=o+1n.s_width=i(e,f,1)+1n.s_saveslot=i(e,f+1,0,1)n.s_goaltime=i(e,f+3,0,7)n.s_devtime=i(e,f+11,0,7)f+=19o=i(e,f,1)*3n.s_hints={}for o=1,o,3do add(n.s_hints,sub(e,f+o,f+o+2))end f+=o+1o=i(e,f,1,1)a=f+2+o*5n.s_obj_count=o n.s_obj_str=sub(e,f+2,a-1)n.s_tiles=i(e,a,1,1)n.s_data=sub(e,a+2)n.s_height=#n.s_data\2\(n.s_width+2)-2add(d,n)end add(b,d)end end ni="4fe5729bd9f69189773150d1dfc52318"J="55332"b={{"6tadpole3ashe601004.8344002.8344c0013110123221230221321310300400503600600100b3101b5100b0200b1203b3301124e4e4e38181818404e38184033ff01ff13403321131d010b01ff3b3301ff0cff01ff013b4c3101ff01ff01394d4e4c41414141414d4e","bplaying card4riley302004.8344002.851160000103200213312320100000123818181818403321ff01ff3b33ff19ff013b33010c01ff3b33ff01ff013b3301ff01ff3b4c414141414d","efractured floor3ashe605006.8344004.836160450551651643632640504500a1160a6011a2540a40251e3818181830181818403301ff011a25ff053b33ff05ff121b01ff3b3301ff01ff1214143f3614141b01ff01ff3b3301ff121b01ff013b33ff01251a2101ff3b4c4141414b4141414d","btwisted path3ashe504005.3344003.334431031021010100300154e3818181818404e3810ff01ff01134033ff01ff19ff013b33010b011f0dff3b332101890cff013b4c413101ff01394d4e4e4c4141414d4e","asilly swine3ashe603007.7010005.501141051041031020100500223818181830181818403301ff011a01ff013b33ff0bff0cff0bff3b3301ff89ff89ff013b33ff11142a140dff3b3301ff010c01ff013b332101ff01ff01ff3b4c414141414141414d","dtricky portals3coco411005.3344003.567771320312411312303201210503200a1220a2012a2322a222315381818181818403301ff25ff013b33ff018901ff3b3301256521013b33ff016501ff3b4c41414141414d","cstylish bunny5autumn632007.4677005.501170561662651552541440430305600a4020a2040214e4e38183018404e4e4e3810451a4513404e4e3301ff1aff013b4e4e33ff010c01ff3b4e381001ff01ff0113403301ff0bff0bff013b33ff01ff89ff01ff3b4c31ff01ff0121394d4e4c41414141414d4e","dspiral portals4riley634006.8344004.867761332320220323423430303300a5414a14541e38181818181818184033018901ff0189013b33ff0111140d01ff3b33011901ff0119013b33ff0cff21ff0cff3b33010501ff0105013b4c414141414141414d"},{"cbarrier break3ashe606006.6677004.717750010110211310300200100331551d4e4e3818181818404e381810444443ff134033210144424301ff3b3301ff01ff43ff013b334301ff014301ff3b4c4131434343ff394d4e4e4c414141414d4e","estaggered coins3coco627006.5011004.5011310310200104003004005643156462561c3818181818181818403362ff01ff01ff013b33ff19ff62ff19ff3b33010c0119010c623b332101ff0cff64ff3b4c31ff01ff01ff633b4e4c4141414141414d","btoggled tris3mika536005.8344003.83446003013223113112211040030035055a5300a00531838181818181818403365ff01ff01423b33ff44444343013b330144444343ff3b332101ff01ff653b4c4141414141414d","cmasked hearts4riley535006.1677004.317781031020011113100112213110200300112531a381818181818184033040401ff03033b33040bff010b033b33010201ff01ff3b332101ff01ff013b4c31ff030301394d4e4c414141414d4e","cdiamond coins3ashe607007.9344005.68446024034044054164163050240046056402564325620454233818181818181818403301ff01ff01ff623b33ff6464016363ff3b33626464626363243b33ff01ff23ff01243b33222321ff2424013b4c414141414141414d","ekey to diamonds3ashe637006.1100004.5100510310200111131003003009209f25254193818181830181818403301ff2c1a2323233b33ff01ff0c2301233b3301ff018a2422243b332101ff192424243b4c4141414b4141414d","dtriangle coins3coco626006.5011004.50116163162261251341242060630045056412563425530355433561c3818181818181818403301ff01444462633b33ff01ff01ff01ff3b33646243ff4243013b334264ff62ff43213b4c414141414141414d","dunlocking path3ashe608006.3344004.334472232131031020011110100502300a4121a21419039f363551b3818181818181818403301ff448a44ff013b33ff01050b0501ff3b3301ff014301ff013b332c012143ff01423b4c414141414141414d","dfractured isle5willow620008.8677006.35105266256246236126090660035055a6100a00612035431355a0664a640621654273818181818181818403325ff01444442013b33ff01ff444401253b36141414141b24243b332242ff011a24243b33432323441aff053b33432323441214143f33052201ff01ff213b4c414141414141414d","atoggle maze3coco612009.8010007.23446263253243233223213090630042056461562125436455a0522a2205425569359f2b3818181818181818403344ff626301ff433b33ff01ff63ff01623b33012205238a23013b33242424448944213b3323ff01ff43ff423b330501622cff01ff3b4c414141414141414d","cnumerous keys4riley633009.8010007.117752432332232131030a043003405540156441569629f113534045624454a0560a60052b381818181818181840330303014442ff053b336201ff016264643b330144444343242c3b33ff0204012124243b33626363632289013b330501ff018a23233b4c414141414141414d"},{"ewatch your step5autumn330004.3011002.501140031132121020200300310551038181818184033014201ff3b33474443013b3301ff43ff3b332101ff273b4c414141414d","ccareful moves5willow518005.1677003.16774143142241231030430035055223541438181818181818403301ff01ff27423b33ff23ff0124433b4c3123014701394d4e33232227213b4e4e4c414141414d4e","cdiamond house3ashe509006.1677004.1844f154153252142141240330231221211301302003313114030540020254252541a4e4e381818404e4e381810232313184033ff012323ff013b332224242424223b33ff47ff0147013b33010701ff07213b4c4141414141414d","dforbidden path5willow439006.1100004.1100502213233103234202022002445419381818181818403323ff01ff233b33ff014701ff3b3301272107013b33ff010701ff3b3307ff01ff223b4c41414141414d","fkey in the woods5willow440006.1100004.5100514424313303214202044009049f19381818181818403366ff01ff463b33ff01ff01ff3b3301ff01ff013b33ff018a01ff3b332c0601ff213b4c41414141414d","9conveyance3roxy528006.8344004.83446104103102101000010030040011353253541e38181818181818403301ff66ff01663b33ff664601ff663b330166060601663b33ff02030123223b33210303ff23233b4c4141414141414d","dunstable floor4riley417005.8344003.851040040140240340200400321551a381818181818403301ff0144443b33ff014244443b334343fe09fe3b334343ff89ff3b3321ff0109013b4c41414141414d","cdigging holes4riley638006.1100004.1770403214224113103032003305533455233818181818181818403343ff014201ff443b33fffe090109feff3b330109fe21fe09013b33fffe090109feff3b3343ff014201ff443b4c414141414141414d","aforest maze5autumn531006.4677004.884440041140133230600400a5100a00519029f152539549f1f3818181818181840336589464646273b338a03ff8aff653b332cff010926023b33ff0404feff013b3321ff4709012c3b4c4141414141414d","bmisdirection3coco829007.7010005.501161030021122110010110700300280541715332255a2300a00239839f2238181818181818181818403325ff01ff06ff43ff223b33ff0144231924ff02ff3b33014442230c240404033b3321012501468aff032c3b4c4141414141414141414d"},{"dbring the heat3ashe416005.1677003.167732232131030202300741e714381818181818403301696969013b33ff0a0a0a283b33010a0a0a013b33ff012101ff3b4c41414141414d","acold circle5willow619006.1100004.501120031130300300a6360a60631c3818181818181818403301ff696969ff053b33ff6969696969ff3b33016969696969013b33210169696901053b4c414141414141414d","bfrozen water3mika624006.5011004.501112630406300811e8a1260a60121c3818181818181818403301ff696969ff053b33ff48acb5a401ff3b33010591968dff013b33ff0169696901213b4c414141414141414d","ahot diamond3mika523006.8344004.83445300301002012322030000025054724e71e381818181818184033210a7a8272223b33ff01578184723b3301ff017c86743b33ff0189575c543b3323ff28ff0a394d4c41414141414d4e","9lava coins3coco625006.5011004.51776103002112211001111060030041056730e74505626154433561c38181818181818184033016201280a620a3b33ff24ff017a72223b33016463558077523b332164236257540a3b4c414141414141414d","ahot springs3ashe810010.2677007.33442001111090010025054811e8761e7813e8a6320a2063a8404a04842d3818181818181818181840330166050606220606663b332148acb5b5a4285d693b3301ffaeb9b9a6235e693b33ff489196968d0551693b332555520a0aff01ff253b4c4141414141414141414d","ccool crossing3mika622007.9344005.68444002012122121090020042056831e8712e745256814e8a2562a622544656234e4e38181818404e4e4e4e3362ff013b4e4e381810ff48461318403321280a896962053b33ff4669896901ff3b3301488e928bff013b4c41310501ff39414d4e4e336363623b4e4e4e4e4c4141414d4e4e"},{"dfollow the gem3ashe714012.8344009.284453003010023123130c000005200755006352555720552300543035040120654526025460417653383818181818181818184033214aefff43cf44443b33ff4aff01430144443b33014a4a4a434201af3b33ff010f236f0403033b332fff0123230403033b33ff01ff232301ff013b3322ff4f238fff01023b4c41414141414141414d","boctogem maze3roxy613011.2010008.201061631622611513502510f06300200545300756000203545130613353553015640250505545045160334655a6606a06663138181818181818184033224a23ef01ff0f3b33ff0303030404ff3b33240303030404013b3322cf2302ff2f213b3301ff01ff43ff4f3b33af43ff018f01ff3b33056f44044204053b4c414141414141414d","bweaving path5willow821017.3440012.384441871862851751008700700e731255403569439f4735620554636e6837e815753a0834a3408818e842856a8882a82884a38181818181818181818403328ff434301ff7a720a3b33ff01ff01ff017c740a3b330142aca4010b5754453b33628e958d2c03ff628a3b3614140d2519ff6969013b332201ff011a01ff01ff3b33239769080cff2666013b33ff886948ff02ff01213b332548626301630163453b4c4141414141414141414d","bfour islands3ashec15030.3344023.7344938708829828807838838908a29a1c0870021054690e62b054a5180a80515710558306504045540317453845e89179f5470217853ac8c4ac4c882ae873ae71ba5352b0123b5457b00a1c15a151ca8c4ca4c8c5bc07834e3818181818404e3818181818404e38102201240113301045082422134033ff01ff24ff451aaf2424ff89233b3301ff012489241aff49ff23ff013b338e8bff01ff011a23cf01ff04233b338fff0a0a236f1a0223ff0423653b4c3125ff0148394b3123010423394d4e36141414143f4e36141414143f4e38102c23234f1330102101034a1340337a75587d82721a0201ff03ff653b33575449575c541a0303030301ff3b3301ff482801ff1aff01ff8902043b33ff8a2f2223011a0fff660401ff3b4c312501ff05394b3105464aef394d4e4c414141414d4e4c414141414d4e"}}function fp(f)if(ff==f)return false
 holdframe()I(0,0,_[1][f],sget,sset)I(0,0,_[2][f],pget,pset)memcpy(12288,24576,255)ff=f end function fg(f)if(ft==f)return false
-music(-1)holdframe()I(0,0,_[3][f],pget,pset)memcpy(12544,24576,128)memcpy(12800,24704,2176)ft=f end function fw(f,e,n)holdframe()I(e,n,_[4][f],mget,mset)end function fP(f)holdframe()I(0,0,_[5][f],pget,pset)memcpy(14976,24576,2176)end function ea(f)holdframe()I(32,72,_[6][f],sget,sset)end function I(i,e,f,r,t)local function c(f,o)local e,n=f[1],1while(e~=o)n+=1e,f[n]=f[n],e
-f[1]=o end local function a(e)local n=$f>>f%1*8<<32-e>>>16-e f+=e>>3return n end local function f(e)local f=0repeat f+=1local n=a(f)e+=n until n<(1<<f)-1return e end local b,u,s,n,l,o,d=f"0",f"0",f"1",{},{},0for f=1,f"1"do add(n,a(s))end for a=e,e+u do for i=i,i+b do o-=1if(o<1)o,d=f"1",not d
-local o=a>e and r(i,a-1)or 0local e=l[o]or{unpack(n)}l[o]=e local f=e[d and 1or f"2"]c(e,f)c(n,f)t(i,a,f)end end end function ec()local f={}f.obj_list,f.player,f.g_p_zap_turn,f.g_tile_count,f.playfield=fB(m),fB(m[1]),F,P,el()add(G,f)if(count(G)>60)deli(G,1)
-end function er()local e=count(G)if(e==0)return
-local f=G[e]if(e>1)deli(G)
-m=f.obj_list m[1]=f.player F,P=f.g_p_zap_turn,f.g_tile_count local e=m[1]e.nextdir,e.isdead,e.ismove,k,Z,K=-1,false,false,false,true,true et(f.playfield)end function el()local f={}for e=0,34do f[e]={}for n=0,31do f[e][n]=mget(e,n)end end return f end function et(n)for f=0,34do for e=0,31do mset(f,e,n[f][e])end end end function fB(e)local f={}for e,n in pairs(e)do f[e]=n end return f end function i(n,f,o,e)return tonum(sub(n,f,f+(e and e or 0)),o)end function C(d,f)local e,o,n={},#d\f for o=1,o do e[o]={}n=(o-1)*f for f=1,f do n+=1add(e[o],i(d,n,1,0))end end return e end function p(f,e,n)return f+(e-f)*n end function z(n,o,d,a)for f=0,1do for e=0,1do mset(d+f,a+e,mget(n+f,o+e))end end end function Q(o,d,f,e)local e,n,a,i,c,l,f=c.s_width<<1,c.s_height<<1,48+f\16<<1,f%16<<1,48+e\16<<1,e%16<<1for e=1,e,2do for n=1,n,2do f=mget(e+1,n)if f==o then z(c,l,e,n)elseif f==d then z(a,i,e,n)end end end end function R(f,e)local n=mget(f,e)if(n~=125and n~=127)return 0
-z(126,24,f-1,e)return 1+R(f-2,e)+R(f+2,e)+R(f,e-2)+R(f,e+2)end function fc(e,n,o,d,a)local f=#e for f=1,f do n=print(sub(e,f,f),n,o+sin(f2+f/10)*a,d)end end function w(f,e,n,o,d)?f,e+1,n+1,d
-return print(f,e,n,o)end function fC(f)return(f>=60and flr(f/60)..":"or"")..sub(flr(f%60)+100,2,3).."."..sub(flr(f%1*1000)+1000,2,4)end function e2()local f=j*o==1fe+=.075fe%=1f6+=.015f6%=1if(g==45and f8==false)music(y(5)and 0or-1,0,7)f8=true
+music(-1)holdframe()I(0,0,_[3][f],pget,pset)memcpy(12544,24576,128)memcpy(12800,24704,2176)ft=f end function fw(f,n,e)holdframe()I(n,e,_[4][f],mget,mset)end function fP(f)holdframe()I(0,0,_[5][f],pget,pset)memcpy(14976,24576,2176)end function nd(f)holdframe()I(32,72,_[6][f],sget,sset)end function I(i,n,f,r,t)local function c(f,o)local n,e=f[1],1while(n~=o)e+=1n,f[e]=f[e],n
+f[1]=o end local function d(n)local e=$f>>f%1*8<<32-n>>>16-n f+=n>>3return e end local function f(n)local f=0repeat f+=1local e=d(f)n+=e until e<(1<<f)-1return n end local b,u,s,e,l,o,a=f"0",f"0",f"1",{},{},0for f=1,f"1"do add(e,d(s))end for d=n,n+u do for i=i,i+b do o-=1if(o<1)o,a=f"1",not a
+local o=d>n and r(i,d-1)or 0local n=l[o]or{unpack(e)}l[o]=n local f=n[a and 1or f"2"]c(n,f)c(e,f)t(i,d,f)end end end function nc()local f={}f.obj_list,f.player,f.g_p_zap_turn,f.g_tile_count,f.playfield=fB(y),fB(y[1]),F,P,nl()add(G,f)if(count(G)>60)deli(G,1)
+end function nr()local n=count(G)if(n==0)return
+local f=G[n]if(n>1)deli(G)
+y=f.obj_list y[1]=f.player F,P=f.g_p_zap_turn,f.g_tile_count local n=y[1]n.nextdir,n.isdead,n.ismove,z,Z,K=-1,false,false,false,true,true nt(f.playfield)end function nl()local f={}for n=0,34do f[n]={}for e=0,31do f[n][e]=mget(n,e)end end return f end function nt(e)for f=0,34do for n=0,31do mset(f,n,e[f][n])end end end function fB(n)local f={}for n,e in pairs(n)do f[n]=e end return f end function i(e,f,o,n)return tonum(sub(e,f,f+(n and n or 0)),o)end function C(a,f)local n,o,e={},#a\f for o=1,o do n[o]={}e=(o-1)*f for f=1,f do e+=1add(n[o],i(a,e,1,0))end end return n end function p(f,n,e)return f+(n-f)*e end function k(e,o,a,d)for f=0,1do for n=0,1do mset(a+f,d+n,mget(e+f,o+n))end end end function Q(o,a,f,n)local n,e,d,i,c,l,f=c.s_width<<1,c.s_height<<1,48+f\16<<1,f%16<<1,48+n\16<<1,n%16<<1for n=1,n,2do for e=1,e,2do f=mget(n+1,e)if f==o then k(c,l,n,e)elseif f==a then k(d,i,n,e)end end end end function R(f,n)local e=mget(f,n)if(e~=125and e~=127)return 0
+k(126,24,f-1,n)return 1+R(f-2,n)+R(f+2,n)+R(f,n-2)+R(f,n+2)end function fc(n,e,o,a,d)local f=#n for f=1,f do e=print(sub(n,f,f),e,o+sin(f2+f/10)*d,a)end end function w(f,n,e,o,a)?f,n+1,e+1,a
+return print(f,n,e,o)end function fC(f)return(f>=60and flr(f/60)..":"or"")..sub(flr(f%60)+100,2,3).."."..sub(flr(f%1*1000)+1000,2,4)end function n2()local f=j*o==1fn+=.075fn%=1fa+=.015fa%=1if(g==45and fo==false)music(m(5)and 0or-1,0,7)fo=true
 if g<=45and f then if(btn(6))poke(24368,1)
-if((Y and l or btn(6))and count(a)==0)eb()
-end O=mid(0,count(a)==0and(l or k)and O+.2or O-.2,1)if(f)for f in all(m)do f:onstep()end e7()
-local f,e,n=m[1],c.s_width<<4,c.s_height<<4local o=f.inportal and cos(1-f.anim>>2)or f.anim W=c.s_width>8and mid(0,(p(f.oldx,f.x,o)<<4)-48,e-112)or(e>>1)-56X=c.s_height>7and mid(-8,(p(f.oldy,f.y,o)<<4)-48,n-108)or(n>>1)-60end function ee()poke(24405,0)if(fn)e9()else eu()
-if(K)es()
-if(Z)eh()
-ex()poke(24405,96)palt(0)local f,e=-32+n,-n if(D>=3)f,e=-32+-W/2,-32+-X/2
-for f=f,128,32do for e=e,128,32do spr(148,f,e,4,2)spr(152,f,e+16,4,2)end end poke(24404,96)pal()if(D<=2)for f=0,127do sspr(0,f,128,1,sin(f6+(f>>4))*1.4,f)end
-poke(24404,0)camera(W,X)local f,e=c.s_width*2+2,c.s_height*2+2palt(256)map(0,0,0,0,f,e,1)fD()map(0,0,-7,0,f,e,128)fD()for f in all(fa[f0])do f:ondraw()end palt(16384)map(0,0,0,0,f,e,12)palt()map(0,0,0,0,f,e,2)for f in all(m)do f:ondraw()end em()camera(0,0)local o,d=y(1),count(a)local f,e=p(127,115,O),o and 0or 87poke(24404,96)pal(f9[1])if d>0then sspr(0,0,128,128,0,0)else sspr(e,0,128,9,e,0)if(O>0)sspr(0,f,128,16,0,f)
-end pal()poke(24404,0)local e=B<=c.s_goaltime and 7or 13if(l and B<=c.s_devtime)e=10
-local n=dget(c.s_saveslot)spr(n<599.995and 147or 146,88,0)if o then?fC(B),2,2,e
-if(f_)fc("new time!",32,2,e,1.3)
-if(n<=c.s_goaltime)?"⧗",81,2,9
-if(n<=c.s_devtime)?"♥",75,2,14
-end rect(96,1,126,7,7)fillp(fb[ceil(T)])rectfill(124-max(1,m[1].tilestouched/P*26),3,124,5,59)fillp()if(l or k)fc(l and"stage clear!"or"❎ undo",l and 42or 50,f+5,7,1.3)
-if(d==1)local f=sin(a[1].m_anim_factor>>2)*-32+-24local e=w("stage "..L,f,106,7,0)line(f-2,112,f+e,112,7)w(c.s_name,f,115,7,0)w(c.s_author,f,122,13,0)
-end function e9()local f="0c38010f00380438080f05380038010f0438113b0f01707f113c0f08113b707f0f0111432438010f00382538080f24380038010f2c3831430f01707f313b0f08313c707f0f01313b"for e=1,144,12do sspr(i(f,e,1,1),i(f,e+2,1,1),i(f,e+4,1,1),i(f,e+6,1,1),i(f,e+8,1,1),i(f,e+10,1,1))end line(112,127,127,127,7)line(0,56,0,71,0)end function eu()local d,e,f,n,o=fF,0,0,false,false for e=0,10do f,n,o=21+e,d&1<<e>0,d&8<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,92,n and 9or 4)sset(f,90,d&32<<e>0and 10or 9)sset(f,88,o and 10or 0)end for e=0,4do f,n,o=8+e,d&16<<e>0,d&64<<e>0sset(f,98,n and 7or 12)sset(f,96,o and 7or 0)sset(f,90,n and 10or 9)sset(f,88,o and 10or 0)end for a=0,7do f,n,o=103-a,95-a,88+a e=d&1<<a>0and 7or 12sset(f,101,e)sset(50,103-a,e)sset(78,96+a,e)e=d&1<<a>0and 9or 4sset(f,91,e)sset(52,n,e)sset(76,o,e)e=d&4<<a>0and 9or 10sset(f,93,e)sset(50,n,e)sset(78,o,e)end fF>><=1end function ex()local o=fe spr(224,80,104,6,2)local f,n=80for d=0,32,16do clip(f,104,16,16)for e=0,15do n=sin(o+e/8)+104sspr(d+e,112,1,16,f+e,n)sspr(f,104+e,16,1,f,n+e)end f+=16end local e=m[1]clip()palt(0,false)spr(208,24,104,3,1)palt()if(e.haskey)spr(144,32,104)spr(144,39,104,1,1,true)
-for n=0,16,8do f=24+n clip(f,104,8,8)for e=0,7do sspr(e+n,104,1,8,f+sin(o+e/8)+e,104)end end clip()if(e.haskey)spr(145,32,104)spr(145,39,104,1,1,true)
-local e,n,f=(btn(4)or e.sprint)and e.onconvey==false,e.blink<4or l f=e and 214or 215if(n or k)f=216
-spr(f,l and 37or 36,104,1,1,l)f=e and 252or 251if(k)f=160
+if((Y and l or btn(6))and count(d)==0)n7()
+end O=mid(0,count(d)==0and(l or z)and O+.2or O-.2,1)if(f)for f in all(y)do f:onstep()end nb()
+local f,n,e=y[1],c.s_width<<4,c.s_height<<4local o=f.inportal and cos(1-f.anim>>2)or f.anim W=c.s_width>8and mid(0,(p(f.oldx,f.x,o)<<4)-48,n-112)or(n>>1)-56X=c.s_height>7and mid(-8,(p(f.oldy,f.y,o)<<4)-48,e-108)or(e>>1)-60end function nn()poke(24405,0)if(fe)n9()else nu()
+if(K)ns()
+if(Z)nh()
+nx()poke(24405,96)palt(0)local f,n=-32+e,-e if(D>=3)f,n=-32+-W/2,-32+-X/2
+for f=f,128,32do for n=n,128,32do spr(148,f,n,4,2)spr(152,f,n+16,4,2)end end poke(24404,96)pal()if(D<=2)for f=0,127do sspr(0,f,128,1,sin(fa+(f>>4))*1.4,f)end
+poke(24404,0)camera(W,X)local f,n=c.s_width*2+2,c.s_height*2+2palt(256)map(0,0,0,0,f,n,1)fD()map(0,0,-7,0,f,n,128)fD()for f in all(fd[f0])do f:ondraw()end palt(16384)map(0,0,0,0,f,n,12)palt()map(0,0,0,0,f,n,2)for f in all(y)do f:ondraw()end ny()camera(0,0)local o,a=m(1),count(d)local f,n=p(127,115,O),o and 0or 87poke(24404,96)pal(f9[1])if a>0then sspr(0,0,128,128,0,0)else sspr(n,0,128,9,n,0)if(O>0)sspr(0,f,128,16,0,f)
+end pal()poke(24404,0)local n=B<=c.s_goaltime and 7or 13if(l and B<=c.s_devtime)n=10
+local e=dget(c.s_saveslot)spr(e<599.995and 147or 146,88,0)if o then?fC(B),2,2,n
+if(f_)fc("new time!",32,2,n,1.3)
+if(e<=c.s_goaltime)?"⧗",81,2,9
+if(e<=c.s_devtime)?"♥",75,2,14
+end rect(96,1,126,7,7)fillp(f7[ceil(T)])rectfill(124-max(1,y[1].tilestouched/P*26),3,124,5,59)fillp()if(l or z)fc(l and"stage clear!"or"❎ undo",l and 42or 50,f+5,7,1.3)
+if(a==1)local f=sin(d[1].m_anim_factor>>2)*-32+-24local n=w("stage "..L,f,106,7,0)line(f-2,112,f+n,112,7)w(c.s_name,f,115,7,0)w(c.s_author,f,122,13,0)
+end function n9()local f="0c38010f00380438080f05380038010f0438113b0f01707f113c0f08113b707f0f0111432438010f00382538080f24380038010f2c3831430f01707f313b0f08313c707f0f01313b"for n=1,144,12do sspr(i(f,n,1,1),i(f,n+2,1,1),i(f,n+4,1,1),i(f,n+6,1,1),i(f,n+8,1,1),i(f,n+10,1,1))end line(112,127,127,127,7)line(0,56,0,71,0)end function nu()local a,n,f,e,o=fF,0,0,false,false for n=0,10do f,e,o=21+n,a&1<<n>0,a&8<<n>0sset(f,98,e and 7or 12)sset(f,96,o and 7or 0)sset(f,92,e and 9or 4)sset(f,90,a&32<<n>0and 10or 9)sset(f,88,o and 10or 0)end for n=0,4do f,e,o=8+n,a&16<<n>0,a&64<<n>0sset(f,98,e and 7or 12)sset(f,96,o and 7or 0)sset(f,90,e and 10or 9)sset(f,88,o and 10or 0)end for d=0,7do f,e,o=103-d,95-d,88+d n=a&1<<d>0and 7or 12sset(f,101,n)sset(50,103-d,n)sset(78,96+d,n)n=a&1<<d>0and 9or 4sset(f,91,n)sset(52,e,n)sset(76,o,n)n=a&4<<d>0and 9or 10sset(f,93,n)sset(50,e,n)sset(78,o,n)end fF>><=1end function nx()local o=fn spr(224,80,104,6,2)local f,e=80for a=0,32,16do clip(f,104,16,16)for n=0,15do e=sin(o+n/8)+104sspr(a+n,112,1,16,f+n,e)sspr(f,104+n,16,1,f,e+n)end f+=16end local n=y[1]clip()palt(0,false)spr(208,24,104,3,1)palt()if(n.haskey)spr(144,32,104)spr(144,39,104,1,1,true)
+for e=0,16,8do f=24+e clip(f,104,8,8)for n=0,7do sspr(n+e,104,1,8,f+sin(o+n/8)+n,104)end end clip()if(n.haskey)spr(145,32,104)spr(145,39,104,1,1,true)
+local n,e,f=(btn(4)or n.sprint)and n.onconvey==false,n.blink<4or l f=n and 214or 215if(e or z)f=216
+spr(f,l and 37or 36,104,1,1,l)f=n and 252or 251if(z)f=160
 if(l)f=250
-spr(f,40,104)for f=0,23do for e=0,7do sset(79-e,104+f,sget(24+f,104+e))end end end function es()ey={{1,13,5,12,13,12},{1,2,5,8,4,8},{1,4,5,9,4,9}}local f,n,o for e=1,3do o=0n,f=((e+F+2+o)%3<<1)+1,ey[e]pal(f[3],f[n])pal(f[4],f[n+1])spr(155+e,96+(e<<3),8,1,2)end pal()K=false end function fD()poke(24405,0)camera(0,0)local f,e for n=0,34do f,e=(n<<3)%128,(n\16<<4)+8sspr(f,e,8,16,f,e,8,16,true)end camera(W,X)poke(24405,96)end function eh()local d,e,o,f=m[1].coins for n=0,1do e,o=4,5if(d>n)e,o=9,4
-f=17-n*3for n=0,8,8do line(72+n,f,76+n,f,e)line(72+n,f-1,75+n,f-1,e)f+=1e=o end end Z=false end function e5(e)local f={type=i(e,1,1),x=i(e,2,1),y=i(e,3,1),spr=i(e,4,1,1),anim=rnd(),spin=rnd()}f.poskey=f.x<<4|f.y if f.type==0then f.startx,f.starty,f.poskey,f.dir,f.anim,f.jiggle,f.sprint,f.pstate,f.ismove,f.oldx,f.oldy,f.startturnx,f.startturny,f.haskey,f.onconvey,f.inportal,f.blink,f.octogems,f.coins,f.nextdir,f.tilestouched,f.isdead,f.prevslimetrap,f.prevcrackedfloor=f.x,f.y,-1,3,1,0,false,0,false,f.x,f.y,f.x,f.y,false,false,false,10,0,0,-1,1,false,false,false f.onstep=eg f.ondraw=ep else if(f.type==5)f.oct_ind=f.spr f.spr=87
-if(f.type==10)f.dst_x,f.dst_y=i(e,4,1),i(e,5,1)
+spr(f,40,104)for f=0,23do for n=0,7do sset(79-n,104+f,sget(24+f,104+n))end end end function ns()nm={{1,13,5,12,13,12},{1,2,5,8,4,8},{1,4,5,9,4,9}}local f,e,o for n=1,3do o=0e,f=((n+F+2+o)%3<<1)+1,nm[n]pal(f[3],f[e])pal(f[4],f[e+1])spr(155+n,96+(n<<3),8,1,2)end pal()K=false end function fD()poke(24405,0)camera(0,0)local f,n for e=0,34do f,n=(e<<3)%128,(e\16<<4)+8sspr(f,n,8,16,f,n,8,16,true)end camera(W,X)poke(24405,96)end function nh()local a,n,o,f=y[1].coins for e=0,1do n,o=4,5if(a>e)n,o=9,4
+f=17-e*3for e=0,8,8do line(72+e,f,76+e,f,n)line(72+e,f-1,75+e,f-1,n)f+=1n=o end end Z=false end function n6(n)local f={type=i(n,1,1),x=i(n,2,1),y=i(n,3,1),spr=i(n,4,1,1),anim=rnd(),spin=rnd()}f.poskey=f.x<<4|f.y if f.type==0then f.startx,f.starty,f.poskey,f.dir,f.anim,f.jiggle,f.sprint,f.pstate,f.ismove,f.oldx,f.oldy,f.startturnx,f.startturny,f.haskey,f.onconvey,f.inportal,f.blink,f.octogems,f.coins,f.nextdir,f.tilestouched,f.isdead,f.prevslimetrap,f.prevcrackedfloor=f.x,f.y,-1,3,1,0,false,0,false,f.x,f.y,f.x,f.y,false,false,false,10,0,0,-1,1,false,false,false f.onstep=ng f.ondraw=np else if(f.type==5)f.oct_ind=f.spr f.spr=87
+if(f.type==10)f.dst_x,f.dst_y=i(n,4,1),i(n,5,1)
 function f:onstep()if(self.type<10)self.anim+=.02self.anim%=1self.spin+=.035self.spin%=1
-end function f:ondraw()local f,e=(self.x<<4)+8,self.y<<4if self.type<9then if self.oct_ind==nil or self.oct_ind==m[1].octogems then local e,o,d,n=e+sin(self.anim)*2,self.spr%16<<3,self.spr\16<<3,ceil(sin(self.spin*.5)*-8)if(n<=3)rectfill(f+7,e+1,f+9,e+14,7)
-sspr(o,d,8,16,f+9-n,e,n,16)sspr(o,d,8,16,f+8,e,n,16,true)end elseif self.type<10then spr(self.spr,f+4,e+sin(self.anim)*2,1,2)end end end return f end function eg(f)if(not y(6)or count(a)>0)return
+end function f:ondraw()local f,n=(self.x<<4)+8,self.y<<4if self.type<9then if self.oct_ind==nil or self.oct_ind==y[1].octogems then local n,o,a,e=n+sin(self.anim)*2,self.spr%16<<3,self.spr\16<<3,ceil(sin(self.spin*.5)*-8)if(e<=3)rectfill(f+7,n+1,f+9,n+14,7)
+sspr(o,a,8,16,f+9-e,n,e,16)sspr(o,a,8,16,f+8,n,e,16,true)end elseif self.type<10then spr(self.spr,f+4,n+sin(self.anim)*2,1,2)end end end return f end function ng(f)if(not m(6)or count(d)>0)return
 f.blink-=1if(f.blink<=1)f.blink=30+flr(rnd(60))
-Y=btn(4)and fd==false fd=btn(4)f.jiggle=max(f.jiggle-.2,0)if(btnp(5)and not l)er()
-f.anim=min(f.anim+((f.sprint or f.onconvey or f.inportal)and.2or.1111),1)if f.anim>=.65then local n={2,0,1,3}for e=0,3do if(btn(e))f.nextdir=n[e+1]
-end end if f.anim+.001>=1and not l and not k then if(f.ismove)ew(f)
+Y=btn(4)and f5==false f5=btn(4)f.jiggle=max(f.jiggle-.2,0)if(btnp(5)and not l)nr()
+f.anim=min(f.anim+((f.sprint or f.onconvey or f.inportal)and.2or.1111),1)if f.anim>=.65then local e={2,0,1,3}for n=0,3do if(btn(n))f.nextdir=e[n+1]
+end end if f.anim+.001>=1and not l and not z then if(f.ismove)nw(f)
 if(Y)f.jiggle=1
-f.sprint=false local e=f.nextdir if e~=-1or f.inportal then if(f.inportal)e=-1
-local o,d,a,i=f.inportal,16,f.x+cos(e>>2),f.y+sin(e>>2)if(f.onconvey or y(2))d=18
-local n=mget((a<<1)+2,(i<<1)+1)if(n==121and f.pstate==1or n==51and f.haskey or fget(n)&d>0)o=true
-f.nextdir,f.dir=-1,e if o and not k then fj=true if(h==nil and stat(49)==-1and not f.onconvey)h=x.p_move
-if(not f.inportal and not f.onconvey)f.startturnx,f.startturny=f.x,f.y ec()F+=1F%=3K=true
-f.anim,f.sprint,f.ismove=0,tonum(y(3))~tonum(btn(4))==1,true if(f.inportal==false)f.oldx,f.oldy=f.x,f.y
-if(e>=0)f.x,f.y=a,i
+f.sprint=false local n=f.nextdir if n~=-1or f.inportal then if(f.inportal)n=-1
+local o,a,d,i=f.inportal,16,f.x+cos(n>>2),f.y+sin(n>>2)if(f.onconvey or m(2))a=18
+local e=mget((d<<1)+2,(i<<1)+1)if(e==121and f.pstate==1or e==51and f.haskey or fget(e)&a>0)o=true
+f.nextdir,f.dir=-1,n if o and not z then fj=true if(h==nil and stat(49)==-1and not f.onconvey)h=x.p_move
+if(not f.inportal and not f.onconvey)f.startturnx,f.startturny=f.x,f.y nc()F+=1F%=3K=true
+f.anim,f.sprint,f.ismove=0,tonum(m(3))~tonum(btn(4))==1,true if(f.inportal==false)f.oldx,f.oldy=f.x,f.y
+if(n>=0)f.x,f.y=d,i
 end end end if l==false and f.tilestouched>=P then l=true h=x.p_win if(B<dget(c.s_saveslot))dset(c.s_saveslot,B)f_=true
 end if(l)f.dir=3
-if(fj and not l)B=min(B+(time()-fo),599.999)
-end function ew(f)f.ismove=false local n,o,a,i,t,b=f.x,f.y,(f.oldx<<1)+2,(f.oldy<<1)+1,true,true if(f.prevcrackedfloor)z(96,18,a-1,i)P-=R(a,i)f.tilestouched-=1h=x.pit_o f.prevcrackedfloor=false
-local e,s,u,c,l,r,d=mget((n<<1)+2,(o<<1)+1),mget(a,i),n<<4|o,(n<<1)+1,(o<<1)+1if(e\16==12and f.pstate==2)e=123
-if(e==52)Q(19,20,3,4)h,d=x.t_switch,{7,8,14}
-if(e==53)Q(21,22,35,36)h,d=x.t_switch,{7,3,11}
-if(e==54)Q(23,24,67,68)h,d=x.t_switch,{7,13,12}
-if e==55then f.coins+=1h,d=x.t_coin,{4,9,10}if(f.coins==3)f.coins,h=0,x.t_switch Q(25,26,99,100)
-Z=true end if(f.prevslimetrap)z(126,26,a-1,i)h=x.s_trap
-f.prevslimetrap=e==48for d=0,2do if(e==80+d)fE((n<<4)+12,(o<<4)+12,fs[d+1])f.pstate,h=d,x.p_state[d+1]
-end for n=0,7do if(e==56+n and f.octogems==n)f.octogems+=1h=x.octo[n+1]
+if(fj and not l)B=min(B+(time()-f8),599.999)
+end function nw(f)f.ismove=false local e,o,d,i,t,b=f.x,f.y,(f.oldx<<1)+2,(f.oldy<<1)+1,true,true if(f.prevcrackedfloor)k(96,18,d-1,i)P-=R(d,i)f.tilestouched-=1h=x.pit_o f.prevcrackedfloor=false
+local n,s,u,c,l,r,a=mget((e<<1)+2,(o<<1)+1),mget(d,i),e<<4|o,(e<<1)+1,(o<<1)+1if(n\16==12and f.pstate==2)n=123
+if(n==52)Q(19,20,3,4)h,a=x.t_switch,{7,8,14}
+if(n==53)Q(21,22,35,36)h,a=x.t_switch,{7,3,11}
+if(n==54)Q(23,24,67,68)h,a=x.t_switch,{7,13,12}
+if n==55then f.coins+=1h,a=x.t_coin,{4,9,10}if(f.coins==3)f.coins,h=0,x.t_switch Q(25,26,99,100)
+Z=true end if(f.prevslimetrap)k(126,26,d-1,i)h=x.s_trap
+f.prevslimetrap=n==48for a=0,2do if(n==80+a)fE((e<<4)+12,(o<<4)+12,fs[a+1])f.pstate,h=a,x.p_state[a+1]
+end for e=0,7do if(n==56+e and f.octogems==e)f.octogems+=1h=x.octo[e+1]
 end if(f.octogems==8)Q(27,28,74,106)f.octogems=0
-if(e==18)if(f.haskey)t=false else f.haskey=true
-if(e==51)f.haskey=false
-if(e==125or e==127)f.prevcrackedfloor=true h=x.pit_t
-local a=-1for f=0,3do if(e==113+(f<<1))a=f
-end if(e==123)a=f.dir
-if(a~=-1)f.nextdir=a
-f.onconvey=a~=-1for e,f in pairs(m)do if f.poskey==u then r=f if(t)deli(m,e)
-break end end if f.inportal then f.inportal=false else for d=0,6,2do if(e==89+d)z(126,f.pstate<<1,c,l)f.oldx,f.oldy,f.inportal,h,f.x,f.y=n,o,true,x.p_portal,r.dst_x,r.dst_y
-end end if(e==123and f.pstate==1)e=192z(104,18,c,l)
-if(e>208)fG(f)b=false
-if e\16==11and f.pstate==0or e\16==12or e==50or e==29and F==0or e==30and F==1or e==31and F==2then fG(f,true)elseif b then f.tilestouched+=1z(126,f.pstate<<1,c,l)end if(d~=nil)fH((n<<4)+12,(o<<4)+8,d)
-end function fG(f,e)k=true if(e)h=x.p_hurt f.isdead=true fE((f.x<<4)+12,(f.y<<4)+12,fs[f.pstate+1])
-end function ep(f)if(f.isdead or f.inportal or not y(6))return
-local a,e,n,o,d=f.dir,f.x<<4,f.y<<4,f.anim if(f.pstate==1)pal(3,8)pal(11,9)
+if(n==18)if(f.haskey)t=false else f.haskey=true
+if(n==51)f.haskey=false
+if(n==125or n==127)f.prevcrackedfloor=true h=x.pit_t
+local d=-1for f=0,3do if(n==113+(f<<1))d=f
+end if(n==123)d=f.dir
+if(d~=-1)f.nextdir=d
+f.onconvey=d~=-1for n,f in pairs(y)do if f.poskey==u then r=f if(t)deli(y,n)
+break end end if f.inportal then f.inportal=false else for a=0,6,2do if(n==89+a)k(126,f.pstate<<1,c,l)f.oldx,f.oldy,f.inportal,h,f.x,f.y=e,o,true,x.p_portal,r.dst_x,r.dst_y
+end end if(n==123and f.pstate==1)n=192k(104,18,c,l)
+if(n>208)fG(f)b=false
+if n\16==11and f.pstate==0or n\16==12or n==50or n==29and F==0or n==30and F==1or n==31and F==2then fG(f,true)elseif b then f.tilestouched+=1k(126,f.pstate<<1,c,l)end if(a~=nil)fH((e<<4)+12,(o<<4)+8,a)
+end function fG(f,n)z=true if(n)h=x.p_hurt f.isdead=true fE((f.x<<4)+12,(f.y<<4)+12,fs[f.pstate+1])
+end function np(f)if(f.isdead or f.inportal or not m(6))return
+local d,n,e,o,a=f.dir,f.x<<4,f.y<<4,f.anim if(f.pstate==1)pal(3,8)pal(11,9)
 if(f.pstate==2)pal(3,13)pal(11,6)
-if(o<1)d=f.onconvey and o or.5+cos(o*.5*sgn(o-.5))*-.5e,n=p(f.oldx<<4,f.x<<4,d),p(f.oldy<<4,f.y<<4,d)
-e+=(-1+rnd(3))*f.jiggle+8n+=(-1+rnd(3))*f.jiggle+8local o,d=cos(f.dir>>2)<0,sin(f.dir>>2)<0local a,i=o and e or e-8,d and n or n-8if(f.dir%2==0)spr(211,a,n+7,3,1,o)spr(211,a,n,3,1,o,true)else spr(217,e+1,i,1,3,false,d)spr(217,e+8,i,1,3,true,d)
-pal()end function fO()cartdata("cs_blobun_"..ei)if(dget(63)==0)dset(63,117)for f=0,59do dset(f,599.999)end dset(62,0x1.12)
-end function y(f)return dget(63)&1<<f>0end function ev(f,n)local f,e=1<<f,dget(63)dset(63,n and e|f or e&~f)end function fv()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function en(f,e)dset(62,dget(62)&~.9922|f>>7|e>>4)end function f4(e)local f=0for e in all(b[e])do if(dget(e.s_saveslot)<599.995)f+=1
-end return f end function fI(f)return f4(f)>=count(b[f])end function fq()local f=count(b)return f4(f)>=J[f][1]end function fl(f,e)for f in all(b[f])do if(dget(f.s_saveslot)>(e and f.s_devtime or f.s_goaltime))return false
-end return true end function f5()for f=1,count(b)do if(not fI(f))return false
-end return true end function H(f)for e=1,count(b)do if(not fl(e,f))return false
-end return true end function e0()cls(0)map(0,0,-24*u,32,19,2)map(0,2,u*2%1*-24,48,19,3)map(0,5,u*3%1*-24,72,19,7)palt(1024)local f=sin(u)*4map(19,0,12,8+f,13,7)if(not y(6))map(19,8,28,8+f,4,5)
+if(o<1)a=f.onconvey and o or.5+cos(o*.5*sgn(o-.5))*-.5n,e=p(f.oldx<<4,f.x<<4,a),p(f.oldy<<4,f.y<<4,a)
+n+=(-1+rnd(3))*f.jiggle+8e+=(-1+rnd(3))*f.jiggle+8local o,a=cos(f.dir>>2)<0,sin(f.dir>>2)<0local d,i=o and n or n-8,a and e or e-8if(f.dir%2==0)spr(211,d,e+7,3,1,o)spr(211,d,e,3,1,o,true)else spr(217,n+1,i,1,3,false,a)spr(217,n+8,i,1,3,true,a)
+pal()end function fO()cartdata("cs_blobun_"..ni)if(dget(63)==0)dset(63,117)for f=0,59do dset(f,599.999)end dset(62,0x1.12)
+end function m(f)return dget(63)&1<<f>0end function nv(f,e)local f,n=1<<f,dget(63)dset(63,e and n|f or n&~f)end function fv()return{stage=dget(62)<<4&15,world=dget(62)<<7&7}end function ne(f,n)dset(62,dget(62)&~.9922|f>>7|n>>4)end function f3(n)local f=0for n in all(b[n])do if(dget(n.s_saveslot)<599.995)f+=1
+end return f end function fI(f)return f3(f)>=count(b[f])end function fq()local f=count(b)return f3(f)>=J[f][1]end function fl(f,n)for f in all(b[f])do if(dget(f.s_saveslot)>(n and f.s_devtime or f.s_goaltime))return false
+end return true end function f6()for f=1,count(b)do if(not fI(f))return false
+end return true end function H(f)for n=1,count(b)do if(not fl(n,f))return false
+end return true end function n0()cls(0)map(0,0,-24*u,32,19,2)map(0,2,u*2%1*-24,48,19,3)map(0,5,u*3%1*-24,72,19,7)palt(1024)local f=sin(u)*4map(19,0,12,8+f,13,7)if(not m(6))map(19,8,28,8+f,4,5)
 ?"2025 cyansorcery",32,122,3
-palt()pal(7,1)if(f5())spr(241,1,119)
-if y(1)then if(H(false))?"⧗",113,122,7
+palt()pal(7,1)if(f6())spr(241,1,119)
+if m(1)then if(H(false))?"⧗",113,122,7
 if(H(true))?"♥",120,122,7
-end pal()if(count(a)==0and q==nil)fc("press 🅾️ to start!",28,96,1,1.4)
-end function fZ()local e=j*o local f=e*8cls(1)rectfill(0,56,127,72,12)map(0,12,-24*u,56-f,19,1)map(0,13,-24+24*u,64+f,19,1)local f=f*.5?"presented by",39,60-f,1
-if(y(6))map(19,7,18,60+f,11,1)
-palt()fillp(f7[flr(p(1,4,e))])rectfill(0,56,127,72,12)fillp()end function fz()if(j*o==1and btnp()&48>0)s(0)
-end function fk()for f=-32+n,128,32do for e=-n,128,32do spr(204,f,e,4,4)end end poke(24404,96)pal(f9[1])if(M==nil)sspr(0,58,128,70,0,58)sspr(0,7,128,18,0,7)sspr(39,38,52,20,39,38)else sspr(0,0,128,128,0,0)
-pal()poke(24404,0)palt(4096)if(M==nil)map(48,0,0,0,16,16)local n={{"programming","bug fixes","general"},{"art, music","art, music","music"}}for f=1,2do for e=1,3do w(n[f][e],f*64-46,e*24+42,7,1)end end w("director",58,42,7,1)w("created by",44,1,7,1)w("a plural system",34,26,7,1)w("seven spirits, one body",18,32,7,1)else map(32,8+M*2,0,32,16,2)local f={[[ you've overcome many
+end pal()if(count(d)==0and q==nil)fc("press 🅾️ to start!",28,96,1,1.4)
+end function fZ()local n=j*o local f=n*8cls(1)rectfill(0,56,127,72,12)map(0,12,-24*u,56-f,19,1)map(0,13,-24+24*u,64+f,19,1)local f=f*.5?"presented by",39,60-f,1
+if(m(6))map(19,7,18,60+f,11,1)
+palt()fillp(fb[flr(p(1,4,n))])rectfill(0,56,127,72,12)fillp()end function fk()if(j*o==1and btnp()&48>0)s(0)
+end function fz()for f=-32+e,128,32do for n=-e,128,32do spr(204,f,n,4,4)end end poke(24404,96)pal(f9[1])if(M==nil)sspr(0,58,128,70,0,58)sspr(0,7,128,18,0,7)sspr(39,38,52,20,39,38)else sspr(0,0,128,128,0,0)
+pal()poke(24404,0)palt(4096)if(M==nil)map(48,0,0,0,16,16)local e={{"programming","bug fixes","general"},{"art, music","art, music","music"}}for f=1,2do for n=1,3do w(e[f][n],f*64-46,n*24+42,7,1)end end w("director",58,42,7,1)w("created by",44,1,7,1)w("a plural system",34,26,7,1)w("seven spirits, one body",18,32,7,1)else map(32,8+M*2,0,32,16,2)local f={[[ you've overcome many
  challenges and are at
 the end of your journey!
 
@@ -134,52 +134,52 @@ for you. you're too good
     you are amazing!]]}w(f[M],16,56,7,0)
 end function fY()u+=.025u%=1if V>0then V-=1if(btnp()&48>0)V=0
 if(V==0)s(0)
-end end function e1()u+=.01u%=1if count(a)==0then local f=btn(6)if(f)poke(24368,1)
-if(btnp()&48>0or f)h=x.m_confirm ez()
-end end function e4()A=mid(0,A+E,1)u+=.02u%=1local f=count(b)if A==1then if(btnp(0)and r>1)h=x.m_sel N=max(r-1,1)E=-.125
-if(btnp(1)and r<count(b)and f4(r)>=J[r][1])h=x.m_sel N=min(r+1,f)E=-.125
+end end function n1()u+=.01u%=1if count(d)==0then local f=btn(6)if(f)poke(24368,1)
+if(btnp()&48>0or f)h=x.m_confirm nk()
+end end function n3()A=mid(0,A+E,1)u+=.02u%=1local f=count(b)if A==1then if(btnp(0)and r>1)h=x.m_sel N=max(r-1,1)E=-.125
+if(btnp(1)and r<count(b)and f3(r)>=J[r][1])h=x.m_sel N=min(r+1,f)E=-.125
 end if(A==0)E=.125r=N N=nil
-local f,e=count(b[r]),btn(6)if(e)poke(24368,1)
+local f,n=count(b[r]),btn(6)if(n)poke(24368,1)
 if(btnp(2))v-=1h=x.m_sel
 if(btnp(3))v+=1h=x.m_sel
 if(v<0)v=f
 if(v>f)v=0
-if btnp()&48>0or e then if(v==0)s(0)h=x.m_back else s(2,r,v)music(-1,500)h=x.m_confirm
-end end function e3()local o,f=ef,20+sin(A>>3)*29for f=1,4do pal(o[1][f],o[r][f])end rectfill(0,0,127,127,1)map(0,14,-24+24*u,-2-f,19,3)map(0,17,-24*u,115+f,19,2)map(32,-2+r*2,0,1-f,16,2)local f,e=122+f,J[r][1]if(r>1)?"⬅️previous area",1,f,7
-local n=f4(r)?n>=e and(r<count(b)and"next area➡️"or"")or"▶solve "..e-n,84,f,7
-local e=count(b[r])local d=max(min(v-5,e-9),-1)local n,a,c,i,l,f=13-d*10,d+10,y(1)for e=0,e do i,fJ=e==v,n+10if e>d and e<a then f=n+3local d=b[r][max(1,e)]local a=dget(d.s_saveslot)if(i)fK(4,n,90,fJ)
-pal(7,i and 7or o[r][2])if e>0then?(e>9and""or" ")..e.." "..d.s_name,15,f,7
-spr(a<=599.995and 241or 240,6,n+1)if c then if(a<=d.s_goaltime)?fC(a),96,f,7
-if(a<=d.s_devtime)?"♥",120,f,7
-end else?"back",27,f,7
-pal(7,10)if(fI(r))spr(241,6,n+1)
+if btnp()&48>0or n then if(v==0)s(0)h=x.m_back else s(2,r,v)music(-1,500)h=x.m_confirm
+end end function n4()local o,f=nf,20+sin(A>>3)*29for f=1,4do pal(o[1][f],o[r][f])end rectfill(0,0,127,127,1)map(0,14,-24+24*u,-2-f,19,3)map(0,17,-24*u,115+f,19,2)map(32,-2+r*2,0,1-f,16,2)local f,n=122+f,J[r][1]if(r>1)?"⬅️previous area",1,f,7
+local e=f3(r)?e>=n and(r<count(b)and"next area➡️"or"")or"▶solve "..n-e,84,f,7
+local n=count(b[r])local a=max(min(v-5,n-9),-1)local e,d,c,i,l,f=13-a*10,a+10,m(1)for n=0,n do i,fJ=n==v,e+10if n>a and n<d then f=e+3local a=b[r][max(1,n)]local d=dget(a.s_saveslot)if(i)fK(4,e,90,fJ)
+pal(7,i and 7or o[r][2])if n>0then?(n>9and""or" ")..n.." "..a.s_name,14,f,7
+spr(d<=599.995and 241or 240,6,e+1)if c then if(d<=a.s_goaltime)?fC(d),96,f,7
+if(d<=a.s_devtime)?"♥",120,f,7
+end else?"back",26,f,7
+pal(7,10)if(fI(r))spr(241,6,e+1)
 if c then if(fl(r,false))?"⧗",113,f,7
 if(fl(r,true))?"♥",120,f,7
-end end end n=fJ end if A<1then palt()if(E<0)pal(1,o[N][1])
-fillp(f7[flr(p(1,4,A))])if(E>0)rectfill(0,22,127,112,1)else rectfill(0,0,127,127,1)
-fillp()end pal()end function fr(e,n,o,f)add(a,{m_x=e,m_y=n,m_w=o,m_h=count(f)*10+6,m_items=f,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(f,n)local e=count(a)local n,o,d=n==e,btn(6),count(f.m_items)if(o)poke(24368,1)
+end end end e=fJ end if A<1then palt()if(E<0)pal(1,o[N][1])
+fillp(fb[flr(p(1,4,A))])if(E>0)rectfill(0,22,127,112,1)else rectfill(0,0,127,127,1)
+fillp()end pal()end function fr(n,e,o,f)add(d,{m_x=n,m_y=e,m_w=o,m_h=count(f)*10+6,m_items=f,m_highlight=1,m_anim_incr=.25,m_anim_factor=0,m_step=function(f,e)local n=count(d)local e,o,a=e==n,btn(6),count(f.m_items)if(o)poke(24368,1)
 if f.m_anim_factor==1then if(btnp(2))f.m_highlight-=1h=x.m_sel
 if(btnp(3))f.m_highlight+=1h=x.m_sel
-if(f.m_highlight<1)f.m_highlight=d
-if(f.m_highlight>d)f.m_highlight=1
+if(f.m_highlight<1)f.m_highlight=a
+if(f.m_highlight>a)f.m_highlight=1
 if(btnp(5)or btnp(4)or o)h=x.m_confirm f.m_items[f.m_highlight]:i_onclick()
-end local o=true if(n and e>1and a[e-1].m_anim_factor>0)o=false
-if(o)f.m_anim_factor=mid(0,f.m_anim_factor+(n and f.m_anim_incr or-.25),1)
-if(f.m_anim_factor==0and f.m_anim_incr<0)deli(a)
-end,m_draw=function(f,n)palt()local e=count(a)local n=n==e if(n and e>1and a[e-1].m_anim_factor>0)return false
-local e,b,o=count(f.m_items),count(m)>0and 147or 241,p(5,f.m_h,f.m_anim_factor)local n,e,d=f.m_x,f.m_y-(o>>1)local o,a,c,l,r,t=n+f.m_w,e+o rectfill(n,e,o,a,1)rect(n+1,e+1,o-1,a-1,13)local u,e=n+8,e+6for s,i in pairs(f.m_items)do if e<a-9then c,l,r,t=n+3,e-3,o-3,e+7d=s==f.m_highlight if(d)fK(c,l,r,t)
-pal(7,d and 7or 13)?i.i_label,u,e,7
-if(i.i_setting~=nil)spr(b-(y(i.i_setting)and 0or 1),o-11,e-2)
-end e+=10end pal()end})end function fm()for f in all(a)do f.m_anim_incr=-.25end end function fL()h=x.m_back a[count(a)].m_anim_incr=-.25end function d(f,e)return{i_label=f,i_onclick=e,i_setting=nil}end function f(f,e)local f=d(f,function(f)ev(f.i_setting,y(f.i_setting)==false)if(f.i_setting==5)music(y(5)and 0or-1,0,7)
-end)f.i_setting=e return f end function eb()Y,fd,h=false,false,x.m_confirm local f if(not eo and fq())f=1
-if(not e8 and f5())f=2
-if(not e6 and H(false))f=3
-if(not ed and H(true))f=4
+end local o=true if(e and n>1and d[n-1].m_anim_factor>0)o=false
+if(o)f.m_anim_factor=mid(0,f.m_anim_factor+(e and f.m_anim_incr or-.25),1)
+if(f.m_anim_factor==0and f.m_anim_incr<0)deli(d)
+end,m_draw=function(f,e)palt()local n=count(d)local e=e==n if(e and n>1and d[n-1].m_anim_factor>0)return false
+local n,b,o=count(f.m_items),count(y)>0and 147or 241,p(5,f.m_h,f.m_anim_factor)local e,n,a=f.m_x,f.m_y-(o>>1)local o,d,c,l,r,t=e+f.m_w,n+o rectfill(e,n,o,d,1)rect(e+1,n+1,o-1,d-1,13)local u,n=e+8,n+6for s,i in pairs(f.m_items)do if n<d-9then c,l,r,t=e+3,n-3,o-3,n+7a=s==f.m_highlight if(a)fK(c,l,r,t)
+pal(7,a and 7or 13)?i.i_label,u,n,7
+if(i.i_setting~=nil)spr(b-(m(i.i_setting)and 0or 1),o-11,n-2)
+end n+=10end pal()end})end function fy()for f in all(d)do f.m_anim_incr=-.25end end function fL()h=x.m_back d[count(d)].m_anim_incr=-.25end function a(f,n)return{i_label=f,i_onclick=n,i_setting=nil}end function f(f,n)local f=a(f,function(f)nv(f.i_setting,m(f.i_setting)==false)if(f.i_setting==5)music(m(5)and 0or-1,0,7)
+end)f.i_setting=n return f end function n7()Y,f5,h=false,false,x.m_confirm local f if(not n8 and fq())f=1
+if(not no and f6())f=2
+if(not na and H(false))f=3
+if(not n5 and H(true))f=4
 if(f~=nil)s(5,f)return
-local e,n,o,f=d((l and"next"or"skip").." puzzle",function()if(L+1>count(b[D]))s(1)else s(2,D,L+1)
-end),d("restart puzzle",function()s(2,D,L,true)end),d("stage select",function()s(1)end)if(l)f={e,n,o}else f={d("back",fL),n,e,d((f0==2and"hide"or"show").." hints",function()f0=f0==2and 1or 2fm()end),o,d("options",fM),d("go to title",function()s(0)end)}
-fr(16,64,96,f)end function ez()fr(24,96,80,{d("start game",function()s(1)end),d("continue",function()local f=fv()s(2,f.world,f.stage)end),d("options",fM),d("credits",function()s(4)end),d("back",function()s(3)end)})end function fM()fr(16,count(m)>0and 64or 72,96,{d("back",fL),f("show timers",1),f("slime overlap",2),f("sprint by default",3),f("sound effects",4),f("music",5),f("lesbians allowed",6),d("exit game",function()extcmd"shutdown"end),d("pico8 menu",ek)})end function ek()extcmd"pause"end function fK(f,e,n,o)rectfill(f,e,n,o,2)fillp(fb[ceil(T)])rect(f,e,n,o,154)fillp(0)end function f3(e,n,o,d,a,f)add(f1,{x=e,y=n,spd=o,dir=d,col=a,time_max=f,time=f})end function fE(a,i,d)local f,e,n for o=0,.9,.1do f,e,n=a+cos(o)*4,i+sin(o)*4,o*360f3(f,e,.9,n,rnd(d),12)f3(f,e,1.8,n,rnd(d),8)end end function eF(o,d,e,n)for f=0,.8,.2do f3(p(o,e,f),p(d,n,f),0,0,14,p(5,12,f))end fH(e,n,{14,7})end function fH(e,n,o)for f=0,.9,.1do f3(e+cos(f)*4,n+sin(f)*4,.8,f*360,rnd(o),8)end end function e7()for f in all(f1)do local e=f.dir/360f.x+=f.spd*cos(e)f.y+=f.spd*sin(e)f.time-=1if(f.time<=0)del(f1,f)
-end end function em()for f in all(f1)do pal(7,f.col)spr(flr(p(163,161,f.time/f.time_max)+.5),f.x,f.y)end end
+local n,e,o,f=a((l and"next"or"skip").." puzzle",function()if(L+1>count(b[D]))s(1)else s(2,D,L+1)
+end),a("restart puzzle",function()s(2,D,L,true)end),a("stage select",function()s(1)end)if(l)f={n,e,o}else f={a("back",fL),e,n,a((f0==2and"hide"or"show").." hints",function()f0=f0==2and 1or 2fy()end),o,a("options",fM),a("go to title",function()s(0)end)}
+fr(16,64,96,f)end function nk()fr(24,96,80,{a("start game",function()s(1)end),a("continue",function()local f=fv()s(2,f.world,f.stage)end),a("options",fM),a("credits",function()s(4)end),a("back",function()s(3)end)})end function fM()fr(16,count(y)>0and 64or 72,96,{a("back",fL),f("show timers",1),f("slime overlap",2),f("sprint by default",3),f("sound effects",4),f("music",5),f("lesbians allowed",6),a("exit game",function()extcmd"shutdown"end),a("pico8 menu",nz)})end function nz()extcmd"pause"end function fK(f,n,e,o)rectfill(f,n,e,o,2)fillp(f7[ceil(T)])rect(f,n,e,o,154)fillp(0)end function f4(n,e,o,a,d,f)add(f1,{x=n,y=e,spd=o,dir=a,col=d,time_max=f,time=f})end function fE(d,i,a)local f,n,e for o=0,.9,.1do f,n,e=d+cos(o)*4,i+sin(o)*4,o*360f4(f,n,.9,e,rnd(a),12)f4(f,n,1.8,e,rnd(a),8)end end function nF(o,a,n,e)for f=0,.8,.2do f4(p(o,n,f),p(a,e,f),0,0,14,p(5,12,f))end fH(n,e,{14,7})end function fH(n,e,o)for f=0,.9,.1do f4(n+cos(f)*4,e+sin(f)*4,.8,f*360,rnd(o),8)end end function nb()for f in all(f1)do local n=f.dir/360f.x+=f.spd*cos(n)f.y+=f.spd*sin(n)f.time-=1if(f.time<=0)del(f1,f)
+end end function ny()for f in all(f1)do pal(7,f.col)spr(flr(p(163,161,f.time/f.time_max)+.5),f.x,f.y)end end
 __gfx__
 02b2ffffff0ffffff0df906a254db9ed20f69f3e29f946cb242146a25e5a43559b0100494e0b48071793ef94e93837a75afd57e96fc17021fade5e87e2912f8b
 507c5391e89322f38c2c2e40f452271fb6dbfd38175c597ee7dedf8f32817bbdbfe376ed3fe4597f2fe1932fddf1140f4fbc7f7cdabcc1d3f6169ccf5cf117b4
