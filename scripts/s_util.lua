@@ -62,8 +62,8 @@ end
 function str2tbl2d(_str, _delimiter)
  local _t, _at, _offset = {}, #_str \ _delimiter
  for _aa=1,_at do
-  _offset = (_aa - 1) * _delimiter + 1
-  _t[_aa] = str2tbl(sub(_str, _offset, _offset + _delimiter - 1))
+  _offset = (_aa - 1) * _delimiter
+  _t[_aa] = str2tbl(sub(_str, _offset + 1, _offset + _delimiter))
  end
  return _t
 end

@@ -111,7 +111,7 @@ function player_end_move(self)
  local _tile, _prevtile, _poskey, _tcp_dx, _tcp_dy, _visx, _visy, _collision_obj, _partcol, _ppartcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y, (_x << 1) + 1, (_y << 1) + 1, (_x << 4) + 12, _y << 4
 
  -- if we're on a water tile and are in the ice state, treat as ice floor
- if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
+ if (_tile \ 16 == 12 and self.pstate == 2) _tile, g_play_sfx = 123, -3452
  
  -- heart
  if (_tile == 52) tile_swap(19, 20, 3, 4) g_play_sfx, _partcol = -349, "78e"
