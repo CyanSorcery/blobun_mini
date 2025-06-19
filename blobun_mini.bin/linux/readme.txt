@@ -4,7 +4,8 @@ Thank you for downloading Blobun Mini! We hope you enjoy it!
 Unless of course, you've already played it. Then we hope you enjoyed it!
 
 If you enjoyed this and want more, please look up Blobun! The full experience
-features 140 unique puzzles over the span of 8 worlds.
+features 140 unique puzzles over the span of 8 worlds, a puzzle editor with
+player-made puzzles available for download, and more!
 
 CONTROLS:
 Arrow keys: Move around
