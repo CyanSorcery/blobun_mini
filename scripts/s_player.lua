@@ -109,7 +109,7 @@ function player_end_move(self)
  -- if the previous tile was a cracked floor, process it
  if (self.prevcrackedfloor) tile_copy(96, 18, _oldx - 1, _oldy) g_tile_count -= proc_cracked_floor(_oldx, _oldy) self.tilestouched -= 1 g_play_sfx = g_sfx_lut.pit_o self.prevcrackedfloor = false
  
- local _tile, _prevtile, _poskey, _tcp_dx, _tcp_dy, _collision_obj, _partcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y, (_x << 1) + 1, (_y << 1) + 1
+ local _tile, _prevtile, _poskey, _tcp_dx, _tcp_dy, _visx, _visy, _collision_obj, _partcol, _ppartcol = mget((_x << 1) + 2, (_y << 1) + 1), mget(_oldx, _oldy), _x << 4 | _y, (_x << 1) + 1, (_y << 1) + 1, (_x << 4) + 12, _y << 4
 
  -- if we're on a water tile and are in the ice state, treat as ice floor
  if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
@@ -139,7 +139,7 @@ function player_end_move(self)
 
  -- states: 0 normal, 1 fire, 2 ice
  for i=0,2 do
-  if (_tile == 80 + i) part_create_slime_explode((_x << 4) + 12, (_y << 4) + 12, g_pal_state_part[i + 1]) self.pstate, g_play_sfx = i, g_sfx_lut.p_state[i + 1]
+  if (_tile == 80 + i) _ppartcol = g_pal_state_part[i + 1] self.pstate, g_play_sfx = i, g_sfx_lut.p_state[i + 1]
  end
 
  -- octogems
@@ -152,7 +152,7 @@ function player_end_move(self)
     g_play_sfx = g_sfx_lut.octo[i + 1]
     -- find next octogem
     for _o in all(g_list_obj) do
-     if (_o.oct_ind == self.octogems) part_create_octogem((_x << 4) + 12, (_y << 4) + 6, (_o.x << 4) + 12, (_o.y << 4) + 6)
+     if (_o.oct_ind == self.octogems) part_create_octogem(_visx, _visy + 6, (_o.x << 4) + 12, (_o.y << 4) + 6)
     end
    else
     _destroy_obj=false
@@ -163,13 +163,16 @@ function player_end_move(self)
  if (self.octogems == 8) tile_swap(27, 28, 74, 106) self.octogems = 0
 
  -- generic key?
- if (_tile==18) if self.haskey then _destroy_obj=false else self.haskey, _partcol, g_play_sfx = true, {6, 7}, g_sfx_lut.t_coin end
+ if (_tile == 18) if self.haskey then _destroy_obj=false else self.haskey, _partcol, g_play_sfx = true, {6, 7}, g_sfx_lut.t_coin end
 
  -- if this is a key block, take their key away (passage into this block is checked elsewhere)
  if (_tile == 51) self.haskey, g_play_sfx = false, g_sfx_lut.t_switch
 
  -- are we on a cracked floor right now?
  if (_tile == 125 or _tile == 127) self.prevcrackedfloor, g_play_sfx = true, g_sfx_lut.pit_t
+
+ -- did we just melt an ice block?
+ if (_tile == 121) g_play_sfx = g_sfx_lut.p_state[2]
 
  -- are we on a conveyer? if so, overwrite new direction
  local _dir = -1
@@ -193,7 +196,7 @@ function player_end_move(self)
 
  -- are we on a floor portal? don't process it though if we're *in* the portal
  if self.inportal then
-  self.inportal = false
+  self.inportal, _ppartcol = false, g_pal_state_part[self.pstate + 1]
  else
   for i=0,6,2 do
    if _tile == 89 + i then
@@ -231,7 +234,8 @@ function player_end_move(self)
  end
 
  -- make particles?
- if (_partcol != nil) part_create_item_grab((_x << 4) + 12, (_y << 4) + 8, _partcol)
+ if (_partcol != nil) part_create_item_grab(_visx, _visy + 8, _partcol)
+ if (_ppartcol != nil) part_create_slime_explode(_visx, _visy + 12, _ppartcol)
 
 end
 

@@ -15,26 +15,28 @@ end end end if g_stage_win==false and self.tilestouched>=g_tile_count then g_sta
 end if(g_stage_win)self.dir=3
 if(g_p_started and not g_stage_win)g_p_time=min(g_p_time+(time()-g_time),599.999)
 end function player_end_move(self)self.ismove=false local _x,_y,_oldx,_oldy,_destroy_obj,_doslime=self.x,self.y,(self.oldx<<1)+2,(self.oldy<<1)+1,true,true if(self.prevcrackedfloor)tile_copy(96,18,_oldx-1,_oldy)g_tile_count-=proc_cracked_floor(_oldx,_oldy)self.tilestouched-=1g_play_sfx=g_sfx_lut.pit_o self.prevcrackedfloor=false
-local _tile,_prevtile,_poskey,_tcp_dx,_tcp_dy,_collision_obj,_partcol=mget((_x<<1)+2,(_y<<1)+1),mget(_oldx,_oldy),_x<<4|_y,(_x<<1)+1,(_y<<1)+1if(_tile\16==12and self.pstate==2)_tile=123
+local _tile,_prevtile,_poskey,_tcp_dx,_tcp_dy,_visx,_visy,_collision_obj,_partcol,_ppartcol=mget((_x<<1)+2,(_y<<1)+1),mget(_oldx,_oldy),_x<<4|_y,(_x<<1)+1,(_y<<1)+1,(_x<<4)+12,_y<<4if(_tile\16==12and self.pstate==2)_tile=123
 if(_tile==52)tile_swap(19,20,3,4)g_play_sfx,_partcol=g_sfx_lut.t_switch,{7,8,14}
 if(_tile==53)tile_swap(21,22,35,36)g_play_sfx,_partcol=g_sfx_lut.t_switch,{7,3,11}
 if(_tile==54)tile_swap(23,24,67,68)g_play_sfx,_partcol=g_sfx_lut.t_switch,{7,13,12}
 if _tile==55then self.coins+=1g_play_sfx,_partcol=g_sfx_lut.t_coin,{4,9,10}if(self.coins==3)self.coins,g_play_sfx=0,g_sfx_lut.t_switch tile_swap(25,26,99,100)
 g_p_updt_coin=true end if(self.prevslimetrap)tile_copy(126,26,_oldx-1,_oldy)g_play_sfx=g_sfx_lut.s_trap
-self.prevslimetrap=_tile==48for i=0,2do if(_tile==80+i)part_create_slime_explode((_x<<4)+12,(_y<<4)+12,g_pal_state_part[i+1])self.pstate,g_play_sfx=i,g_sfx_lut.p_state[i+1]
-end for i=0,7do if(_tile==56+i and self.octogems==i)self.octogems+=1g_play_sfx=g_sfx_lut.octo[i+1]
-end if(self.octogems==8)tile_swap(27,28,74,106)self.octogems=0
-if(_tile==18)if(self.haskey)_destroy_obj=false else self.haskey=true
-if(_tile==51)self.haskey=false
-if(_tile==125or _tile==127)self.prevcrackedfloor=true g_play_sfx=g_sfx_lut.pit_t
+self.prevslimetrap=_tile==48for i=0,2do if(_tile==80+i)_ppartcol=g_pal_state_part[i+1]self.pstate,g_play_sfx=i,g_sfx_lut.p_state[i+1]
+end for i=0,7do if _tile==56+i then if self.octogems==i then self.octogems+=1g_play_sfx=g_sfx_lut.octo[i+1]for _o in all(g_list_obj)do if(_o.oct_ind==self.octogems)part_create_octogem(_visx,_visy+6,(_o.x<<4)+12,(_o.y<<4)+6)
+end else _destroy_obj=false end end end if(self.octogems==8)tile_swap(27,28,74,106)self.octogems=0
+if(_tile==18)if self.haskey then _destroy_obj=false else self.haskey,_partcol,g_play_sfx=true,{6,7},g_sfx_lut.t_coin end
+if(_tile==51)self.haskey,g_play_sfx=false,g_sfx_lut.t_switch
+if(_tile==125or _tile==127)self.prevcrackedfloor,g_play_sfx=true,g_sfx_lut.pit_t
+if(_tile==121)g_play_sfx=g_sfx_lut.p_state[2]
 local _dir=-1for i=0,3do if(_tile==113+(i<<1))_dir=i
 end if(_tile==123)_dir=self.dir
 if(_dir~=-1)self.nextdir=_dir
 self.onconvey=_dir~=-1for i,_obj in pairs(g_list_obj)do if _obj.poskey==_poskey then _collision_obj=_obj if(_destroy_obj)deli(g_list_obj,i)
-break end end if self.inportal then self.inportal=false else for i=0,6,2do if(_tile==89+i)tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)self.oldx,self.oldy,self.inportal,g_play_sfx,self.x,self.y=_x,_y,true,g_sfx_lut.p_portal,_collision_obj.dst_x,_collision_obj.dst_y
+break end end if self.inportal then self.inportal,_ppartcol=false,g_pal_state_part[self.pstate+1]else for i=0,6,2do if(_tile==89+i)tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)self.oldx,self.oldy,self.inportal,g_play_sfx,self.x,self.y=_x,_y,true,g_sfx_lut.p_portal,_collision_obj.dst_x,_collision_obj.dst_y
 end end if(_tile==123and self.pstate==1)_tile=192tile_copy(104,18,_tcp_dx,_tcp_dy)
 if(_tile>208)player_destroy(self)_doslime=false
-if _tile\16==11and self.pstate==0or _tile\16==12or _tile==50or _tile==29and g_p_zap_turn==0or _tile==30and g_p_zap_turn==1or _tile==31and g_p_zap_turn==2then player_destroy(self,true)elseif _doslime then self.tilestouched+=1tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)end if(_partcol~=nil)part_create_item_grab((_x<<4)+12,(_y<<4)+8,_partcol)
+if _tile\16==11and self.pstate==0or _tile\16==12or _tile==50or _tile==29and g_p_zap_turn==0or _tile==30and g_p_zap_turn==1or _tile==31and g_p_zap_turn==2then player_destroy(self,true)elseif _doslime then self.tilestouched+=1tile_copy(126,self.pstate<<1,_tcp_dx,_tcp_dy)end if(_partcol~=nil)part_create_item_grab(_visx,_visy+8,_partcol)
+if(_ppartcol~=nil)part_create_slime_explode(_visx,_visy+12,_ppartcol)
 end function player_destroy(self,_kill)g_stage_lose=true if(_kill)g_play_sfx=g_sfx_lut.p_hurt self.isdead=true part_create_slime_explode((self.x<<4)+12,(self.y<<4)+12,g_pal_state_part[self.pstate+1])
 end function player_draw(self)if(self.isdead or self.inportal or not setting_get(6))return
 local _dir,_x,_y,_anim,_offset=self.dir,self.x<<4,self.y<<4,self.anim if(self.pstate==1)pal(3,8)pal(11,9)
