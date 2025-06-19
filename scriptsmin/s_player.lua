@@ -15,7 +15,7 @@ end end end if g_stage_win==false and self.tilestouched>=g_tile_count then g_sta
 end if(g_stage_win)self.dir=3
 if(g_p_started and not g_stage_win)g_p_time=min(g_p_time+(time()-g_time),599.999)
 end function player_end_move(self)self.ismove=false local _x,_y,_oldx,_oldy,_destroy_obj,_doslime=self.x,self.y,(self.oldx<<1)+2,(self.oldy<<1)+1,true,true if(self.prevcrackedfloor)tile_copy(96,18,_oldx-1,_oldy)g_tile_count-=proc_cracked_floor(_oldx,_oldy)self.tilestouched-=1g_play_sfx=62278self.prevcrackedfloor=false
-local _tile,_prevtile,_poskey,_tcp_dx,_tcp_dy,_visx,_visy,_collision_obj,_partcol,_ppartcol=mget((_x<<1)+2,(_y<<1)+1),mget(_oldx,_oldy),_x<<4|_y,(_x<<1)+1,(_y<<1)+1,(_x<<4)+12,_y<<4if(_tile\16==12and self.pstate==2)_tile=123
+local _tile,_prevtile,_poskey,_tcp_dx,_tcp_dy,_visx,_visy,_collision_obj,_partcol,_ppartcol=mget((_x<<1)+2,(_y<<1)+1),mget(_oldx,_oldy),_x<<4|_y,(_x<<1)+1,(_y<<1)+1,(_x<<4)+12,_y<<4if(_tile\16==12and self.pstate==2)_tile,g_play_sfx=123,62084
 if(_tile==52)tile_swap(19,20,3,4)g_play_sfx,_partcol=-349,"78e"
 if(_tile==53)tile_swap(21,22,35,36)g_play_sfx,_partcol=-349,"73b"
 if(_tile==54)tile_swap(23,24,67,68)g_play_sfx,_partcol=-349,"7dc"
