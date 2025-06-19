@@ -51,10 +51,10 @@ function _init()
  g_w_req, -- how many stages are required per world
  g_sfx_octo, -- sfx lookup for octogems
  g_sfx_pstate -- sfx lookups for player state changes
- = str2tbl("0001115525511125",16),
- str2tbl("3c26915154", 5),
- str2tbl("13b49a5d6", 3), -- colors for normal, fire, ice
- str2tbl(g_w_req, 1),
+ = str2tbl("0001115525511125"),
+ str2tbl2d("3c26915154", 5),
+ str2tbl2d("13b49a5d6", 3), -- colors for normal, fire, ice
+ str2tbl(g_w_req),
  {-1021,-925,-829,-733,-637,-541,-445,-248},
  {-1396, -1850, -1656}
 
@@ -227,7 +227,7 @@ function unpack_stage_select()
  local _ws = last_worldstage_get()
  g_sss_menu_world, g_sss_menu_world_tgt = mid(1, _ws.world, count(g_levels))
  g_sss_menu_stage = mid(1, _ws.stage, count(g_levels[g_sss_menu_world]))
- g_title_scroll, g_sss_anim_factor, g_sss_anim_incr, g_sss_colors = 0, 0, .125, str2tbl("13b224cd02415d6d2494", 4)
+ g_title_scroll, g_sss_anim_factor, g_sss_anim_incr, g_sss_colors = 0, 0, .125, str2tbl2d("13b224cd02415d6d2494", 4)
 end
 
 function unpack_credits()
@@ -291,7 +291,7 @@ function unpack_stage(_world, _stage)
  if (_need_sprites_update) then
   -- get ready to recolor the puzzle
   poke(0x5f55,0x0)
-  local _t = str2tbl("2854ef234924d6d54924", 4)
+  local _t = str2tbl2d("2854ef234924d6d54924", 4)
   for i=1,4 do
     pal(_t[1][i], _t[_world][i])
   end

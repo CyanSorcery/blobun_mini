@@ -115,7 +115,7 @@ function gameplay_draw()
  
  -- darken areas of the screen
  poke(0x5F54, 0x60)
- pal(g_pal_dark[1])
+ pal(g_pal_dark)
  if _menus_open > 0 then
   sspr(0, 0, 128, 128, 0, 0)
  else

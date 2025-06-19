@@ -65,7 +65,7 @@ end
 
 function achv_beat_last_world()
  local _finworld = count(g_levels)
- return stages_beat_in_world(_finworld) >= g_w_req[_finworld][1]
+ return stages_beat_in_world(_finworld) >= g_w_req[_finworld]
 end
 
 function achv_beat_times(_world, _dev)

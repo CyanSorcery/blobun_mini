@@ -59,15 +59,18 @@ function subl(_str, _offset, _flag, _len)
  return tonum(sub(_str, _offset, _offset + (_len and _len or 0)), _flag)
 end
 
-function str2tbl(_str, _delimiter)
+function str2tbl2d(_str, _delimiter)
  local _t, _at, _offset = {}, #_str \ _delimiter
  for _aa=1,_at do
-  _t[_aa] = {}
-  _offset = (_aa - 1) * _delimiter
-  for i=1,_delimiter do
-   _offset += 1
-   add(_t[_aa], subl(_str,_offset, 0x1, 0))
-  end
+  _offset = (_aa - 1) * _delimiter + 1
+  _t[_aa] = str2tbl(sub(_str, _offset, _offset + _delimiter - 1))
+ end
+ return _t
+end
+function str2tbl(_str)
+ local _t = {}
+ for i=1,#_str do
+  add(_t, subl(_str, i, 0x1))
  end
  return _t
 end

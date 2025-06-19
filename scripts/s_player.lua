@@ -114,15 +114,15 @@ function player_end_move(self)
  if (_tile \ 16 == 12 and self.pstate == 2) _tile = 123
  
  -- heart
- if (_tile == 52) tile_swap(19, 20, 3, 4) g_play_sfx, _partcol = -349, {7, 8, 14}
+ if (_tile == 52) tile_swap(19, 20, 3, 4) g_play_sfx, _partcol = -349, "78e"
  -- diamond
- if (_tile == 53) tile_swap(21, 22, 35, 36) g_play_sfx, _partcol = -349, {7, 3, 11}
+ if (_tile == 53) tile_swap(21, 22, 35, 36) g_play_sfx, _partcol = -349, "73b"
  -- triangle
- if (_tile == 54) tile_swap(23, 24, 67, 68) g_play_sfx, _partcol = -349, {7, 13, 12}
+ if (_tile == 54) tile_swap(23, 24, 67, 68) g_play_sfx, _partcol = -349, "7dc"
  -- coins
  if _tile == 55 then
   self.coins += 1
-  g_play_sfx, _partcol = -2042, {4, 9, 10}
+  g_play_sfx, _partcol = -2042, "49a"
   if self.coins == 3 then
    self.coins, g_play_sfx = 0, -349
    tile_swap(25, 26, 99, 100)
@@ -164,7 +164,7 @@ function player_end_move(self)
  if (self.octogems == 8) tile_swap(27, 28, 74, 106) self.octogems = 0
 
  -- generic key?
- if (_tile == 18) if self.haskey then _destroy_obj=false else self.haskey, _partcol, g_play_sfx = true, {6, 7}, -2042 end
+ if (_tile == 18) if self.haskey then _destroy_obj=false else self.haskey, _partcol, g_play_sfx = true, "67", -2042 end
 
  -- if this is a key block, take their key away (passage into this block is checked elsewhere)
  if (_tile == 51) self.haskey, g_play_sfx = false, -349
@@ -235,7 +235,7 @@ function player_end_move(self)
  end
 
  -- make particles?
- if (_partcol != nil) part_create_item_grab(_visx, _visy + 8, _partcol)
+ if (_partcol != nil) part_create_item_grab(_visx, _visy + 8, str2tbl(_partcol))
  if (_ppartcol != nil) part_create_slime_explode(_visx, _visy + 12, _ppartcol)
 
 end
