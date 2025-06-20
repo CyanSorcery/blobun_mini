@@ -10,12 +10,9 @@ go play the game at the links above, rather than trying to play it from here,
 as there's quite a bit of setup you'll have to go through to get it running.
 
 ## IMPORTANT
-This project should **not** be used as the basis for your own pico8 project,
-nor should it be used as a reference. It's full of cursed code and many decisions
-were made to save tokens in order to cram it all in there, rather than being good
-or efficient code practice. Keep that in mind when looking at this project!
+This project should **not** be used as the basis for your own pico8 project, nor should it be used as a reference for good coding practices. It's full of cursed code and many decisions were made to save tokens in order to cram it all in there, rather than being good or efficient code practice. Keep that in mind when looking at this project!
 
-Again, **do not use this project as a reference for creating your own pico8 games.**
+Again, **__do not use this project as a reference for creating your own pico8 games.__**
 This game is filled with many advanced techniques that most people should not
 bother with, especially if you're a beginner.
 
