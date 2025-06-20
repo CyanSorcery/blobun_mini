@@ -30,3 +30,5 @@ The game source code is available for download, and is released under
 CC4-BY-NC-SA. All other program(s), code, sound effects, music, characters,
 graphics, and puzzles (unless otherwise noted) are  Copyright 2024-2025
 CyanSorcery All Rights Reserved.
+
+https://github.com/CyanSorcery/blobun_mini

@@ -66,6 +66,10 @@ All level data is converted from Blobun Worldpak JSON files. You'll need Blobun 
 - `-o` Where you want the file saved once it's been converted.
 - `-m` Where to save the map lookup table. This was used during development and will be no use to you, so don't worry about it. See above about the `map_lut.p8` file this generates. Since the lookup tables are baked into the program, you can't change what this outputs.
 
+The source code for the level converter is available here:
+
+https://github.com/CyanSorcery/wp_convert_net
+
 ### Level Format
 All level data is stored in `res/r_levels.lua`. There's three variables that are set, which are:
 
