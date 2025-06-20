@@ -111,6 +111,8 @@ Here is a list of all the objects that can be spawned, as well as specific chang
 10. (hex `a`) Floor portals. Here, the Misc field has the X and Y position of where this floor portal will send you. No sprite is drawn for this object.
 11. (hex `b`) Arrows on the floor that are *not* part of the hint arrows, and are instead part of the puzzle. When the player turns hints on, these disappear. The first character of the Misc field is unused, and the second is the direction the arrow points.
 
+Please note, the object table only covers puzzle elements which have a floating key, or are otherwise interactable in some way. It does NOT include stuff like Heart Toggle Blocks, which are simply stored in the level data itself.
+
 ### Map Lookup Table
 
 Originally, we had the game simply read Blobun puzzle IDs and do autotiling and whatnot at runtime. However, this proved to use a lot of tokens (about 1000 in fact) so we decided to pre-calculate all of this. The level converter calculates all the autotiling for water, lava, and the puzzle walls, and the result is `map_lut.p8`. When loading the level, each tile is just the ID of what tile to copy from the lookup tabled (store in the right of the pico8 map data at runtime.) Because we messed up, this data is stored top to bottom, and then left to right. So, you'll find tile ID at position 0,2 instead of 2,0.
