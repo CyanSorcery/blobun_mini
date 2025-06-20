@@ -99,6 +99,8 @@ The level string format is as follows:
 
 When the level data is loaded into the game, it is first converted to an internal minipak format (see `convert_stages()` in `blobun_mini.p8` for this function) for speed and efficiency.
 
+NOTE ABOUT HINTS: Blobun Mini renders hint arrows differently from regular Blobun. Blobun will attempt to follow along the path to show the arrow in the next spot, IE going across ice floors and conveyer belts. However, Blobun Mini doesn't do this, and will instead just show a hint arrow for each step of the way. So, hints across any tiles that move you in any way, such as conveyer belts, ice tiles, floor portals etc will not match between the two versions. Keep this in mind.
+
 ### Object IDs
 Here is a list of all the objects that can be spawned, as well as specific changes to how they use their spawn data (if any)
 
