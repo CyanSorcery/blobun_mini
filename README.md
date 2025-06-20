@@ -140,4 +140,4 @@ NOTE: Eventually, we will release the pico8 version of the Blobun Level Editor w
 ¹Sound effects manually recreated by Roxy.
 
 ## License
-The game source code (contained in lua and p8 files) is released under CC4-BY-NC-SA. All other progra (s), code, sound effects, music, characters, graphics, and puzzles (unless otherwise noted) are Copyright 2024-2025 CyanSorcery All Rights Reserved.
+The game source code (contained in lua and p8 files) is released under CC4-BY-NC-SA. All other program(s), code, sound effects, music, characters, graphics, and puzzles (unless otherwise noted) are Copyright 2024-2025 CyanSorcery All Rights Reserved.
