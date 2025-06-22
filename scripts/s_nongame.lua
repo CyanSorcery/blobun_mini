@@ -11,7 +11,7 @@ function draw_title()
  if (not setting_get(6)) map(19, 8, 28, 8 + _y_mod, 4, 5)
 
  ?"2025 cyansorcery", 32, 122, 3
- ?"beta 1", 1,1,1
+ ?"beta 2", 1,1,1
  
  palt()
  pal(7, 1)

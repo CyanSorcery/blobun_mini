@@ -309,8 +309,7 @@ g_pal_zappers = str2tbl2d("1d5cdc125848145949",6)
 function redraw_floor_zappers()
  local _subt, _o1, _addmod
  for i=1,3 do
-  _addmod = 0
-  _o1, _subt = (((i + g_p_zap_turn + 2 + _addmod) % 3) << 1) + 1, g_pal_zappers[i]
+  _o1, _subt = (((g_p_zap_turn + 3 - i) % 3) << 1) + 1, g_pal_zappers[i]
   pal(_subt[3], _subt[_o1])
   pal(_subt[4], _subt[_o1 + 1])
   spr(155 + i, 96 + (i << 3), 8, 1, 2)

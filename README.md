@@ -87,12 +87,12 @@ The level string format is as follows:
 - **Stage Dev Time** (8 char, dec): Same format as Stage Target Time.
 - **Hints**: The first character indicates how many hints there are (from 0 to 15), and after that are the hint values (if any.) For each hint, this is the format:
   - Direction (1 char, hex): The direction this arrow should point. 0 = right, 1 = up, 2 = left, 3 = down.
-  - X position (1 char, hex): The X position of the hint, from 0 through 15. Note that there may be issues if the hint is to show up on the very right of the puzzle.
-  - Y Position (1 char, hex): The Y position of the hint, from 0 through 15.
+  - X position (1 char, hex): The X position of the hint, from 0 through 15.
+  - Y Position (1 char, hex): The Y position of the hint, from 0 through 14.
 - **Objects**: First, there's a 2 character hex value which indicates how many objects are in the stage (max 255). Each object *generally* follows the structure below, and is comprised of 5 characters each:
   - ID (1 char, hex): The ID of the object that's to be spawned here (see below).
-  - X position (1 char, hex): X spawn position of the object. There may be issues on the very far right of the stage.
-  - Y position (1 char, hex): Y spawn position.
+  - X position (1 char, hex): X spawn position of the object, from 0 through 15.
+  - Y position (1 char, hex): Y spawn position from 0 through 14.
   - Sprite/Misc (2 char, hex): What sprite this object should draw. Behavior can change depending on the sprite ID. The usage of these two characters change for some objects.
 - **Tile Count** (2 char, hex): How many tiles are in this stage. Note, this is NOT copied from the Worldpak JSON. Instead, it's calculated by the converter to account for stuff like the Slime Trap, which requires 2 moves to cover with slime.
 - **Tile Data**: Everything after this is assumed to be level data. There is no indicator of how much should be there. See the section on the Map Lookup Table for more information. Each tile is 2 characters hex, filled in from top left to bottom right, and represents which tile we should copy from the map lookup table.
