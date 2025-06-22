@@ -214,7 +214,7 @@ function player_end_move(self)
  end
 
  -- did we step on an ice tile in the fire state
- if (_tile == 123 and self.pstate == 1) _tile = 192 tile_copy(104, 18, _tcp_dx, _tcp_dy)
+ if (_tile == 123 and self.pstate == 1) _tile = 192 tile_copy(112, 14, _tcp_dx, _tcp_dy)
 
  -- did we overlap our own trail? this (vaguely) captures all slime tiles
  if (_tile > 208) player_destroy(self) _doslime = false
