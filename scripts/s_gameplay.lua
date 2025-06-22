@@ -141,10 +141,12 @@ function gameplay_draw()
   if (_curr_time <= g_p_sst.s_devtime) ?"♥", 75, 2, 14
  end
 
+ local _ttouch = g_list_obj[1].tilestouched
+
  -- draw slimebar
  rect(96, 1, 126, 7, 7)
  fillp(g_fillp_diag[ceil(g_fillp_anim)])
- rectfill(124 - max(1, (g_list_obj[1].tilestouched / g_tile_count) * 26), 3, 124, 5, 59)
+ rectfill(124 - max(1, (_ttouch / g_tile_count) * 26), 3, 124, 5, 59)
  fillp()
 
  -- did we win or lose?
@@ -159,6 +161,9 @@ function gameplay_draw()
   line(_offset - 2, 112, _offset + _line_x, 112, 7)
   print_shd(g_p_sst.s_name, _offset, 115, 7, 0)
   print_shd(g_p_sst.s_author, _offset, 122, 13, 0)
+ -- show sprint prompt on the first stage after moving around a little?
+ elseif not g_stage_win and g_p_i_world == 1 and g_p_i_stage == 1 and _ttouch > 5 then
+  print_shd("🅾️ sprint", 12, 12, 7, 0)
  end
 end
 

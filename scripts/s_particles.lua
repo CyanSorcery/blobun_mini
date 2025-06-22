@@ -1,6 +1,6 @@
 -- wrapper function for creating particles
 function part_create(_x, _y, _spd, _dir, _col, _time)
- add(g_list_part, {x=_x, y=_y, spd = _spd, dir=_dir, col=_col,time_max=_time,time=_time})
+ if (count(g_list_part) < 100) add(g_list_part, {x=_x, y=_y, spd = _spd, dir=_dir, col=_col,time_max=_time,time=_time})
 end
 
 function part_create_slime_explode(_x, _y, _col)

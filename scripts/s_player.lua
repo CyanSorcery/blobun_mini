@@ -34,6 +34,14 @@ function player_step(self)
  if self.anim + .001 >= 1 and not g_stage_win and not g_stage_lose then
   -- did she just stop moving?
   if (self.ismove) player_end_move(self)
+  
+
+  -- have we won?
+  if g_stage_win == false and self.tilestouched >= g_tile_count then
+   g_stage_win, g_play_sfx = true, -3053
+   -- if the player time is lower than the record, store it
+   if (g_p_time < dget(g_p_sst.s_saveslot)) dset(g_p_sst.s_saveslot, g_p_time) g_p_new_time = true
+  end
 
   -- sprint jiggle?
   if (g_btn4_press) self.jiggle = 1
@@ -56,7 +64,7 @@ function player_step(self)
    -- reset the buffered input and face us in this direction
    self.nextdir, self.dir = -1, _new_dir
    -- can we actually move here?
-   if _can_move and not g_stage_lose then
+   if _can_move and not g_stage_lose and not g_stage_win then
 
     g_p_started = true
 
@@ -83,13 +91,6 @@ function player_step(self)
 
    end
   end
- end
-
- -- have we won?
- if g_stage_win == false and self.tilestouched >= g_tile_count then
-  g_stage_win, g_play_sfx = true, -3053
-  -- if the player time is lower than the record, store it
-  if (g_p_time < dget(g_p_sst.s_saveslot)) dset(g_p_sst.s_saveslot, g_p_time) g_p_new_time = true
  end
 
  -- if we've won, make stephanie face down
