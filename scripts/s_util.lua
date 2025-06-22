@@ -13,7 +13,7 @@ function perform_undo()
  local _count = count(g_list_undo)
  if (_count == 0) return -- unlikely scenario, but prevents crash
  local _undo = g_list_undo[_count]
- if (_count > 1) deli(g_list_undo)
+ if (_count > 0) deli(g_list_undo)
  -- replace object list and player object
  g_list_obj     = _undo.obj_list
  g_list_obj[1]  = _undo.player

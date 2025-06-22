@@ -14,7 +14,10 @@ function player_step(self)
  self.jiggle = max(self.jiggle - .2, 0)
 
  -- do undo?
- if (btnp(5) and not g_stage_win) perform_undo()
+ -- coco note: this adds one extra frame compared to regular blobun, but
+ -- also prevents a bug where stephanie will still leave slime on a future
+ -- tile before being moved backwards a step. might be a better way to solve this
+ if (btnp(5) and not g_stage_win) perform_undo() return nil
 
  -- do the move animation
  self.anim = min(self.anim + ((self.sprint or self.onconvey or self.inportal) and .2 or .1111), 1)

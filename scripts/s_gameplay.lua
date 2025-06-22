@@ -160,7 +160,6 @@ function gameplay_draw()
   print_shd(g_p_sst.s_name, _offset, 115, 7, 0)
   print_shd(g_p_sst.s_author, _offset, 122, 13, 0)
  end
-
 end
 
 function redraw_conveyers()
