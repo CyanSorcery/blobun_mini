@@ -27,7 +27,7 @@ function gameplay_update()
  -- move camera while binding it to the stage edges/centering it
  local _obj, _lw, _lh = g_list_obj[1], g_p_sst.s_width << 4, g_p_sst.s_height << 4
  local _anim = _obj.inportal and cos((1 - _obj.anim) >> 2) or _obj.anim
- g_cam_x = g_p_sst.s_width > 8
+ g_cam_x = g_p_sst.s_width >= 8
     and mid(0, (lerp(_obj.oldx, _obj.x, _anim) << 4) - 48, _lw - 112)
     or (_lw >> 1) - 56
 
@@ -170,10 +170,10 @@ function redraw_conveyers()
  sspr(4, 56, 8, 15, 5, 56)
  sspr(0, 56, 1, 15, 4, 56)
  
- -- north (uses bottom right of sprite sheet, on arrows)
- sspr(17, 59, 15, 1, 112, 127)
+ -- north (uses bottom right of sprite sheet, on stephanie mouth parts)
+ sspr(17, 59, 15, 1, 88, 127)
  sspr(17, 60, 15, 8, 17, 59)
- sspr(112, 127, 15, 1, 17, 67)
+ sspr(88, 127, 15, 1, 17, 67)
  
  -- west
  sspr(36, 56, 1, 15, 0, 56)
@@ -181,17 +181,17 @@ function redraw_conveyers()
  sspr(0, 56, 1, 15, 44, 56)
  
  -- south
- sspr(49, 67, 15, 1, 112, 127)
+ sspr(49, 67, 15, 1, 88, 127)
  sspr(49, 59, 15, 8, 49, 60)
- sspr(112, 127, 15, 1, 49, 59)]]
+ sspr(88, 127, 15, 1, 49, 59)]]
  -- roxy note: this does the same as above, but smaller
- local _s = "0c38010f00380438080f05380038010f0438113b0f01707f113c0f08113b707f0f0111432438010f00382538080f24380038010f2c3831430f01707f313b0f08313c707f0f01313b"
+ local _s = "0c38010f00380438080f05380038010f0438113b0f01587f113c0f08113b587f0f0111432438010f00382538080f24380038010f2c3831430f01587f313b0f08313c587f0f01313b"
  for _b = 1,144,12 do
   sspr(subl(_s, _b, 1, 1), subl(_s, _b + 2, 1, 1), subl(_s, _b + 4, 1, 1),subl(_s, _b + 6, 1, 1), subl(_s, _b + 8, 1, 1), subl(_s, _b + 10, 1, 1))
  end
  
  -- cleanup
- line(112, 127, 127, 127, 7)
+ line(88, 127, 104, 127, 0)
  line(0, 56, 0, 71, 0)
 end
 
