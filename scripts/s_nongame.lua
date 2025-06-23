@@ -213,15 +213,15 @@ function draw_stage_select()
    _syt = _sy1 + 3
    -- ashe note: this results in one double lookup, don't feel like fixing it
    local _st = g_levels[g_sss_menu_world][max(1, _y)];
-   local _stagetime = dget(_st.s_saveslot)
+   local _stagetime = dget(_st.s_st)
    if (_is_hilite) menu_draw_select(4, _sy1, 90, _sy2)
    pal(7, _is_hilite and 7 or _t[g_sss_menu_world][2])
    if _y > 0 then
-    ?(_y > 9 and "" or " ").._y.." ".._st.s_name, 14, _syt, 7
+    ?(_y > 9 and "" or " ").._y.." ".._st.s_nm, 14, _syt, 7
     spr(_stagetime <= 599.995 and 241 or 240, 6, _sy1 + 1)
     if _show_timers then
-     if (_stagetime <= _st.s_goaltime) ?format_time(_stagetime), 96, _syt, 7
-     if (_stagetime <= _st.s_devtime) ?"♥", 120, _syt, 7
+     if (_stagetime <= _st.s_gt) ?format_time(_stagetime), 96, _syt, 7
+     if (_stagetime <= _st.s_dt) ?"♥", 120, _syt, 7
     end
    else
     ?"back", 26, _syt, 7

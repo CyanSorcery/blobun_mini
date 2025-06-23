@@ -54,7 +54,7 @@ end
 function stages_beat_in_world(_world)
  local _count = 0;
  for _st in all(g_levels[_world]) do
-  if (dget(_st.s_saveslot) < 599.995) _count += 1
+  if (dget(_st.s_st) < 599.995) _count += 1
  end
  return _count
 end
@@ -71,7 +71,7 @@ end
 function achv_beat_times(_world, _dev)
  -- if any of the stages aren't beaten, do an early return false
  for _st in all(g_levels[_world]) do
-  if (dget(_st.s_saveslot) > (_dev and _st.s_devtime or _st.s_goaltime)) return false
+  if (dget(_st.s_st) > (_dev and _st.s_dt or _st.s_gt)) return false
  end
  return true
 end

@@ -25,13 +25,13 @@ function gameplay_update()
  end
 
  -- move camera while binding it to the stage edges/centering it
- local _obj, _lw, _lh = g_list_obj[1], g_p_sst.s_width << 4, g_p_sst.s_height << 4
- local _anim = _obj.inportal and cos((1 - _obj.anim) >> 2) or _obj.anim
- g_cam_x = g_p_sst.s_width >= 8
+ local _obj, _lw, _lh = g_list_obj[1], g_p_sst.s_w << 4, g_p_sst.s_h << 4
+ local _anim = _obj.inprt and cos((1 - _obj.anim) >> 2) or _obj.anim
+ g_cam_x = g_p_sst.s_w >= 8
     and mid(0, (lerp(_obj.oldx, _obj.x, _anim) << 4) - 48, _lw - 112)
     or (_lw >> 1) - 56
 
- g_cam_y = g_p_sst.s_height > 7
+ g_cam_y = g_p_sst.s_h > 7
     and mid(-8, (lerp(_obj.oldy, _obj.y, _anim) << 4) - 48, _lh - 108)
     or (_lh >> 1) - 60
 
@@ -65,12 +65,12 @@ function gameplay_draw()
 
  -- clear the background
  palt(0)
- local _startx, _starty = -32+g_bg_scl, -g_bg_scl
+ local _stx, _sty = -32+g_bg_scl, -g_bg_scl
  -- disable autoscrolling for these worlds
- if (g_p_i_world >= 3) _startx, _starty = -32 + -g_cam_x/2, -32 + -g_cam_y/2
+ if (g_p_i_world >= 3) _stx, _sty = -32 + -g_cam_x/2, -32 + -g_cam_y/2
  -- draw the background
- for _x=_startx,128,32 do
-  for _y=_starty,128,32 do
+ for _x=_stx,128,32 do
+  for _y=_sty,128,32 do
    spr(148, _x, _y, 4, 2)
    spr(152, _x, _y + 16, 4, 2)
   end
@@ -85,7 +85,7 @@ function gameplay_draw()
 
  camera(g_cam_x, g_cam_y)
 
- local _s_w, _s_h = g_p_sst.s_width * 2 + 2, g_p_sst.s_height * 2 + 2
+ local _s_w, _s_h = g_p_sst.s_w * 2 + 2, g_p_sst.s_h * 2 + 2
 -- get ready to draw the map, using white as the transparent color
  palt(0b0000000100000000)
  -- draw the puzzle floor
@@ -125,23 +125,23 @@ function gameplay_draw()
  pal()
  poke(0x5F54, 0x00)
  -- time below goal time?
- local _col = g_p_time <= g_p_sst.s_goaltime and 7 or 13
+ local _col = g_p_time <= g_p_sst.s_gt and 7 or 13
  -- time below dev time?
- if (g_stage_win and g_p_time <= g_p_sst.s_devtime) _col = 10
+ if (g_stage_win and g_p_time <= g_p_sst.s_dt) _col = 10
  -- if the player has beaten this stage or not
- local _curr_time = dget(g_p_sst.s_saveslot)
+ local _curr_time = dget(g_p_sst.s_st)
  spr(_curr_time < 599.995 and 147 or 146, 88, 0)
  --show timer and "new time?"
  if _show_timers then
   ?format_time(g_p_time), 2, 2, _col
   if (g_p_new_time) draw_wavy_text("new time!", 32, 2, _col, 1.3)
   -- player has minimum time?
-  if (_curr_time <= g_p_sst.s_goaltime) ?"⧗", 81, 2, 9
+  if (_curr_time <= g_p_sst.s_gt) ?"⧗", 81, 2, 9
   -- player has dev time?
-  if (_curr_time <= g_p_sst.s_devtime) ?"♥", 75, 2, 14
+  if (_curr_time <= g_p_sst.s_dt) ?"♥", 75, 2, 14
  end
 
- local _ttouch = g_list_obj[1].tilestouched
+ local _ttouch = g_list_obj[1].ttch
 
  -- draw slimebar
  rect(96, 1, 126, 7, 7)
@@ -159,8 +159,8 @@ function gameplay_draw()
   local _offset = sin(g_menu[1].m_anim_factor >> 2) * -32 + -24
   local _line_x = print_shd("stage "..g_p_i_stage, _offset, 106, 7, 0)
   line(_offset - 2, 112, _offset + _line_x, 112, 7)
-  print_shd(g_p_sst.s_name, _offset, 115, 7, 0)
-  print_shd(g_p_sst.s_author, _offset, 122, 13, 0)
+  print_shd(g_p_sst.s_nm, _offset, 115, 7, 0)
+  print_shd(g_p_sst.s_at, _offset, 122, 13, 0)
  -- show sprint prompt on the first stage after moving around a little?
  elseif not g_stage_win and g_p_i_world == 1 and g_p_i_stage == 1 and _ttouch > 5 then
   print_shd("🅾️ sprint", 12, 12, 7, 0)
@@ -286,7 +286,7 @@ function redraw_slimetrail()
  if (_obj.haskey) spr(145, 32, 104) spr(145, 39, 104, 1, 1, true)
 
  -- get ready to draw her expression on
- local _eye_determined, _eye_blink, _spr = (btn(4) or _obj.sprint) and _obj.onconvey == false, _obj.blink < 4 or g_stage_win
+ local _eye_determined, _eye_blink, _spr = (btn(4) or _obj.sprint) and _obj.oncnv == false, _obj.blink < 4 or g_stage_win
 
  -- eyes
   _spr = _eye_determined and 214 or 215

@@ -159,8 +159,8 @@ function _draw()
   local _x = print_shd(_sname, _offset + 12, 97, 7, _colshd)
   line(_o2, 105, _o2 + _x, 105, _colshd)
   line(_o1, 104, _o1 + _x, 104, 7)
-  print_shd(g_p_sst.s_name, _o1, 107, 7, _colshd)
-  if (_w > 0) ?g_p_sst.s_author, _o1, 115, _colshd
+  print_shd(g_p_sst.s_nm, _o1, 107, 7, _colshd)
+  if (_w > 0) ?g_p_sst.s_at, _o1, 115, _colshd
  end
 
  -- show this only on the gameplay screen
@@ -282,7 +282,7 @@ function unpack_stage(_world, _stage)
  g_game_clear, -- they've beaten every puzzle
  g_game_fast_clear, -- they've beaten every puzzle fast
  g_game_dev_clear -- they've beaten every dev time
- ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{},{{},{}},1,g_p_sst.s_tiles,achv_beat_last_world(),achv_beat_game_stages(),achv_beat_game_times(false),achv_beat_game_times(true)
+ ={},false,false,false,false,0,true,false,0,false,g_p_skip_intro==true and 0 or 90,0,false,{},{},{{},{}},1,g_p_sst.s_tl,achv_beat_last_world(),achv_beat_game_stages(),achv_beat_game_times(false),achv_beat_game_times(true)
 
  -- decompress sprites and music (if needed)
  decompress_sprites(2)
@@ -310,7 +310,7 @@ function unpack_stage(_world, _stage)
  end
 
  -- start loading the stage into the map
- local _stage, _width, _obj_end, _obj_str = g_p_sst.s_data, g_p_sst.s_width + 2, g_p_sst.s_obj_count - 1, g_p_sst.s_obj_str
+ local _stage, _width, _obj_end, _obj_str = g_p_sst.s_d, g_p_sst.s_w + 2, g_p_sst.s_o_c - 1, g_p_sst.s_o_s
  for i=1,#_stage,2 do
   local _tile = subl(_stage, i, 0x1, 1)
   local _x, _y = (i - 1) \ 2 % _width, (i - 1) \ 2 \ _width
@@ -333,7 +333,7 @@ function unpack_stage(_world, _stage)
  end
 
  -- add arrows to hint list
- for _arrow in all(g_p_sst.s_hints) do add(g_list_arrows[2], arrow_create(_arrow)) end
+ for _arrow in all(g_p_sst.s_hn) do add(g_list_arrows[2], arrow_create(_arrow)) end
 end
 
 -- arrows can come from either the hint string, or the object array (where they'll be passed in as numbers)
@@ -360,39 +360,39 @@ function convert_stages()
    _offset = 2
    -- stage title
    _bytes = subl(_stage, 1, 0x1)
-   _sst.s_name = sub(_stage, _offset, _offset + _bytes)
+   _sst.s_nm = sub(_stage, _offset, _offset + _bytes)
    _offset += _bytes + 2
    -- stage author
    _bytes = subl(_stage, _offset - 1, 0x1)
-   _sst.s_author = sub(_stage, _offset, _offset + _bytes)
+   _sst.s_at = sub(_stage, _offset, _offset + _bytes)
    _offset += _bytes + 1
    -- stage width
-   _sst.s_width = subl(_stage, _offset, 0x1) + 1
+   _sst.s_w = subl(_stage, _offset, 0x1) + 1
    -- stage save slot
-   _sst.s_saveslot = subl(_stage, _offset + 1, 0, 1)
+   _sst.s_st = subl(_stage, _offset + 1, 0, 1)
    -- stage target time
-   _sst.s_goaltime = subl(_stage, _offset + 3, 0, 7)
+   _sst.s_gt = subl(_stage, _offset + 3, 0, 7)
    -- stage dev time
-   _sst.s_devtime = subl(_stage, _offset + 11, 0, 7)
+   _sst.s_dt = subl(_stage, _offset + 11, 0, 7)
    _offset += 19
    -- hint count
    _bytes = subl(_stage, _offset, 0x1) * 3
-   _sst.s_hints = {}
+   _sst.s_hn = {}
    for i=1,_bytes,3 do
-    add(_sst.s_hints, sub(_stage, _offset + i, _offset + i + 2))
+    add(_sst.s_hn, sub(_stage, _offset + i, _offset + i + 2))
    end
    _offset += _bytes + 1
    -- the object list
    _bytes = subl(_stage, _offset, 0x1, 1)
    _off_end = _offset + 2 + _bytes * 5
-   _sst.s_obj_count = _bytes;
-   _sst.s_obj_str = sub(_stage, _offset + 2, _off_end - 1)
+   _sst.s_o_c = _bytes;
+   _sst.s_o_s = sub(_stage, _offset + 2, _off_end - 1)
    -- stage tiles
-   _sst.s_tiles = subl(_stage, _off_end, 0x1, 1)
+   _sst.s_tl = subl(_stage, _off_end, 0x1, 1)
    -- the rest is just the stage data itself
-   _sst.s_data = sub(_stage, _off_end + 2)
+   _sst.s_d = sub(_stage, _off_end + 2)
    -- figure out the height
-   _sst.s_height = (#_sst.s_data \ 2) \ (_sst.s_width + 2) - 2
+   _sst.s_h = (#_sst.s_d \ 2) \ (_sst.s_w + 2) - 2
    add(_wst, _sst)
   end
   add(g_levels, _wst)

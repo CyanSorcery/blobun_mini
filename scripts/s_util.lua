@@ -21,7 +21,7 @@ function perform_undo()
  g_p_zap_turn, g_tile_count = _undo.g_p_zap_turn,_undo.g_tile_count
  -- reset these variables
  local _player = g_list_obj[1]
- _player.nextdir, _player.isdead, _player.ismove, g_stage_lose, g_p_updt_coin, g_p_updt_zap = -1, false, false, false, true, true
+ _player.nextdir, _player.isdead, _player.ismv, g_stage_lose, g_p_updt_coin, g_p_updt_zap = -1, false, false, false, true, true
  -- put the playfield back how it was
  unpack_undo_tiles(_undo.playfield)
 end
@@ -90,7 +90,7 @@ end
 
 -- source and destination top right tile, source puzzle ID, dest puzzle ID
 function tile_swap(_str, _dtr, _smp, _dmp)
- local _w, _h, _smp_x, _smp_y, _dmp_x, _dmp_y, _tile = g_p_sst.s_width << 1, g_p_sst.s_height << 1, (48 + _smp \ 16) << 1, (_smp % 16) << 1, (48 + _dmp \ 16) << 1, (_dmp % 16) << 1
+ local _w, _h, _smp_x, _smp_y, _dmp_x, _dmp_y, _tile = g_p_sst.s_w << 1, g_p_sst.s_h << 1, (48 + _smp \ 16) << 1, (_smp % 16) << 1, (48 + _dmp \ 16) << 1, (_dmp % 16) << 1
  for _x=1,_w,2 do
   for _y=1,_h,2 do
    _tile = mget(_x + 1, _y)

@@ -15,30 +15,30 @@ function obj_create(_str)
 
  -- if this is the player, add additional variables
  if _obj.type == 0 then
-  _obj.startx, -- where the player started
-  _obj.starty,
+  _obj.stx, -- where the player started
+  _obj.sty,
   _obj.poskey, -- reset this so it wont match (otherwise game can destroy stephanie for reals)
   _obj.dir, -- direction she faces
   _obj.anim, -- movement animation
-  _obj.jiggle, -- little shake when player presses sprint
+  _obj.jgl, -- little shake when player presses sprint
   _obj.sprint, -- current move is sprint
   _obj.pstate, -- current player state (normal, fire, ice)
-  _obj.ismove, -- move is active
+  _obj.ismv, -- move is active
   _obj.oldx, -- during a move, where she's coming from
   _obj.oldy,
-  _obj.startturnx, -- where she was at the start of her turn
-  _obj.startturny,
+  _obj.strnx, -- where she was at the start of her turn
+  _obj.strny,
   _obj.haskey, -- she currently is holding a generic key
-  _obj.onconvey, -- she's on a conveyer belt of some kind
-  _obj.inportal, -- she's in a floor portal
+  _obj.oncnv, -- she's on a conveyer belt of some kind
+  _obj.inprt, -- she's in a floor portal
   _obj.blink, -- how long until she blinks
-  _obj.octogems, -- how many octogems she's carrying
+  _obj.octg, -- how many octogems she's carrying
   _obj.coins, -- how many coins she's carrying
   _obj.nextdir, -- the next direction she'll go (input buffering)
-  _obj.tilestouched, -- how many tiles she's touched (starts at 1 for her spawn tile)
+  _obj.ttch, -- how many tiles she's touched (starts at 1 for her spawn tile)
   _obj.isdead, -- player was destroyed and shouldn't be drawn
-  _obj.prevslimetrap, -- previous move was a slime trap
-  _obj.prevcrackedfloor -- previous move was on a cracked floor
+  _obj.prvsltr, -- previous move was a slime trap
+  _obj.prvcrfl -- previous move was on a cracked floor
   = _obj.x, _obj.y, -1, 3, 1, 0, false, 0, false, _obj.x, _obj.y, _obj.x, _obj.y, false, false, false, 10, 0, 0, -1, 1, false, false, false
   _obj.onstep = player_step
   _obj.ondraw = player_draw
@@ -64,7 +64,7 @@ function obj_create(_str)
    local _w_x, _w_y = (self.x << 4) + 8, self.y << 4
    if self.type < 9 then
     -- only draw if this isn't an octogem, or if it is and is the correct index
-    if self.oct_ind == nil or self.oct_ind == g_list_obj[1].octogems then
+    if self.oct_ind == nil or self.oct_ind == g_list_obj[1].octg then
      local _y, _sx, _sy, _modx = _w_y + (sin(self.anim) * 2), (self.spr % 16) << 3, (self.spr \ 16) << 3, ceil(sin(self.spin * .5) * -8)
      if (_modx <= 3) rectfill(_w_x + 7, _y + 1, _w_x + 9, _y + 14, 7)
      sspr(_sx, _sy, 8, 16, _w_x + 9 - _modx, _y, _modx, 16)

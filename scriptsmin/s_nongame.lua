@@ -46,10 +46,10 @@ if(g_sss_menu_stage>_stages)g_sss_menu_stage=0
 if btnp()&48>0or _pause_press then if(g_sss_menu_stage==0)set_game_mode(0)g_play_sfx=63333else set_game_mode(2,g_sss_menu_world,g_sss_menu_stage)music(-1,500)g_play_sfx=61828
 end end function draw_stage_select()local _t,_y_offset=g_sss_colors,20+sin(g_sss_anim_factor>>3)*29for i=1,4do pal(_t[1][i],_t[g_sss_menu_world][i])end rectfill(0,0,127,127,1)map(0,14,-24+24*g_title_scroll,-2-_y_offset,19,3)map(0,17,-24*g_title_scroll,115+_y_offset,19,2)map(32,-2+g_sss_menu_world*2,0,1-_y_offset,16,2)local _bott,_req=122+_y_offset,g_w_req[g_sss_menu_world]if(g_sss_menu_world>1)?"⬅️previous area",1,_bott,7
 local _p_beat=stages_beat_in_world(g_sss_menu_world)?_p_beat>=_req and(g_sss_menu_world<count(g_levels)and"next area➡️"or"")or"▶solve ".._req-_p_beat,84,_bott,7
-local _stages=count(g_levels[g_sss_menu_world])local _start=max(min(g_sss_menu_stage-5,_stages-9),-1)local _sy1,_end,_show_timers,_is_hilite,_stagetime,_syt=13-_start*10,_start+10,setting_get(1)for _y=0,_stages do _is_hilite,_sy2=_y==g_sss_menu_stage,_sy1+10if _y>_start and _y<_end then _syt=_sy1+3local _st=g_levels[g_sss_menu_world][max(1,_y)]local _stagetime=dget(_st.s_saveslot)if(_is_hilite)menu_draw_select(4,_sy1,90,_sy2)
-pal(7,_is_hilite and 7or _t[g_sss_menu_world][2])if _y>0then?(_y>9and""or" ").._y.." ".._st.s_name,14,_syt,7
-spr(_stagetime<=599.995and 241or 240,6,_sy1+1)if _show_timers then if(_stagetime<=_st.s_goaltime)?format_time(_stagetime),96,_syt,7
-if(_stagetime<=_st.s_devtime)?"♥",120,_syt,7
+local _stages=count(g_levels[g_sss_menu_world])local _start=max(min(g_sss_menu_stage-5,_stages-9),-1)local _sy1,_end,_show_timers,_is_hilite,_stagetime,_syt=13-_start*10,_start+10,setting_get(1)for _y=0,_stages do _is_hilite,_sy2=_y==g_sss_menu_stage,_sy1+10if _y>_start and _y<_end then _syt=_sy1+3local _st=g_levels[g_sss_menu_world][max(1,_y)]local _stagetime=dget(_st.s_st)if(_is_hilite)menu_draw_select(4,_sy1,90,_sy2)
+pal(7,_is_hilite and 7or _t[g_sss_menu_world][2])if _y>0then?(_y>9and""or" ").._y.." ".._st.s_nm,14,_syt,7
+spr(_stagetime<=599.995and 241or 240,6,_sy1+1)if _show_timers then if(_stagetime<=_st.s_gt)?format_time(_stagetime),96,_syt,7
+if(_stagetime<=_st.s_dt)?"♥",120,_syt,7
 end else?"back",26,_syt,7
 pal(7,10)if(achv_beat_stages(g_sss_menu_world))spr(241,6,_sy1+1)
 if _show_timers then if(achv_beat_times(g_sss_menu_world,false))?"⧗",113,_syt,7
