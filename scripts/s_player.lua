@@ -72,10 +72,13 @@ function player_step(self)
     if (g_play_sfx == nil and stat(49) == -1 and not self.oncnv) g_play_sfx = -3580
    
     -- record the playfield before making a move?
-    if not self.inprt and not self.oncnv then
-     -- update the end turn position for the next undo
-     self.strnx, self.strny = self.x, self.y
-     add_undo()
+    if not self.oncnv then
+     -- don't do this if we're on a portal
+     if not self.inprt then
+      -- update the end turn position for the next undo
+      self.strnx, self.strny = self.x, self.y
+      add_undo()
+     end
      
      -- increment the floor zappers
      g_p_zap_turn += 1

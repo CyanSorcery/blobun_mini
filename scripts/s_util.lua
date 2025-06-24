@@ -83,7 +83,8 @@ end
 function tile_copy(_srcx, _srcy, _dstx, _dsty)
  for _x=0,1 do
   for _y=0,1 do
-   mset(_dstx + _x, _dsty + _y, mget(_srcx + _x, _srcy + _y))
+   -- prevent overflow into sprite memory
+   if (_dsty + _y < 32) mset(_dstx + _x, _dsty + _y, mget(_srcx + _x, _srcy + _y))
   end
  end
 end

@@ -9,8 +9,8 @@ self.sprint=false local _new_dir=self.nextdir if _new_dir~=-1or self.inprt then 
 local _can_move,_check,_chx,_chy=self.inprt,16,self.x+cos(_new_dir>>2),self.y+sin(_new_dir>>2)if(self.oncnv or setting_get(2))_check=18
 local _nextblock=mget((_chx<<1)+2,(_chy<<1)+1)if(_nextblock==121and self.pstate==1or _nextblock==51and self.haskey or fget(_nextblock)&_check>0)_can_move=true
 self.nextdir,self.dir=-1,_new_dir if _can_move and not g_stage_lose and not g_stage_win then g_p_started=true if(g_play_sfx==nil and stat(49)==-1and not self.oncnv)g_play_sfx=61956
-if(not self.inprt and not self.oncnv)self.strnx,self.strny=self.x,self.y add_undo()g_p_zap_turn+=1g_p_zap_turn%=3g_p_updt_zap=true
-self.anim,self.sprint,self.ismv=0,tonum(setting_get(3))~tonum(btn(4))==1,true if(self.inprt==false)self.oldx,self.oldy=self.x,self.y
+if not self.oncnv then if(not self.inprt)self.strnx,self.strny=self.x,self.y add_undo()
+g_p_zap_turn+=1g_p_zap_turn%=3g_p_updt_zap=true end self.anim,self.sprint,self.ismv=0,tonum(setting_get(3))~tonum(btn(4))==1,true if(self.inprt==false)self.oldx,self.oldy=self.x,self.y
 if(_new_dir>=0)self.x,self.y=_chx,_chy
 end end end if(g_stage_win)self.dir=3
 if(g_p_started and not g_stage_win)g_p_time=min(g_p_time+(time()-g_time),599.999)

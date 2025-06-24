@@ -136,7 +136,7 @@ NOTE: Eventually, we will release the pico8 version of the Blobun Level Editor w
 ## Misc Notes
 - To save tokens, there's pretty much no direct tables in the game. Instead, they're strings of hex values which are converted to tables at runtime. The function `str2tbl` creates a 1 dimensional table, while `str2tbl2d` creates a 2 dimensional table.
 - Documentation for the various game states, settings IDs, etc. are generally stored in their associated script files in the comments, so we wont document them again here.
-- Sometimes the floor zappers fall out of sync when compared to Blobun, so a puzzle that's solvable there wont be solvable here. We got around it by just not having any puzzles that exhibited this bug.
+- Near the end of development, we had to rename some variables to save character count. These variables, therefore, have kinda cryptic names.
 
 ## Credits
 - PICO-8 - Lexaloffle Games
