@@ -310,21 +310,15 @@ function unpack_stage(_world, _stage)
  end
 
  -- start loading the stage into the map
- local _stage, _width, _obj_end, _obj_str = g_p_sst.s_d, g_p_sst.s_w + 2, g_p_sst.s_o_c - 1, g_p_sst.s_o_s
+ local _stage, _width, _obj_end = g_p_sst.s_d, g_p_sst.s_w + 2, g_p_sst.s_o_c - 1
  for i=1,#_stage,2 do
   local _tile = subl(_stage, i, 0x1, 1)
-  local _x, _y = (i - 1) \ 2 % _width, (i - 1) \ 2 \ _width
-  tile_copy(96 + (_tile \ 16) * 2, (_tile % 16) * 2, _x * 2 - 1, _y * 2 - 1)
-  -- load (some) objects. this reduces the character count for level strings
-  -- by just converting the common keys at runtime
-  for j=0,3 do
-   if (_tile == 2 | (j << 5)) _obj_str = _obj_str..(j+1)..sub(tostr(_x-1,1),6,6)..sub(tostr(_y-1,1),6,6)..sub(tostr(83+j,1),5,6) _obj_end += 1
-  end
+  tile_copy(96 + (_tile \ 16) * 2, (_tile % 16) * 2, ((i - 1) \ 2 % _width) * 2 - 1, ((i - 1) \ 2 \ _width) * 2 - 1)
  end
 
  -- load all the objects
  for i=0,_obj_end do
-  local _obj = obj_create(sub(_obj_str, i * 5 + 1, i * 5 + 6))
+  local _obj = obj_create(sub(g_p_sst.s_o_s, i * 5 + 1, i * 5 + 6))
   if _obj.type == 11 then
    add(g_list_arrows[1], arrow_create(_obj.spr, _obj.x, _obj.y))
   else
