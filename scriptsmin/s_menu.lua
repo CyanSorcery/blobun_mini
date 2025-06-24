@@ -12,7 +12,8 @@ local _count,_sprchk,_b_h=count(self.m_items),count(g_list_obj)>0and 147or 241,l
 pal(7,_is_hilite and 7or 13)?_item.i_label,_base_x,_base_y,7
 if(_item.i_setting~=nil)spr(_sprchk-(setting_get(_item.i_setting)and 0or 1),_x2-11,_base_y-2)
 end _base_y+=10end pal()end})end function menus_remove()for _pane in all(g_menu)do _pane.m_anim_incr=-.25end end function menu_goback()g_play_sfx=63333g_menu[count(g_menu)].m_anim_incr=-.25end function menu_item_base(_str,_func)return{i_label=_str,i_onclick=_func,i_setting=nil}end function menu_item_setting(_str,_setting)local _item=menu_item_base(_str,function(self)setting_set(self.i_setting,setting_get(self.i_setting)==false)if(self.i_setting==5)music(setting_get(5)and 0or-1,0,7)
-end)_item.i_setting=_setting return _item end function menu_create_puzz()g_btn4_press,g_btn4_held,g_play_sfx=false,false,61828local _dest if(not g_final_world_clr and achv_beat_last_world())_dest=1
+end)_item.i_setting=_setting return _item end function menu_create_puzz()g_btn4_press,g_btn4_held,g_play_sfx=false,false,61828local _dest if(not g_world_clr and stages_beat_min(g_p_i_world))_dest=5
+if(not g_final_world_clr and achv_beat_last_world())_dest=1
 if(not g_game_clear and achv_beat_game_stages())_dest=2
 if(not g_game_fast_clear and achv_beat_game_times(false))_dest=3
 if(not g_game_dev_clear and achv_beat_game_times(true))_dest=4

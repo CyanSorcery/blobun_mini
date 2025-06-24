@@ -35,7 +35,7 @@ function _init()
  compress_music("res/m_snowdrift.p8")
  compress_music("res/m_marmalade.p8")
  compress_music("res/m_title.p8")
- compress_map("res/s_title.p8", 0, 0, 64, 21)
+ compress_map("res/s_title.p8", 0, 0, 64, 20)
  compress_map("res/map_lut.p8", 96, 0, 32, 32)
  compress_sfx("res/sfx.p8")
 

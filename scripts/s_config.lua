@@ -59,6 +59,10 @@ function stages_beat_in_world(_world)
  return _count
 end
 
+function stages_beat_min(_world)
+ return stages_beat_in_world(_world) >= g_w_req[_world]
+end
+
 function achv_beat_stages(_world)
  return stages_beat_in_world(_world) >= count(g_levels[_world])
 end

@@ -97,6 +97,7 @@ function menu_create_puzz()
  g_btn4_press, g_btn4_held, g_play_sfx = false, false, -3708
  -- if the player has met one of these conditions, bring them to the victory screen
  local _dest
+ if (not g_world_clr and stages_beat_min(g_p_i_world)) _dest = 5
  if (not g_final_world_clr and achv_beat_last_world()) _dest = 1
  if (not g_game_clear and achv_beat_game_stages()) _dest = 2
  if (not g_game_fast_clear and achv_beat_game_times(false)) _dest = 3

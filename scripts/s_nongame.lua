@@ -43,7 +43,8 @@ function draw_intro()
 end
 
 function update_credits()
- if (g_intro_anim * g_outro_anim == 1 and btnp() & 0x30 > 0) set_game_mode(0)
+ -- send them to the intro screen, unless it's telling them they just beat the world, then send to stage select
+ if (g_intro_anim * g_outro_anim == 1 and btnp() & 0x30 > 0) if g_victory_mode == 5 then set_game_mode(1) else set_game_mode(0) end
 end
 
 function draw_credits()
@@ -107,7 +108,11 @@ for you. you're too good
   at the game! not many
    people can do this.
 
-    you are amazing!]]
+    you are amazing!]],
+[[  your exploration has
+  led to the discovery
+     of a new area!
+       good luck!]]
   }
   print_shd(_str[g_victory_mode], 16, 56, 7, 0)
  end
@@ -151,7 +156,7 @@ function update_stage_select()
  if g_sss_anim_factor == 1 then
   if (btnp(0) and g_sss_menu_world > 1) g_play_sfx = -3836 g_sss_menu_world_tgt = max(g_sss_menu_world - 1, 1) g_sss_anim_incr = -.125
   -- roxy note: check for player worlds unlocked
-  if (btnp(1) and g_sss_menu_world < count(g_levels) and stages_beat_in_world(g_sss_menu_world) >= g_w_req[g_sss_menu_world]) g_play_sfx = -3836 g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
+  if (btnp(1) and g_sss_menu_world < count(g_levels) and stages_beat_min(g_sss_menu_world)) g_play_sfx = -3836 g_sss_menu_world_tgt = min(g_sss_menu_world + 1, _worlds) g_sss_anim_incr = -.125
  end
 
  -- show the next world panel?
