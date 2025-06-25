@@ -1,10 +1,11 @@
 function player_step(self)
+ -- make stephanie blink
+ self.blink -= 1
+ if (self.blink <= 1) self.blink = 30 + flr(rnd(60))
+
  -- if lesbians aren't allowed, don't do this
  -- also don't if a menu is open right now
  if (not setting_get(6) or count(g_menu) > 0) return
-
- self.blink -= 1
- if (self.blink <= 1) self.blink = 30 + flr(rnd(60))
 
  -- find out if the player has just pressed the button
  g_btn4_press = btn(4) and g_btn4_held == false

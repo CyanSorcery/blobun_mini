@@ -1,6 +1,6 @@
 function draw_title()cls(0)map(0,0,-24*g_title_scroll,32,19,2)map(0,2,g_title_scroll*2%1*-24,48,19,3)map(0,5,g_title_scroll*3%1*-24,72,19,7)palt(1024)local _y_mod=sin(g_title_scroll)*4map(19,0,12,8+_y_mod,13,7)if(not setting_get(6))map(19,8,28,8+_y_mod,4,5)
 ?"2025 cyansorcery",32,122,3
-?"rc1",1,1,1
+?"v1",1,1,1
 palt()pal(7,1)if(achv_beat_game_stages())spr(241,1,119)
 if setting_get(1)then if(achv_beat_game_times(false))?"⧗",113,122,7
 if(achv_beat_game_times(true))?"♥",120,122,7

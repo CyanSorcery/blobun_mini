@@ -1,5 +1,5 @@
-function player_step(self)if(not setting_get(6)or count(g_menu)>0)return
-self.blink-=1if(self.blink<=1)self.blink=30+flr(rnd(60))
+function player_step(self)self.blink-=1if(self.blink<=1)self.blink=30+flr(rnd(60))
+if(not setting_get(6)or count(g_menu)>0)return
 g_btn4_press=btn(4)and g_btn4_held==false g_btn4_held=btn(4)self.jgl=max(self.jgl-.2,0)if(btnp(5)and not g_stage_win)perform_undo()return nil
 self.anim=min(self.anim+((self.sprint or self.oncnv or self.inprt)and.2or.1111),1)if self.anim>=.65then local _t=str2tbl"2013"for i=0,3do if(btn(i))self.nextdir=_t[i+1]
 end end if self.anim+.001>=1and not g_stage_win and not g_stage_lose then if(self.ismv)player_end_move(self)

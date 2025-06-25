@@ -146,6 +146,8 @@ function menu_create_title()
   menu_item_base("continue", function()
    local _ws = last_worldstage_get()
    set_game_mode(2, _ws.world, _ws.stage)
+   -- need to manually fade music here, since it wont otherwise
+   music(-1, 500)
   end
   ),
   menu_item_base("options", menu_create_options),
