@@ -5,6 +5,8 @@ https://cyansorcery.itch.io/blobun-mini
 
 https://store.steampowered.com/app/3827340/Blobun_Mini/
 
+https://www.lexaloffle.com/bbs/?tid=150119
+
 If you simply want to play the game, it is *highly* recommended that you just go play the game at the links above, rather than trying to play it from here, as there's quite a bit of setup you'll have to go through to get it running.
 
 ## IMPORTANT
