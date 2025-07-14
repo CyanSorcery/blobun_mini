@@ -362,14 +362,16 @@ function convert_stages()
    _bytes = subl(_stage, _offset - 1, 0x1)
    _sst.s_at = sub(_stage, _offset, _offset + _bytes)
    _offset += _bytes + 1
-   -- stage width
-   _sst.s_w = subl(_stage, _offset, 0x1) + 1
-   -- stage save slot
-   _sst.s_st = subl(_stage, _offset + 1, 0, 1)
-   -- stage target time
-   _sst.s_gt = subl(_stage, _offset + 3, 0, 7)
-   -- stage dev time
-   _sst.s_dt = subl(_stage, _offset + 11, 0, 7)
+   
+   _sst.s_w, -- stage width
+   _sst.s_st, -- stage save slot
+   _sst.s_gt, -- stage target time
+   _sst.s_dt -- stage dev time
+    = subl(_stage, _offset, 0x1) + 1,
+   subl(_stage, _offset + 1, 0, 1),
+   subl(_stage, _offset + 3, 0, 7),
+   subl(_stage, _offset + 11, 0, 7)
+   
    _offset += 19
    -- hint count
    _bytes = subl(_stage, _offset, 0x1) * 3

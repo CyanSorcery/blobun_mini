@@ -2,12 +2,13 @@ function player_step(self)self.blink-=1if(self.blink<=1)self.blink=30+flr(rnd(60
 if(not setting_get(6)or count(g_menu)>0)return
 g_btn4_press=btn(4)and g_btn4_held==false g_btn4_held=btn(4)self.jgl=max(self.jgl-.2,0)if(btnp(5)and not g_stage_win)perform_undo()return nil
 self.anim=min(self.anim+((self.sprint or self.oncnv or self.inprt)and.2or.1111),1)if self.anim>=.65then local _t=str2tbl"2013"for i=0,3do if(btn(i))self.nextdir=_t[i+1]
-end end if self.anim+.001>=1and not g_stage_win and not g_stage_lose then if(self.ismv)player_end_move(self)
+end end local _dir_backup=self.nextdir if self.anim+.001>=1and not g_stage_win and not g_stage_lose then if(self.ismv)player_end_move(self)
 if not g_stage_win and self.ttch>=g_tile_count and not g_stage_lose then g_stage_win,g_play_sfx=true,62483if(g_p_time<dget(g_p_sst.s_st))dset(g_p_sst.s_st,min(599,g_p_time))g_p_new_time=true
 end if(g_btn4_press)self.jgl=1
-self.sprint=false local _new_dir=self.nextdir if _new_dir~=-1or self.inprt then if(self.inprt)_new_dir=-1
+self.sprint=false local _new_dir=self.nextdir if _new_dir~=-1or self.inprt then::REDO::if(self.inprt)_new_dir=-1
 local _can_move,_check,_chx,_chy=self.inprt,16,self.x+cos(_new_dir>>2),self.y+sin(_new_dir>>2)if(self.oncnv or setting_get(2))_check=18
 local _nextblock=mget((_chx<<1)+2,(_chy<<1)+1)if(_nextblock==121and self.pstate==1or _nextblock==51and self.haskey or fget(_nextblock)&_check>0)_can_move=true
+if(self.oncnv and not _can_move)_new_dir,self.oncnv=_dir_backup,false goto REDO
 self.nextdir,self.dir=-1,_new_dir if _can_move and not g_stage_lose and not g_stage_win then g_p_started=true if(g_play_sfx==nil and stat(49)==-1and not self.oncnv)g_play_sfx=61956
 if not self.oncnv then if(not self.inprt)self.strnx,self.strny=self.x,self.y add_undo()
 g_p_zap_turn+=1g_p_zap_turn%=3g_p_updt_zap=true end self.anim,self.sprint,self.ismv=0,tonum(setting_get(3))~tonum(btn(4))==1,true if(self.inprt==false)self.oldx,self.oldy=self.x,self.y

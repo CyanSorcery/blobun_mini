@@ -30,6 +30,7 @@ function player_step(self)
    if (btn(i)) self.nextdir = _t[i + 1]
   end
  end
+ local _dir_backup = self.nextdir 
  
  -- fix fractional precision errors
  if self.anim + .001 >= 1 and not g_stage_win and not g_stage_lose then
@@ -49,8 +50,10 @@ function player_step(self)
 
   -- move her around the playfield?
   self.sprint = false
+ -- store a backup
   local _new_dir = self.nextdir
   if _new_dir != -1 or self.inprt then
+   ::REDO::
    -- prevent bug where you can come out of the portal 1 tile over in the held direction
    if (self.inprt) _new_dir = -1
    -- do a check if this is solid or not. if we're on portal, we can move
@@ -61,6 +64,12 @@ function player_step(self)
    -- next block is ice block and they're in fire state OR next block is lock and they have a key OR check if next tile is slimed already (or is otherwise passable)
    local _nextblock = mget((_chx << 1) + 2, (_chy << 1) + 1)
    if (_nextblock == 121 and self.pstate == 1 or _nextblock == 51 and self.haskey or fget(_nextblock) & _check > 0) _can_move = true
+
+   -- if we're on a conveyer, but we couldn't move, restore the player's held direction and check again
+   if self.oncnv and not _can_move then
+    _new_dir, self.oncnv = _dir_backup, false
+    goto REDO
+   end
 
    -- reset the buffered input and face us in this direction
    self.nextdir, self.dir = -1, _new_dir
