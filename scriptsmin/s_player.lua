@@ -3,7 +3,7 @@ if(not setting_get(6)or count(g_menu)>0)return
 g_btn4_press=btn(4)and g_btn4_held==false g_btn4_held=btn(4)self.jgl=max(self.jgl-.2,0)if(btnp(5)and not g_stage_win)perform_undo()return nil
 self.anim=min(self.anim+((self.sprint or self.oncnv or self.inprt)and.2or.1111),1)if self.anim>=.65then local _t=str2tbl"2013"for i=0,3do if(btn(i))self.nextdir=_t[i+1]
 end end if self.anim+.001>=1and not g_stage_win and not g_stage_lose then if(self.ismv)player_end_move(self)
-if g_stage_win==false and self.ttch>=g_tile_count then g_stage_win,g_play_sfx=true,62483if(g_p_time<dget(g_p_sst.s_st))dset(g_p_sst.s_st,g_p_time)g_p_new_time=true
+if not g_stage_win and self.ttch>=g_tile_count and not g_stage_lose then g_stage_win,g_play_sfx=true,62483if(g_p_time<dget(g_p_sst.s_st))dset(g_p_sst.s_st,min(599,g_p_time))g_p_new_time=true
 end if(g_btn4_press)self.jgl=1
 self.sprint=false local _new_dir=self.nextdir if _new_dir~=-1or self.inprt then if(self.inprt)_new_dir=-1
 local _can_move,_check,_chx,_chy=self.inprt,16,self.x+cos(_new_dir>>2),self.y+sin(_new_dir>>2)if(self.oncnv or setting_get(2))_check=18

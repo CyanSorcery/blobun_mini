@@ -11,7 +11,7 @@ function draw_title()
  if (not setting_get(6)) map(19, 8, 28, 8 + _y_mod, 4, 5)
 
  ?"2025 cyansorcery", 32, 122, 3
- ?"v1", 1,1,1
+ ?"v1.1", 1,1,1
  
  palt()
  pal(7, 1)
@@ -43,8 +43,8 @@ function draw_intro()
 end
 
 function update_credits()
- -- send them to the intro screen, unless it's telling them they just beat the world, then send to stage select
- if (g_intro_anim * g_outro_anim == 1 and btnp() & 0x30 > 0) if g_victory_mode == 5 then set_game_mode(1) else set_game_mode(0) end
+ -- if this was the credits, go to the intro screen. otherwise, go to the stage select
+ if (g_intro_anim * g_outro_anim == 1 and btnp() & 0x30 > 0) if g_victory_mode != nil then set_game_mode(1) else set_game_mode(0) end
 end
 
 function draw_credits()

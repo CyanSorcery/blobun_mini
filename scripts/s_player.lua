@@ -38,10 +38,10 @@ function player_step(self)
   
 
   -- have we won?
-  if g_stage_win == false and self.ttch >= g_tile_count then
+  if not g_stage_win and self.ttch >= g_tile_count and not g_stage_lose then
    g_stage_win, g_play_sfx = true, -3053
    -- if the player time is lower than the record, store it
-   if (g_p_time < dget(g_p_sst.s_st)) dset(g_p_sst.s_st, g_p_time) g_p_new_time = true
+   if (g_p_time < dget(g_p_sst.s_st)) dset(g_p_sst.s_st, min(599, g_p_time)) g_p_new_time = true
   end
 
   -- sprint jgl?
