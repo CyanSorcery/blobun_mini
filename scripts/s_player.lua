@@ -51,7 +51,7 @@ function player_step(self)
   -- move her around the playfield?
   self.sprint = false
  -- store a backup
-  local _new_dir = self.nextdir
+  local _new_dir, _cnv_fix = self.nextdir, false
   if _new_dir != -1 or self.inprt then
    ::REDO::
    -- prevent bug where you can come out of the portal 1 tile over in the held direction
@@ -66,8 +66,8 @@ function player_step(self)
    if (_nextblock == 121 and self.pstate == 1 or _nextblock == 51 and self.haskey or fget(_nextblock) & _check > 0) _can_move = true
 
    -- if we're on a conveyer, but we couldn't move, restore the player's held direction and check again
-   if self.oncnv and not _can_move then
-    _new_dir, self.oncnv = _dir_backup, false
+   if self.oncnv and not _can_move and _dir_backup != -1 then
+    _new_dir, self.oncnv, _cnv_fix = _dir_backup, false, true
     goto REDO
    end
 
@@ -82,7 +82,7 @@ function player_step(self)
     if (g_play_sfx == nil and stat(49) == -1 and not self.oncnv) g_play_sfx = -3580
    
     -- record the playfield before making a move?
-    if not self.oncnv then
+    if not self.oncnv and not _cnv_fix then
      -- don't do this if we're on a portal
      if not self.inprt then
       -- update the end turn position for the next undo
